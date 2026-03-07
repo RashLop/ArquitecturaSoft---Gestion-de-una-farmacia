@@ -1,0 +1,27 @@
+﻿@page
+@model LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Farmacia VitalCare</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="~/images/vitalcare.png" class="logo" />
+            <h2>Farmacia VitalCare</h2>
+
+            <form method="post">
+                <input type="text" asp-for="Usuario" placeholder="Usuario" required />
+                <input type="password" asp-for="Password" placeholder="Contraseña" required />
+                <button type="submit">Ingresar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

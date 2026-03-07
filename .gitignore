@@ -1,0 +1,38 @@
+# Build
+bin/
+obj/
+
+# User specific
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Publish output
+publish/
+
+# Dotnet local
+*.runtimeconfig.dev.json
+
+# NuGet
+*.nupkg
+packages/
+
+# node modules (por si agregas algo web)
+node_modules/
+
+# EF migrations (si algún día usas)
+Migrations/

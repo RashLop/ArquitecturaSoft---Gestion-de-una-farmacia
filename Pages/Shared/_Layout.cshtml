@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VitalCare</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/VitalCare.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header class="navbar">
+        <img src="~/images/vitalcare.png" height="80" />
+
+        <nav>
+            <a asp-page="/Index">Home</a>
+            <a asp-page="/Privacy">Privacy</a>
+            <a asp-page="/Medicamentos/Index">Medicamentos</a>
+            <a asp-page="/Clientes/Index">Clientes</a>
+            <a asp-page="/Bioquimicos/Index">Bioquímicos</a>
+            
+            @*<a asp-page="/Reportes/Index">Reportes</a>*@    
+        
+        </nav>
+    </header>
+
+    
+        @RenderBody()
+    
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>
