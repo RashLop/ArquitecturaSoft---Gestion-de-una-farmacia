@@ -10,6 +10,7 @@ obj/
 
 # VS Code
 .vscode/
+.vs/
 
 # Rider
 .idea/
@@ -31,8 +32,23 @@ publish/
 *.nupkg
 packages/
 
-# node modules (por si agregas algo web)
+# node modules (osriacasoo algo web)
 node_modules/
 
-# EF migrations (si algún día usas)
+# EF migrations (posriacasoo)
 Migrations/
+
+# ASP.NET
+appsettings.Development.json
+
+# dotnet test
+TestResults/
+
+# coverage
+coverage/
+
+# Mac / Linux temp
+*.swp
+*.tmp
+
+*.cache
