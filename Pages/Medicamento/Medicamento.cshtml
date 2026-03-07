@@ -1,0 +1,43 @@
+@page
+@model ProyectoArqSoft.Pages.MedicamentoModel
+@{
+}
+
+<h1>Medicamentos en Stock</h1>
+
+<!--<div>
+    <a asp-page="MedicamentoCreate" class="btn btn-primary">Nuevo Medicamento</a>
+</div> -->
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre del medicamento</th>
+            <th>Presentación</th>
+            <th>Clasificación</th>
+            <th>Concentración</th>
+            <th>Precio</th>
+            <!--<th>Fecha de Registro</th>-->
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
+        {
+            <tr>
+                <td>@row["nombre"]</td>
+                <td>@row["presentacion"]</td>
+                <td>@row["clasificacion"]</td>
+                <td>@row["concentracion"]</td>
+                <td>@row["precio"]</td>
+                <td>
+                    <a asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+
+
+    </tbody>
+</table>

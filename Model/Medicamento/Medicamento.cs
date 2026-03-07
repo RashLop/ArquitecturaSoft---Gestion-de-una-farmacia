@@ -1,13 +1,32 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace ProyectoArqSoft.Modelos ; 
+namespace ProyectoArqSoft.Models ; 
 public class Medicamento
 {
-    public  int id_medicamento {get; set; }
-    public string nombre {get; set; } = string.Empty; 
-    public string presentacion {get; set; } = string.Empty; 
-    public string clasificacion {get; set; } = string.Empty;
-    public string concentracion {get; set; } = string.Empty; 
-   
-    public int stock_minimo {get; set; }
+    public  int Id {get; set; }
+    public string Nombre {get; set; } 
+    public string Presentacion {get; set; } 
+    public string Clasificacion {get; set; } 
+    public string Concentracion {get; set; } 
+    public decimal Precio {get; set; }
+    public int Stock { get; set; }
+
+    //public short Estado { get; set; }
+    //public DateTime FechaRegistro { get; set; }
+    //public DateTime UltimaActualizacion { get; set; }
+    
+    public Medicamento()
+    {
+        
+    }
+
+    public Medicamento(string nombre, string presentacion, string clasificacion, string concentracion, decimal precio, int stock)
+    {
+        Nombre = nombre;
+        Presentacion = presentacion;
+        Clasificacion = clasificacion;
+        Concentracion = concentracion;
+        Precio = precio;
+        Stock = stock;
+    }
 }
