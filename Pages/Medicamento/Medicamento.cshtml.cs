@@ -25,14 +25,13 @@ namespace ProyectoArqSoft.Pages
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT  id_medicamento, nombre, presentacion, clasificacion, concentracion, precio
-                            FROM medicamento";
+                            FROM medicamento
+                            ORDER BY 2";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString)) 
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
-                //Se ejecuta la consulta SQL del comando y los datos se transfieren
-                //al objeto adapter
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 adapter.Fill(MedicamentoDataTable);
 
