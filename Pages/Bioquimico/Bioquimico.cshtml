@@ -1,4 +1,64 @@
 ﻿@page
-@model ProyectoArqSoft.Pages.Bioquimico.BioquimicoModel
+@model ProyectoArqSoft.Pages.BioquimicoModel
 @{
+    ViewData["Title"] = "Bioquímicos";
 }
+
+<h2>Listado de Bioquímicos</h2>
+
+<div class="mb-3">
+    <a asp-page="/Bioquimico/BioquimicoCreate" class="btn btn-primary">Nuevo Bioquímico</a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div class="alert alert-success">@Model.Mensaje</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.MensajeError))
+{
+    <div class="alert alert-danger">@Model.MensajeError</div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>CI</th>
+            <th>Teléfono</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.BioquimicoDataTable.Rows.Count > 0)
+        {
+            foreach (System.Data.DataRow row in Model.BioquimicoDataTable.Rows)
+            {
+                <tr>
+                    <td>@row["idBioquimico"]</td>
+                    <td>@row["nombres"]</td>
+                    <td>@row["apellidos"]</td>
+                    <td>@row["ci"]</td>
+                    <td>@row["telefono"]</td>
+                    <td>@(Convert.ToBoolean(row["activo"]) ? "Sí" : "No")</td>
+                    <td>
+                        <a asp-page="/Bioquimico/BioquimicoEdit"
+                           asp-route-id="@row["idBioquimico"]"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">No hay bioquímicos registrados.</td>
+            </tr>
+        }
+    </tbody>
+</table>
