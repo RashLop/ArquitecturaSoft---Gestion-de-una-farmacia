@@ -32,7 +32,7 @@
                 <td>@row["concentracion"]</td>
                 <td>@row["precio"]</td>
                 <td>
-                    <a asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-page = "MedicamentoUpdate" asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
                     <a asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Eliminar</a>
                 </td>
             </tr>
