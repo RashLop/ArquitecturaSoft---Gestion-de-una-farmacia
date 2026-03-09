@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using System.Text.RegularExpressions;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -61,9 +62,7 @@ namespace ProyectoArqSoft.Pages
                             Edad = reader.GetInt32("edad");
                             Telefono = reader.GetString("telefono");
 
-                            Console.WriteLine($"✓ Cliente encontrado:");
-                            Console.WriteLine($"  - Nombre: {Nombre}");
-                            Console.WriteLine($"  - Carnet: {Carnet}");
+                            Console.WriteLine($"✓ Cliente encontrado: {Nombre}");
                         }
                         else
                         {
@@ -84,42 +83,86 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
+        // Validaciones de negocio
+        private bool ValidarNombre(string nombre)
+        {
+            // Solo letras y espacios, mínimo 3 caracteres
+            return !string.IsNullOrEmpty(nombre) &&
+                   nombre.Length >= 3 &&
+                   nombre.Length <= 100 &&
+                   Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
+        }
+
+        private bool ValidarCarnet(string carnet)
+        {
+            // Solo números, entre 5 y 20 dígitos
+            return !string.IsNullOrEmpty(carnet) &&
+                   carnet.Length >= 5 &&
+                   carnet.Length <= 20 &&
+                   Regex.IsMatch(carnet, @"^\d+$");
+        }
+
+        private bool ValidarTelefono(string telefono)
+        {
+            // Permitir números, espacios, +, -, (, )
+            return !string.IsNullOrEmpty(telefono) &&
+                   telefono.Length >= 7 &&
+                   telefono.Length <= 20 &&
+                   Regex.IsMatch(telefono, @"^[\d\s\+\-\(\)]+$");
+        }
+
         public IActionResult OnPost()
         {
-            Console.WriteLine("=== GUARDANDO CAMBIOS ===");
-            Console.WriteLine($"ID: {IdCliente}");
-            Console.WriteLine($"Tipo_Cliente: {Tipo_Cliente}");
-            Console.WriteLine($"Nombre: {Nombre}");
-            Console.WriteLine($"Carnet: {Carnet}");
-            Console.WriteLine($"Edad: {Edad}");
-            Console.WriteLine($"Telefono: {Telefono}");
+            Console.WriteLine("=== GUARDANDO CAMBIOS DE CLIENTE ===");
 
-            // Validaciones
+            // =============================================
+            // VALIDACIONES DE NEGOCIO
+            // =============================================
+
+            // Validar Nombre
+            if (!ValidarNombre(Nombre))
+            {
+                TempData["ErrorMessage"] = "El nombre solo puede contener letras y espacios, mínimo 3 caracteres";
+                return Page();
+            }
+
+            // Validar Carnet
+            if (!ValidarCarnet(Carnet))
+            {
+                TempData["ErrorMessage"] = "El carnet solo puede contener números y debe tener entre 5 y 20 dígitos";
+                return Page();
+            }
+
+            // Validar Edad
+            if (Edad < 18)
+            {
+                TempData["ErrorMessage"] = "El cliente debe ser mayor de 18 años";
+                return Page();
+            }
+
+            if (Edad > 120)
+            {
+                TempData["ErrorMessage"] = "La edad no puede ser mayor a 120 años";
+                return Page();
+            }
+
+            // Validar Teléfono
+            if (!ValidarTelefono(Telefono))
+            {
+                TempData["ErrorMessage"] = "El teléfono debe tener entre 7 y 20 caracteres válidos (números, +, -, (), espacios)";
+                return Page();
+            }
+
+            // Validar Tipo de Cliente
             if (string.IsNullOrEmpty(Tipo_Cliente))
             {
-                TempData["ErrorMessage"] = "El tipo de cliente es requerido";
+                TempData["ErrorMessage"] = "Debe seleccionar un tipo de cliente";
                 return Page();
             }
-            if (string.IsNullOrEmpty(Nombre))
-            {
-                TempData["ErrorMessage"] = "El nombre es requerido";
-                return Page();
-            }
-            if (string.IsNullOrEmpty(Carnet))
-            {
-                TempData["ErrorMessage"] = "El carnet es requerido";
-                return Page();
-            }
-            if (Edad <= 0 || Edad > 120)
-            {
-                TempData["ErrorMessage"] = "La edad debe ser entre 1 y 120";
-                return Page();
-            }
-            if (string.IsNullOrEmpty(Telefono))
-            {
-                TempData["ErrorMessage"] = "El teléfono es requerido";
-                return Page();
-            }
+
+            // =============================================
+            // FIN DE VALIDACIONES
+            // =============================================
 
             string connectionString = Configuration.GetConnectionString("MySqlConnection")!;
 
@@ -129,38 +172,32 @@ namespace ProyectoArqSoft.Pages
                 {
                     connection.Open();
 
-                    // Verificar que el cliente existe ANTES de actualizar
+                    // Verificar que el cliente existe
                     string checkQuery = "SELECT COUNT(*) FROM cliente WHERE idCliente = @id";
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection);
                     checkCmd.Parameters.AddWithValue("@id", IdCliente);
                     int existe = Convert.ToInt32(checkCmd.ExecuteScalar());
 
-                    Console.WriteLine($"Cliente existe en BD: {existe}");
-
                     if (existe == 0)
                     {
-                        Console.WriteLine("✗ ERROR: Cliente no encontrado en BD");
                         TempData["ErrorMessage"] = "Cliente no encontrado en la base de datos";
                         return RedirectToPage("Cliente");
                     }
 
-                    // Verificar carnet duplicado
+                    // Verificar que el carnet no esté duplicado en OTRO cliente
                     string checkCarnetQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci AND idCliente != @id";
                     MySqlCommand checkCarnetCmd = new MySqlCommand(checkCarnetQuery, connection);
                     checkCarnetCmd.Parameters.AddWithValue("@ci", Carnet);
                     checkCarnetCmd.Parameters.AddWithValue("@id", IdCliente);
                     int carnetCount = Convert.ToInt32(checkCarnetCmd.ExecuteScalar());
 
-                    Console.WriteLine($"Carnet duplicado: {carnetCount}");
-
                     if (carnetCount > 0)
                     {
-                        Console.WriteLine("✗ ERROR: Carnet duplicado");
                         TempData["ErrorMessage"] = "Ya existe otro cliente con ese carnet";
                         return Page();
                     }
 
-                    // Actualizar
+                    // Actualizar cliente
                     string updateQuery = @"UPDATE cliente 
                         SET tipo_cliente = @tipo_cliente, 
                             nombre = @nombre, 
@@ -168,8 +205,6 @@ namespace ProyectoArqSoft.Pages
                             edad = @edad, 
                             telefono = @telefono 
                         WHERE idCliente = @id";
-
-                    Console.WriteLine("Ejecutando UPDATE...");
 
                     MySqlCommand updateCmd = new MySqlCommand(updateQuery, connection);
                     updateCmd.Parameters.AddWithValue("@id", IdCliente);
@@ -180,17 +215,14 @@ namespace ProyectoArqSoft.Pages
                     updateCmd.Parameters.AddWithValue("@telefono", Telefono);
 
                     int rowsAffected = updateCmd.ExecuteNonQuery();
-                    Console.WriteLine($"Filas afectadas: {rowsAffected}");
 
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("✓ Cliente actualizado correctamente");
                         TempData["SuccessMessage"] = "Cliente actualizado exitosamente";
                         return RedirectToPage("Cliente");
                     }
                     else
                     {
-                        Console.WriteLine("✗ No se actualizó ninguna fila");
                         TempData["ErrorMessage"] = "No se pudo actualizar el cliente";
                         return Page();
                     }
@@ -198,7 +230,6 @@ namespace ProyectoArqSoft.Pages
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"✗ ERROR: {ex.Message}");
                 TempData["ErrorMessage"] = "Error al actualizar: " + ex.Message;
                 return Page();
             }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using System.Text.RegularExpressions;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -33,13 +34,62 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
+        private bool ValidarNombre(string nombre)
+        {
+            // Solo letras y espacios, mínimo 3 caracteres
+            return !string.IsNullOrEmpty(nombre) &&
+                   nombre.Length >= 3 &&
+                   Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
+        }
+
+        private bool ValidarCarnet(string carnet)
+        {
+            // Solo números, entre 5 y 20 dígitos
+            return !string.IsNullOrEmpty(carnet) &&
+                   carnet.Length >= 5 &&
+                   carnet.Length <= 20 &&
+                   Regex.IsMatch(carnet, @"^\d+$");
+        }
+
+        private bool ValidarTelefono(string telefono)
+        {
+            // Permitir números, espacios, +, -, (, )
+            return !string.IsNullOrEmpty(telefono) &&
+                   telefono.Length >= 7 &&
+                   telefono.Length <= 20 &&
+                   Regex.IsMatch(telefono, @"^[\d\s\+\-\(\)]+$");
+        }
+
         public IActionResult OnPost()
         {
-            // Validaciones básicas
-            if (string.IsNullOrEmpty(Tipo_Cliente) || string.IsNullOrEmpty(Nombre) ||
-                string.IsNullOrEmpty(Carnet) || Edad <= 0 || string.IsNullOrEmpty(Telefono))
+            // Validaciones de negocio
+            if (!ValidarNombre(Nombre))
             {
-                TempData["ErrorMessage"] = "Todos los campos son requeridos";
+                TempData["ErrorMessage"] = "El nombre solo puede contener letras y espacios, mínimo 3 caracteres";
+                return Page();
+            }
+
+            if (!ValidarCarnet(Carnet))
+            {
+                TempData["ErrorMessage"] = "El carnet solo puede contener números y debe tener entre 5 y 20 dígitos";
+                return Page();
+            }
+
+            if (Edad < 18)
+            {
+                TempData["ErrorMessage"] = "El cliente debe ser mayor de 18 años para registrarse";
+                return Page();
+            }
+
+            if (Edad > 120)
+            {
+                TempData["ErrorMessage"] = "La edad no puede ser mayor a 120 años";
+                return Page();
+            }
+
+            if (!ValidarTelefono(Telefono))
+            {
+                TempData["ErrorMessage"] = "El teléfono debe tener entre 7 y 20 caracteres válidos (números, +, -, (), espacios)";
                 return Page();
             }
 
@@ -52,7 +102,7 @@ namespace ProyectoArqSoft.Pages
                     connection.Open();
 
                     // Verificar si el carnet ya existe
-                    string checkQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci AND estado = 1";
+                    string checkQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci";
                     MySqlCommand checkCommand = new MySqlCommand(checkQuery, connection);
                     checkCommand.Parameters.AddWithValue("@ci", Carnet);
                     int count = Convert.ToInt32(checkCommand.ExecuteScalar());
@@ -63,7 +113,7 @@ namespace ProyectoArqSoft.Pages
                         return Page();
                     }
 
-                    // Insertar nuevo cliente
+                    // Insertar nuevo cliente (SIN email ni direccion)
                     string insertQuery = @"INSERT INTO cliente (tipo_cliente, nombre, ci, edad, telefono, estado)
                                          VALUES(@tipo_cliente, @nombre, @ci, @edad, @telefono, 1)";
 

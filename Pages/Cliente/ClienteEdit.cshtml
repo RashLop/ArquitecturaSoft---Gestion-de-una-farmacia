@@ -6,6 +6,14 @@
 
 <h1 class="mb-4">Editar Cliente</h1>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -25,40 +33,83 @@
                     <input type="hidden" asp-for="IdCliente" />
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Tipo de Cliente</label>
+                        <label class="control-label">Tipo de Cliente *</label>
                         <select asp-for="Tipo_Cliente" class="form-control" required>
                             <option value="">Seleccione...</option>
                             <option value="Regular">Regular</option>
                             <option value="Frecuente">Frecuente</option>
                             <option value="VIP">VIP</option>
                         </select>
+                        <small class="text-muted">Seleccione el tipo de cliente</small>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Nombre Completo</label>
-                        <input asp-for="Nombre" class="form-control" required />
+                        <label class="control-label">Nombre Completo *</label>
+                        <input asp-for="Nombre" class="form-control" required
+                               pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+"
+                               title="Solo letras y espacios, mínimo 3 caracteres" />
+                        <small class="text-muted">Solo letras y espacios</small>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Carnet de Identidad</label>
-                        <input asp-for="Carnet" class="form-control" required />
+                        <label class="control-label">Carnet de Identidad *</label>
+                        <input asp-for="Carnet" class="form-control" required
+                               pattern="\d+"
+                               title="Solo números, entre 5 y 20 dígitos" />
+                        <small class="text-muted">Solo números, entre 5 y 20 dígitos</small>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Edad</label>
-                        <input asp-for="Edad" type="number" min="1" max="120" class="form-control" required />
+                        <label class="control-label">Edad *</label>
+                        <input asp-for="Edad" type="number" min="18" max="120" class="form-control" required />
+                        <small class="text-muted">Mínimo 18 años</small>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Teléfono</label>
-                        <input asp-for="Telefono" class="form-control" required />
+                        <label class="control-label">Teléfono *</label>
+                        <input asp-for="Telefono" class="form-control" required
+                               pattern="[\d\s\+\-\(\)]+"
+                               title="Números, espacios, +, -, (), mínimo 7 caracteres" />
+                        <small class="text-muted">Ej: 70011111 o +591 70011111</small>
                     </div>
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-warning">Guardar Cambios</button>
-                        <a asp-page="Cliente" class="btn btn-secondary">Volver al Listado</a>
+                        <a asp-page="Cliente" class="btn btn-secondary">Cancelar</a>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Instrucciones</h5>
+            </div>
+            <div class="card-body">
+                <h6>Reglas de negocio:</h6>
+                <ul class="small">
+                    <li><strong>✓ Edad mínima:</strong> 18 años (mayoría de edad)</li>
+                    <li><strong>✓ Carnet único:</strong> No puede duplicarse</li>
+                    <li><strong>✓ Nombre:</strong> Solo caracteres alfabéticos</li>
+                    <li><strong>✓ Teléfono:</strong> Formato flexible pero validado</li>
+                </ul>
+
+                <hr>
+
+                <h6>Tipos de Cliente:</h6>
+                <ul class="small">
+                    <li><strong>Regular:</strong> Cliente estándar</li>
+                    <li><strong>Frecuente:</strong> Cliente con compras recurrentes</li>
+                    <li><strong>VIP:</strong> Cliente premium</li>
+                </ul>
+
+                <hr>
+
+                <div class="alert alert-light border">
+                    <strong>ID del Cliente:</strong> @Model.IdCliente
+                </div>
             </div>
         </div>
     </div>
