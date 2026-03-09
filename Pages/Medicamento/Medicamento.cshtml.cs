@@ -37,11 +37,9 @@ namespace ProyectoArqSoft.Pages
                 adapter.Fill(MedicamentoDataTable);
 
             }
-
-          
-               
         }
-        public IActionResult OnGetDelete(int id)
+
+        public IActionResult OnPostSoftDelete(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
@@ -59,8 +57,8 @@ namespace ProyectoArqSoft.Pages
                 command.ExecuteNonQuery();
             }
 
-    return RedirectToPage();
-}
+            return RedirectToPage();    
+        }
 
 
     }

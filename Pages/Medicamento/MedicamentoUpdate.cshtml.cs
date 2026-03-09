@@ -72,6 +72,18 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPost()
         {
+            if (Precio < 0)
+            {
+                ModelState.AddModelError("Precio", "El precio no puede ser negativo.");
+            }
+            if (Stock < 0)
+            {
+                ModelState.AddModelError("Stock", "El stock no puede ser negativo.");
+            }   
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
             string query = @"UPDATE medicamento
