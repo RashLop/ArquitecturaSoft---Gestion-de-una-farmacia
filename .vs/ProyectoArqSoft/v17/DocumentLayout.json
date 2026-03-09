@@ -1,7 +1,24 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ASUS\\Desktop\\Arq.Software\\ProyectoArqSoft\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\pages\\cliente\\clienteedit.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\cliente\\clienteedit.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\pages\\cliente\\clienteedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\cliente\\clienteedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\model\\medicamento\\medicamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:model\\medicamento\\medicamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,33 +26,60 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ClienteEdit.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "RelativeToolTip": "Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAUwHgAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:17:59.87Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ClienteEdit.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Cliente\\ClienteEdit.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml",
+              "RelativeToolTip": "Pages\\Cliente\\ClienteEdit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-09T01:17:46.085Z"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 231,
-          "SelectedChildIndex": -1,
-          "Children": [
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Medicamento.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Medicamento\\Medicamento.cs",
+              "RelativeDocumentMoniker": "Model\\Medicamento\\Medicamento.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Medicamento\\Medicamento.cs",
+              "RelativeToolTip": "Model\\Medicamento\\Medicamento.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:17:19.321Z"
+            },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Cliente.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Cliente\\Cliente.cs",
+              "RelativeDocumentMoniker": "Model\\Cliente\\Cliente.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Cliente\\Cliente.cs",
+              "RelativeToolTip": "Model\\Cliente\\Cliente.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:16:35.582Z"
             }
           ]
         }

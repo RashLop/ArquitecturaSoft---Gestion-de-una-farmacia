@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Models;
+namespace ProyectoArqSoft.Model.Cliente;
 
 public class Cliente
 {
