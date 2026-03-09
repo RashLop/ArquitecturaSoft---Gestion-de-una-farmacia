@@ -1,9 +1,5 @@
 ﻿@page "{id:int}"
-<<<<<<< HEAD
 @model ProyectoArqSoft.Pages.ClienteEditModel
-=======
-@model ProyectoArqSoft.Pages.Cliente.ClienteEditModel
->>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
 @{
     ViewData["Title"] = "Editar Cliente";
 }
@@ -26,7 +22,6 @@
             </div>
             <div class="card-body">
                 <form method="post">
-<<<<<<< HEAD
                     <input type="hidden" asp-for="IdCliente" />
 
                     <div class="form-group mb-3">
@@ -62,67 +57,9 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-warning">Guardar Cambios</button>
                         <a asp-page="Cliente" class="btn btn-secondary">Volver al Listado</a>
-=======
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    <input type="hidden" asp-for="Id" />
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Tipo_Cliente" class="control-label">Tipo de Cliente</label>
-                        <select asp-for="Tipo_Cliente" class="form-control" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Regular">Regular</option>
-                            <option value="VIP">VIP</option>
-                            <option value="Corporativo">Corporativo</option>
-                        </select>
-                        <span asp-validation-for="Tipo_Cliente" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Nombre" class="control-label">Nombre Completo</label>
-                        <input asp-for="Nombre" class="form-control" required />
-                        <span asp-validation-for="Nombre" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Carnet" class="control-label">Carnet de Identidad</label>
-                        <input asp-for="Carnet" class="form-control" required />
-                        <span asp-validation-for="Carnet" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Edad" class="control-label">Edad</label>
-                        <input asp-for="Edad" type="number" min="1" max="120" class="form-control" required />
-                        <span asp-validation-for="Edad" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Telefono" class="control-label">Teléfono</label>
-                        <input asp-for="Telefono" class="form-control" required />
-                        <span asp-validation-for="Telefono" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-warning">
-                            <i class="bi bi-save"></i> Guardar Cambios
-                        </button>
-                        <a asp-page="./Cliente" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Volver al Listado
-                        </a>
->>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
                     </div>
                 </form>
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </div>
-=======
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
->>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
