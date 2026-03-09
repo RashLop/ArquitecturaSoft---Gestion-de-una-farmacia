@@ -1,10 +1,10 @@
-@page
-@model ProyectoArqSoft.Pages.ClienteCreateModel
+﻿@page "{id:int}"
+@model ProyectoArqSoft.Pages.ClienteEditModel
 @{
-    ViewData["Title"] = "Nuevo Cliente";
+    ViewData["Title"] = "Editar Cliente";
 }
 
-<h1 class="mb-4">Nuevo Cliente</h1>
+<h1 class="mb-4">Editar Cliente</h1>
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -17,11 +17,13 @@
 <div class="row">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Ingrese los datos del cliente</h5>
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Modifique los datos del cliente</h5>
             </div>
             <div class="card-body">
                 <form method="post">
+                    <input type="hidden" asp-for="IdCliente" />
+
                     <div class="form-group mb-3">
                         <label class="control-label">Tipo de Cliente</label>
                         <select asp-for="Tipo_Cliente" class="form-control" required>
@@ -48,13 +50,13 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="control-label">Tel�fono</label>
+                        <label class="control-label">Teléfono</label>
                         <input asp-for="Telefono" class="form-control" required />
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                        <a asp-page="Cliente" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                        <a asp-page="Cliente" class="btn btn-secondary">Volver al Listado</a>
                     </div>
                 </form>
             </div>
