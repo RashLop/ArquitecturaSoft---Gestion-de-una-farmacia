@@ -80,7 +80,8 @@ namespace ProyectoArqSoft.Pages
                                  clasificacion=@clasificacion,
                                  concentracion=@concentracion,
                                  precio=@precio,
-                                 stock=@stock
+                                 stock=@stock,
+                                 ultima_actualizacion = NOW()
                              WHERE id_medicamento=@id_medicamento";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
