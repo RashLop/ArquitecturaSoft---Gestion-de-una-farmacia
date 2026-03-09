@@ -26,6 +26,7 @@ namespace ProyectoArqSoft.Pages
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT  id_medicamento, nombre, presentacion, clasificacion, concentracion, precio
                             FROM medicamento
+                            WHERE estado = 1
                             ORDER BY 2";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString)) 
@@ -40,6 +41,26 @@ namespace ProyectoArqSoft.Pages
           
                
         }
+        public IActionResult OnGetDelete(int id)
+        {
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+
+            string query = @"UPDATE medicamento 
+                        SET estado = 0,
+                        ultima_actualizacion = NOW()
+                        WHERE id_medicamento = @id";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+    return RedirectToPage();
+}
 
 
     }
