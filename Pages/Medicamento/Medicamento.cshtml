@@ -34,7 +34,12 @@
                 <td>@row["precio"]</td>
                 <td>
                     <a asp-page = "MedicamentoUpdate" asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
-                    <a asp-page-handler="Delete" asp-route-id="@row["id_medicamento"]"class="btn btn-danger btn-sm"> Eliminar</a>
+
+                    <form method="post" asp-page-handler="SoftDelete" style="display:inline;">
+                        <input type="hidden" name="id" value="@row["id_medicamento"]"/>
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+
                 </td>
             </tr>
         }
