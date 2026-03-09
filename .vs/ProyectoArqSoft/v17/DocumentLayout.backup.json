@@ -3,6 +3,7 @@
   "WorkspaceRootPath": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\pages\\cliente\\cliente.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\cliente\\cliente.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -37,6 +38,22 @@
     {
       "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\pages\\cliente\\clienteedit.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\cliente\\clienteedit.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\pages\\cliente\\clienteedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\cliente\\clienteedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:model\\cliente\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\documents\\arquitecturasoft---gestion-de-una-farmacia\\model\\medicamento\\medicamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:model\\medicamento\\medicamento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
     }
   ],
   "DocumentGroupContainers": [
@@ -46,7 +63,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< HEAD
           "SelectedChildIndex": 7,
+=======
+          "SelectedChildIndex": 1,
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,6 +75,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 1,
               "Title": "Cliente.cshtml",
               "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\Cliente.cshtml",
@@ -89,11 +111,36 @@
               "ViewState": "AgIAAEUAAAAAAAAAAAAIwJ4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-09T16:37:18.155Z",
+=======
+              "DocumentIndex": 0,
+              "Title": "ClienteEdit.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "RelativeDocumentMoniker": "Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "RelativeToolTip": "Pages\\Cliente\\ClienteEdit.cshtml.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAUwHkAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:17:59.87Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ClienteEdit.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Cliente\\ClienteEdit.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml",
+              "RelativeToolTip": "Pages\\Cliente\\ClienteEdit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-09T01:17:46.085Z",
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+<<<<<<< HEAD
               "Title": "ClienteEdit.cshtml",
               "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Cliente\\ClienteEdit.cshtml",
               "RelativeDocumentMoniker": "Pages\\Cliente\\ClienteEdit.cshtml",
@@ -115,10 +162,21 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-09T17:15:46.271Z",
+=======
+              "Title": "Medicamento.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Medicamento\\Medicamento.cs",
+              "RelativeDocumentMoniker": "Model\\Medicamento\\Medicamento.cs",
+              "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Medicamento\\Medicamento.cs",
+              "RelativeToolTip": "Model\\Medicamento\\Medicamento.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:17:19.321Z",
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 5,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\appsettings.json",
@@ -159,14 +217,23 @@
             {
               "$type": "Document",
               "DocumentIndex": 8,
+=======
+              "DocumentIndex": 2,
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
               "Title": "Cliente.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Cliente\\Cliente.cs",
               "RelativeDocumentMoniker": "Model\\Cliente\\Cliente.cs",
               "ToolTip": "C:\\Users\\Asus\\Documents\\ArquitecturaSoft---Gestion-de-una-farmacia\\Model\\Cliente\\Cliente.cs",
               "RelativeToolTip": "Model\\Cliente\\Cliente.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAAAAAAAAAAAAAAAUwCoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-09T16:35:15.801Z",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T01:16:35.582Z",
+>>>>>>> 23851e3e2c1bddc3014d5a342e12d51d3f5c7db5
               "EditorCaption": ""
             }
           ]
