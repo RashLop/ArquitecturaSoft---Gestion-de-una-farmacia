@@ -20,6 +20,7 @@
             <th>Precio</th>
             <!--<th>Fecha de Registro</th>-->
             <th>Acciones</th>
+
         </tr>
     </thead>
     <tbody>
@@ -33,7 +34,7 @@
                 <td>@row["precio"]</td>
                 <td>
                     <a asp-page = "MedicamentoUpdate" asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
-                    <a asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Eliminar</a>
+                    <a asp-page-handler="Delete" asp-route-id="@row["id_medicamento"]"class="btn btn-danger btn-sm"> Eliminar</a>
                 </td>
             </tr>
         }

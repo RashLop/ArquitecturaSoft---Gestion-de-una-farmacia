@@ -11,9 +11,9 @@ public class Medicamento
     public decimal Precio {get; set; }  
     public int Stock { get; set; }
 
-    //public short Estado { get; set; }
-    //public DateTime FechaRegistro { get; set; }
-    //public DateTime UltimaActualizacion { get; set; }
+    public short Estado { get; set; } = 1; 
+    public DateTime FechaRegistro { get; set; }
+    public DateTime UltimaActualizacion { get; set; }
     
     public Medicamento()
     {
