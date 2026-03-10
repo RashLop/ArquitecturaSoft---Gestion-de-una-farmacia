@@ -82,11 +82,8 @@ namespace ProyectoArqSoft.Pages
 
             return Page();
         }
-
-        // Validaciones de negocio
         private bool ValidarNombre(string nombre)
         {
-            // Solo letras y espacios, mínimo 3 caracteres
             return !string.IsNullOrEmpty(nombre) &&
                    nombre.Length >= 3 &&
                    nombre.Length <= 100 &&
@@ -95,7 +92,6 @@ namespace ProyectoArqSoft.Pages
 
         private bool ValidarCarnet(string carnet)
         {
-            // Solo números, entre 5 y 20 dígitos
             return !string.IsNullOrEmpty(carnet) &&
                    carnet.Length >= 5 &&
                    carnet.Length <= 20 &&
@@ -104,7 +100,6 @@ namespace ProyectoArqSoft.Pages
 
         private bool ValidarTelefono(string telefono)
         {
-            // Permitir números, espacios, +, -, (, )
             return !string.IsNullOrEmpty(telefono) &&
                    telefono.Length >= 7 &&
                    telefono.Length <= 20 &&
@@ -115,25 +110,18 @@ namespace ProyectoArqSoft.Pages
         {
             Console.WriteLine("=== GUARDANDO CAMBIOS DE CLIENTE ===");
 
-            // =============================================
-            // VALIDACIONES DE NEGOCIO
-            // =============================================
-
-            // Validar Nombre
             if (!ValidarNombre(Nombre))
             {
                 TempData["ErrorMessage"] = "El nombre solo puede contener letras y espacios, mínimo 3 caracteres";
                 return Page();
             }
 
-            // Validar Carnet
             if (!ValidarCarnet(Carnet))
             {
                 TempData["ErrorMessage"] = "El carnet solo puede contener números y debe tener entre 5 y 20 dígitos";
                 return Page();
             }
 
-            // Validar Edad
             if (Edad < 18)
             {
                 TempData["ErrorMessage"] = "El cliente debe ser mayor de 18 años";
@@ -146,24 +134,16 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            // Validar Teléfono
             if (!ValidarTelefono(Telefono))
             {
                 TempData["ErrorMessage"] = "El teléfono debe tener entre 7 y 20 caracteres válidos (números, +, -, (), espacios)";
                 return Page();
             }
-
-            // Validar Tipo de Cliente
             if (string.IsNullOrEmpty(Tipo_Cliente))
             {
                 TempData["ErrorMessage"] = "Debe seleccionar un tipo de cliente";
                 return Page();
             }
-
-            // =============================================
-            // FIN DE VALIDACIONES
-            // =============================================
-
             string connectionString = Configuration.GetConnectionString("MySqlConnection")!;
 
             try
@@ -172,7 +152,6 @@ namespace ProyectoArqSoft.Pages
                 {
                     connection.Open();
 
-                    // Verificar que el cliente existe
                     string checkQuery = "SELECT COUNT(*) FROM cliente WHERE idCliente = @id";
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, connection);
                     checkCmd.Parameters.AddWithValue("@id", IdCliente);
@@ -184,7 +163,6 @@ namespace ProyectoArqSoft.Pages
                         return RedirectToPage("Cliente");
                     }
 
-                    // Verificar que el carnet no esté duplicado en OTRO cliente
                     string checkCarnetQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci AND idCliente != @id";
                     MySqlCommand checkCarnetCmd = new MySqlCommand(checkCarnetQuery, connection);
                     checkCarnetCmd.Parameters.AddWithValue("@ci", Carnet);
@@ -196,8 +174,6 @@ namespace ProyectoArqSoft.Pages
                         TempData["ErrorMessage"] = "Ya existe otro cliente con ese carnet";
                         return Page();
                     }
-
-                    // Actualizar cliente
                     string updateQuery = @"UPDATE cliente 
                         SET tipo_cliente = @tipo_cliente, 
                             nombre = @nombre, 

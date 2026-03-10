@@ -71,7 +71,6 @@
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Tipo de Cliente</th>
                 <th>Carnet</th>
@@ -86,7 +85,6 @@
                 @foreach (System.Data.DataRow row in Model.Clientes_DataTable.Rows)
                 {
                     <tr>
-                        <td>@row["idCliente"]</td>
                         <td>@row["nombre"]</td>
                         <td>@row["tipo_cliente"]</td>
                         <td>@row["ci"]</td>

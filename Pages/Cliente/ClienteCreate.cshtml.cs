@@ -36,7 +36,6 @@ namespace ProyectoArqSoft.Pages
 
         private bool ValidarNombre(string nombre)
         {
-            // Solo letras y espacios, mínimo 3 caracteres
             return !string.IsNullOrEmpty(nombre) &&
                    nombre.Length >= 3 &&
                    Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
@@ -44,7 +43,6 @@ namespace ProyectoArqSoft.Pages
 
         private bool ValidarCarnet(string carnet)
         {
-            // Solo números, entre 5 y 20 dígitos
             return !string.IsNullOrEmpty(carnet) &&
                    carnet.Length >= 5 &&
                    carnet.Length <= 20 &&
@@ -53,7 +51,6 @@ namespace ProyectoArqSoft.Pages
 
         private bool ValidarTelefono(string telefono)
         {
-            // Permitir números, espacios, +, -, (, )
             return !string.IsNullOrEmpty(telefono) &&
                    telefono.Length >= 7 &&
                    telefono.Length <= 20 &&
@@ -62,7 +59,6 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPost()
         {
-            // Validaciones de negocio
             if (!ValidarNombre(Nombre))
             {
                 TempData["ErrorMessage"] = "El nombre solo puede contener letras y espacios, mínimo 3 caracteres";
@@ -101,7 +97,6 @@ namespace ProyectoArqSoft.Pages
                 {
                     connection.Open();
 
-                    // Verificar si el carnet ya existe
                     string checkQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci";
                     MySqlCommand checkCommand = new MySqlCommand(checkQuery, connection);
                     checkCommand.Parameters.AddWithValue("@ci", Carnet);
@@ -113,7 +108,6 @@ namespace ProyectoArqSoft.Pages
                         return Page();
                     }
 
-                    // Insertar nuevo cliente (SIN email ni direccion)
                     string insertQuery = @"INSERT INTO cliente (tipo_cliente, nombre, ci, edad, telefono, estado)
                                          VALUES(@tipo_cliente, @nombre, @ci, @edad, @telefono, 1)";
 
