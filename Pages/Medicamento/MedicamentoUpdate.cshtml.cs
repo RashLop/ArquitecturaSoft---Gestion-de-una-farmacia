@@ -29,6 +29,9 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public short Stock { get; set; }
 
+        public string MensajeError { get; set; } = string.Empty;
+
+
         public MedicamentoUpdateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -72,13 +75,15 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPost()
         {
-            if (Precio < 0)
+            if (Precio <= 0)
             {
-                ModelState.AddModelError("Precio", "El precio no puede ser negativo.");
+                MensajeError = "El precio no puede ser menor o igual a 0";
+                return Page();
             }
             if (Stock < 0)
             {
-                ModelState.AddModelError("Stock", "El stock no puede ser negativo.");
+                MensajeError = "El stock no puede ser negativo";
+                return Page();
             }   
             if (!ModelState.IsValid)
             {
