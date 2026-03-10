@@ -36,6 +36,11 @@
         <input asp-for="@Model.Stock" class="form-control" required />
     </div>
 
+    @if (!string.IsNullOrEmpty(Model.MensajeError))
+    {
+        <div class="alert alert-danger">@Model.MensajeError</div>
+    }
+
     <button type="submit" class="btn btn-primary mt-2">Guardar</button>
     <a asp-page="Medicamento" class="btn btn-secondary mt-2">Volver</a>
 

@@ -24,9 +24,6 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public string Telefono { get; set; } = string.Empty;
 
-        [BindProperty]
-        public bool Activo { get; set; }
-
         public string MensajeError { get; set; } = string.Empty;
 
         public BioquimicoEditModel(IConfiguration configuration)
@@ -42,7 +39,7 @@ namespace ProyectoArqSoft.Pages
             {
                 connection.Open();
 
-                string query = @"SELECT idBioquimico, nombres, apellidos, ci, telefono, activo
+                string query = @"SELECT idBioquimico, nombres, apellidos, ci, telefono
                                  FROM bioquimico
                                  WHERE idBioquimico = @id";
 
@@ -62,7 +59,6 @@ namespace ProyectoArqSoft.Pages
                         Apellidos = reader["apellidos"].ToString() ?? string.Empty;
                         Ci = reader["ci"].ToString() ?? string.Empty;
                         Telefono = reader["telefono"].ToString() ?? string.Empty;
-                        Activo = Convert.ToBoolean(reader["activo"]);
                     }
                 }
             }
@@ -130,8 +126,7 @@ namespace ProyectoArqSoft.Pages
                                        SET nombres = @nombres,
                                            apellidos = @apellidos,
                                            ci = @ci,
-                                           telefono = @telefono,
-                                           activo = @activo
+                                           telefono = @telefono
                                        WHERE idBioquimico = @id";
 
                 using (MySqlCommand cmdUpdate = new MySqlCommand(queryUpdate, connection))
@@ -140,7 +135,6 @@ namespace ProyectoArqSoft.Pages
                     cmdUpdate.Parameters.AddWithValue("@apellidos", Apellidos.Trim());
                     cmdUpdate.Parameters.AddWithValue("@ci", Ci.Trim());
                     cmdUpdate.Parameters.AddWithValue("@telefono", Telefono.Trim());
-                    cmdUpdate.Parameters.AddWithValue("@activo", Activo);
                     cmdUpdate.Parameters.AddWithValue("@id", IdBioquimico);
 
                     cmdUpdate.ExecuteNonQuery();

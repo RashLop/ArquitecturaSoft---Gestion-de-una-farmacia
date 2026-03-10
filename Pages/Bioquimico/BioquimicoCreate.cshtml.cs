@@ -52,6 +52,8 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
+            Activo = true;
+
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {

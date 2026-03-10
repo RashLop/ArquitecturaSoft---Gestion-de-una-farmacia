@@ -26,6 +26,8 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public short Stock { get; set; }
 
+        public string MensajeError { get; set; } = string.Empty;
+
         public MedicamentoCreateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -34,17 +36,37 @@ namespace ProyectoArqSoft.Pages
         {
         }
 
+        public bool esPrecioValido()
+        {
+            if (Precio <= 0)    
+                return false;
+            return true;
+        }
+
+        public bool esStockValido()
+        {
+            if(Stock < 0)
+                return false;
+            return true;
+        }
+
         public IActionResult OnPost()
         {
-            
+            if (!esPrecioValido())
+            {
+                MensajeError = "El precio debe ser mayor a 0";
+                return Page();
+            }
+
+            if (!esStockValido())
+            {
+                MensajeError = "El stock no puede ser negativo";
+                return Page();
+            }
+
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"INSERT INTO medicamento (nombre, presentacion, clasificacion, concentracion, precio, stock)
                              VALUES(@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
-            //Problemas
-            //1. Complejidad en la Codificación -> Soporte
-            //2. Manejo de Caracteres Especiales
-            //3. Inyección SQL
-            //Uso de Parámetros
 
             using (MySqlConnection connection= new MySqlConnection(connectionString))
             { 

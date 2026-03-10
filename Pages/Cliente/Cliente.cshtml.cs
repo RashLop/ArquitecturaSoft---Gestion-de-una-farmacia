@@ -143,20 +143,7 @@ namespace ProyectoArqSoft.Pages
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
-
-                    // Verificar si tiene ventas asociadas
-                    string checkVentasQuery = "SELECT COUNT(*) FROM venta WHERE Cliente_idCliente = @id";
-                    MySqlCommand checkVentasCommand = new MySqlCommand(checkVentasQuery, connection);
-                    checkVentasCommand.Parameters.AddWithValue("@id", id);
-                    int ventasCount = Convert.ToInt32(checkVentasCommand.ExecuteScalar());
-
-                    if (ventasCount > 0)
-                    {
-                        TempData["ErrorMessage"] = "No se puede eliminar: cliente con ventas asociadas";
-                        return RedirectToPage();
-                    }
-
+                    connection.Open(); 
                     // Soft delete
                     string deleteQuery = "UPDATE cliente SET estado = 0 WHERE idCliente = @id";
                     MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
