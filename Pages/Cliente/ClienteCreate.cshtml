@@ -1,101 +1,47 @@
 @page
 @model ProyectoArqSoft.Pages.ClienteCreateModel
 @{
-    ViewData["Title"] = "Nuevo Cliente";
+    ViewData["Title"] = "Registrar Cliente";
 }
 
-<h1 class="mb-4">Nuevo Cliente</h1>
+<h2>Registrar Cliente</h2>
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Ingrese los datos del cliente</h5>
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    <div class="form-group mb-3">
-                        <label class="control-label">Tipo de Cliente *</label>
-                        <select asp-for="Tipo_Cliente" class="form-control" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Regular">Regular</option>
-                            <option value="Frecuente">Frecuente</option>
-                            <option value="VIP">VIP</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="control-label">Nombre Completo *</label>
-                        <input asp-for="Nombre" class="form-control" required
-                               pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+"
-                               title="Solo letras y espacios, mínimo 3 caracteres" />
-                        <small class="text-muted">Solo letras y espacios</small>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="control-label">Carnet de Identidad *</label>
-                        <input asp-for="Carnet" class="form-control" required
-                               pattern="\d+"
-                               title="Solo números, entre 5 y 20 dígitos" />
-                        <small class="text-muted">Solo números, entre 5 y 20 dígitos</small>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="control-label">Edad *</label>
-                        <input asp-for="Edad" type="number" min="18" max="120" class="form-control" required />
-                        <small class="text-muted">Mínimo 18 años</small>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="control-label">Teléfono *</label>
-                        <input asp-for="Telefono" class="form-control" required
-                               pattern="[\d\s\+\-\(\)]+"
-                               title="Números, espacios, +, -, (), mínimo 7 caracteres" />
-                        <small class="text-muted">Ej: 70011111 o +591 70011111</small>
-                    </div>
-
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Los campos marcados con * son obligatorios
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                        <a asp-page="Cliente" class="btn btn-secondary">Cancelar</a>
-                    </div>
-                </form>
-            </div>
-        </div>
+<form method="post">
+    <div class="form-group mb-2">
+        <label>Tipo de Cliente</label>
+        <select asp-for="Tipo_Cliente" class="form-control">
+            <option value="">Seleccione...</option>
+            <option value="Regular">Regular</option>
+            <option value="Frecuente">Frecuente</option>
+            <option value="VIP">VIP</option>
+        </select>
     </div>
 
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Instrucciones</h5>
-            </div>
-            <div class="card-body">
-                <h6>Validaciones:</h6>
-                <ul class="small">
-                    <li><strong>Nombre:</strong> Solo letras, mínimo 3 caracteres</li>
-                    <li><strong>Carnet:</strong> Solo números, 5-20 dígitos</li>
-                    <li><strong>Edad:</strong> Mínimo 18 años</li>
-                    <li><strong>Teléfono:</strong> Formato válido</li>
-                </ul>
-                <hr>
-                <h6>Tipos de Cliente:</h6>
-                <ul class="small">
-                    <li><strong>Regular:</strong> Cliente estándar</li>
-                    <li><strong>Frecuente:</strong> Cliente con compras recurrentes</li>
-                    <li><strong>VIP:</strong> Cliente premium</li>
-                </ul>
-            </div>
-        </div>
+    <div class="form-group mb-2">
+        <label>Nombre Completo</label>
+        <input asp-for="Nombre" class="form-control" />
     </div>
-</div>
+
+    <div class="form-group mb-2">
+        <label>Carnet de Identidad</label>
+        <input asp-for="Carnet" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Edad</label>
+        <input asp-for="Edad" type="number" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Teléfono</label>
+        <input asp-for="Telefono" class="form-control" />
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-page="Cliente" class="btn btn-secondary">Volver</a>
+</form>
