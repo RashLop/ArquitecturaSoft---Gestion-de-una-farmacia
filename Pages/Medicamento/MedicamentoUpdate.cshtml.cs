@@ -73,14 +73,28 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
+        public bool esPrecioValido()
+        {
+            if (Precio <= 0)    
+                return false;
+            return true;
+        }
+
+        public bool esStockValido()
+        {
+            if(Stock < 0)
+                return false;
+            return true;
+        }
+
         public IActionResult OnPost()
         {
-            if (Precio <= 0)
+            if (!esPrecioValido())
             {
                 MensajeError = "El precio no puede ser menor o igual a 0";
                 return Page();
             }
-            if (Stock < 0)
+            if (!esStockValido())
             {
                 MensajeError = "El stock no puede ser negativo";
                 return Page();
