@@ -26,7 +26,7 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public short Stock { get; set; }
 
-         public string MensajeError { get; set; } = string.Empty;
+        public string MensajeError { get; set; } = string.Empty;
 
         public MedicamentoCreateModel(IConfiguration configuration)
         {
