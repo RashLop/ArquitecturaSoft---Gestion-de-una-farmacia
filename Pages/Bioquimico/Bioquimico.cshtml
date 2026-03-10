@@ -16,8 +16,14 @@
     <a asp-page="/Bioquimico/BioquimicoCreate" class="btn btn-success">Nuevo Bioquímico</a>
 </div>
 
-@if (!string.IsNullOrEmpty(Model.Mensaje)) { <div class="alert alert-success">@Model.Mensaje</div> }
-@if (!string.IsNullOrEmpty(Model.MensajeError)) { <div class="alert alert-danger">@Model.MensajeError</div> }
+@if (!string.IsNullOrEmpty(Model.Mensaje)) 
+{ 
+    <div class="alert alert-success">@Model.Mensaje</div>
+}
+@if (!string.IsNullOrEmpty(Model.MensajeError))
+{ 
+    <div class="alert alert-danger">@Model.MensajeError</div> 
+}
 
 <table class="table table-bordered table-striped">
     <thead>
