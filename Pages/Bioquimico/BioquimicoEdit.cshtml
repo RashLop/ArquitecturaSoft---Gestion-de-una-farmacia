@@ -29,13 +29,7 @@
         <input asp-for="Telefono" class="form-control" />
     </div>
 
-    <div class="form-group mb-3">
-        <label>Activo</label>
-        <select asp-for="Activo" class="form-control">
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-        </select>
-    </div>
+    
 
     @if (!string.IsNullOrEmpty(Model.MensajeError))
     {
