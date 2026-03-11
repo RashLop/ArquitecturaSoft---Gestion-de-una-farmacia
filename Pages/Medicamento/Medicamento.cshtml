@@ -7,7 +7,7 @@
 
 <form method="get" class="mb-3">
     <div class="input-group">
-        <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre, clasificación o presentación..." value="@Model.FiltroActual" />
+        <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre, clasificación o presentación..." value="@Model.Estado.FiltroActual" />
         <button type="submit" class="btn btn-primary">Buscar</button>
         <a asp-page="Medicamento" class="btn btn-secondary">Limpiar</a>
     </div>
@@ -17,8 +17,8 @@
     <a asp-page="MedicamentoCreate" class="btn btn-primary">Nuevo Medicamento</a>
 </div> 
 
-@if (!string.IsNullOrEmpty(Model.Mensaje)) { <div class="alert alert-success">@Model.Mensaje</div> }
-@if (!string.IsNullOrEmpty(Model.MensajeError)) { <div class="alert alert-danger">@Model.MensajeError</div> }
+@if (!string.IsNullOrEmpty(Model.Estado.Mensaje)) { <div class="alert alert-success">@Model.Estado.Mensaje</div> }
+@if (!string.IsNullOrEmpty(Model.Estado.MensajeError)) { <div class="alert alert-danger">@Model.Estado.MensajeError</div> }
 
 
 <table class="table table-bordered table-striped">

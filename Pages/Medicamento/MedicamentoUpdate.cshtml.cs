@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Pages.Base;
+using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoUpdateModel : PageModel
+    public class MedicamentoUpdateModel : BasePageModel
     {
         private readonly IConfiguration configuration;
+        private readonly IValidacion<MedicamentoEntidad> validador;
 
         [BindProperty]
         public int IdMedicamento { get; set; }
@@ -27,14 +32,12 @@ namespace ProyectoArqSoft.Pages
         public decimal Precio { get; set; }
 
         [BindProperty]
-        public short Stock { get; set; }
-
-        public string MensajeError { get; set; } = string.Empty;
-
+        public int Stock { get; set; }
 
         public MedicamentoUpdateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
+            validador = new MedicamentoValidacion();
         }
 
         public IActionResult OnGet(int id)
@@ -56,12 +59,12 @@ namespace ProyectoArqSoft.Pages
                     if (reader.Read())
                     {
                         IdMedicamento = Convert.ToInt32(reader["id_medicamento"]);
-                        Nombre = reader["nombre"].ToString()!;
-                        Presentacion = reader["presentacion"].ToString()!;
-                        Clasificacion = reader["clasificacion"].ToString()!;
-                        Concentracion = reader["concentracion"].ToString()!;
+                        Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString());
+                        Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString());
+                        Clasificacion = StringHelper.LimpiarEspacios(reader["clasificacion"].ToString());
+                        Concentracion = StringHelper.LimpiarEspacios(reader["concentracion"].ToString());
                         Precio = Convert.ToDecimal(reader["precio"]);
-                        Stock = Convert.ToInt16(reader["stock"]);
+                        Stock = Convert.ToInt32(reader["stock"]);
                     }
                     else
                     {
@@ -73,38 +76,49 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-        public bool esPrecioValido()
-        {
-            if (Precio <= 0)    
-                return false;
-            return true;
-        }
-
-        public bool esStockValido()
-        {
-            if(Stock < 0)
-                return false;
-            return true;
-        }
-
         public IActionResult OnPost()
         {
-            if (!esPrecioValido())
+            MedicamentoEntidad medicamento = ConstruirMedicamento();
+            Validacion resultado = ValidarMedicamento(medicamento);
+
+            if (!resultado.EsValido)
             {
-                MensajeError = "El precio no puede ser menor o igual a 0";
+                Estado.MensajeError = resultado.MensajeError;
                 return Page();
             }
-            if (!esStockValido())
-            {
-                MensajeError = "El stock no puede ser negativo";
-                return Page();
-            }   
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
+            ActualizarMedicamento(medicamento);
+
+            return RedirectToPage("Medicamento");
+        }
+
+        private MedicamentoEntidad ConstruirMedicamento()
+        {
+            return new MedicamentoEntidad
+            {
+                Id = IdMedicamento,
+                Nombre = StringHelper.QuitarEspacios(Nombre),
+                Presentacion = StringHelper.LimpiarEspacios(Presentacion),
+                Clasificacion = StringHelper.LimpiarEspacios(Clasificacion),
+                Concentracion = StringHelper.LimpiarEspacios(Concentracion),
+                Precio = Precio,
+                Stock = Stock
+            };
+        }
+
+        private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
+        {
+            return validador.Validar(medicamento);
+        }
+
+        private void ActualizarMedicamento(MedicamentoEntidad medicamento)
+        {
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"UPDATE medicamento
                              SET nombre=@nombre,
                                  presentacion=@presentacion,
@@ -120,18 +134,16 @@ namespace ProyectoArqSoft.Pages
                 MySqlCommand command = new MySqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@id_medicamento", IdMedicamento);
-                command.Parameters.AddWithValue("@nombre", Nombre);
-                command.Parameters.AddWithValue("@presentacion", Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", Clasificacion);
-                command.Parameters.AddWithValue("@concentracion", Concentracion);
-                command.Parameters.AddWithValue("@precio", Precio);
-                command.Parameters.AddWithValue("@stock", Stock);
+                command.Parameters.AddWithValue("@nombre", medicamento.Nombre);
+                command.Parameters.AddWithValue("@presentacion", medicamento.Presentacion);
+                command.Parameters.AddWithValue("@clasificacion", medicamento.Clasificacion);
+                command.Parameters.AddWithValue("@concentracion", medicamento.Concentracion);
+                command.Parameters.AddWithValue("@precio", medicamento.Precio);
+                command.Parameters.AddWithValue("@stock", medicamento.Stock);
 
                 connection.Open();
                 command.ExecuteNonQuery();
             }
-
-            return RedirectToPage("Medicamento");
         }
     }
 }
