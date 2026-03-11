@@ -40,7 +40,7 @@ namespace ProyectoArqSoft.Pages
             validador = new MedicamentoValidacion();
         }
 
-        public IActionResult OnGet(int id)
+        public IActionResult OnPostLoad(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock

@@ -44,7 +44,10 @@
                 <td>@row["concentracion"]</td>
                 <td>@row["precio"]</td>
                 <td>
-                    <a asp-page = "MedicamentoUpdate" asp-route-id="@row["id_medicamento"]" class="btn btn-warning btn-sm">Editar</a>
+                    <form method="post" asp-page="MedicamentoUpdate" asp-page-handler="Load" style="display:inline;">
+                        <input type="hidden" name="id" value="@row["id_medicamento"]" />
+                        <button type="submit" class="btn btn-warning btn-sm">Editar</button>
+                    </form>
 
                     <form method="post" asp-page-handler="SoftDelete" style="display:inline;">
                         <input type="hidden" name="id" value="@row["id_medicamento"]"/>
