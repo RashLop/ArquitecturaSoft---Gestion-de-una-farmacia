@@ -4,7 +4,7 @@ namespace ProyectoArqSoft.Interfaces
 {
     public interface IUpdateMedicamento
     {
-        IActionResult ActualizarMedicamento();
-        IActionResult CargarMedicamentoParaEdicion(int id);
+        IActionResult OnPostActualizarMedicamento();
+        IActionResult OnPostCargarMedicamentoParaEdicion(int id);
     }
 }

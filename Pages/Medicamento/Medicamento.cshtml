@@ -5,7 +5,7 @@
 
 <h2>Medicamentos en Stock</h2>
 
-<form method="get" class="mb-3">
+<form method="get" asp-page-handler="ListarMedicamentos" class="mb-3">
     <div class="input-group">
         <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre, clasificación o presentación..." value="@Model.Estado.FiltroActual" />
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -44,12 +44,12 @@
                 <td>@row["concentracion"]</td>
                 <td>@row["precio"]</td>
                 <td>
-                    <form method="post" asp-page="MedicamentoUpdate" asp-page-handler="Load" style="display:inline;">
+                    <form method="post" asp-page="MedicamentoUpdate" asp-page-handler="CargarMedicamentoParaEdicion" style="display:inline;">
                         <input type="hidden" name="id" value="@row["id_medicamento"]" />
                         <button type="submit" class="btn btn-warning btn-sm">Editar</button>
                     </form>
 
-                    <form method="post" asp-page-handler="SoftDelete" style="display:inline;">
+                    <form method="post" asp-page-handler="EliminarMedicamentoLogicamente" style="display:inline;">
                         <input type="hidden" name="id" value="@row["id_medicamento"]"/>
                         <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                     </form>

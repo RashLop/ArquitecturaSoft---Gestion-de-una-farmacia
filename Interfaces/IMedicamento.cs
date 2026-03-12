@@ -4,7 +4,7 @@ namespace ProyectoArqSoft.Interfaces
 {
     public interface IMedicamento
     {
-        void ListarMedicamentos(string? filtro, string? mensaje, string? error);
-        IActionResult EliminarMedicamentoLogicamente(int id);
+        void OnGet(string? filtro, string? mensaje, string? error);
+        IActionResult OnPostEliminarMedicamentoLogicamente(int id);
     }
 }

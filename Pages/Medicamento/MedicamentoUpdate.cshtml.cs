@@ -35,13 +35,16 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
+        public void OnGet()
+        {
+        }
         public MedicamentoUpdateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
             validador = new MedicamentoValidacion();
         }
 
-        public IActionResult CargarMedicamentoParaEdicion(int id)
+        public IActionResult OnPostCargarMedicamentoParaEdicion(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock
@@ -77,7 +80,7 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-        public IActionResult ActualizarMedicamento()
+        public IActionResult OnPostActualizarMedicamento()
         {
             MedicamentoEntidad medicamento = ConstruirMedicamento();
             Validacion resultado = ValidarMedicamento(medicamento);
