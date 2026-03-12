@@ -18,7 +18,7 @@ namespace ProyectoArqSoft.Pages
             this.configuration = configuration;
         }
 
-        public void OnGetListarMedicamentos(string? filtro, string? mensaje, string? error)
+        public void OnGet(string? filtro, string? mensaje, string? error)
         {
             CargarParametros(filtro, mensaje, error);
 
