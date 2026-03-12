@@ -3,12 +3,13 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Interfaces;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoUpdateModel : BasePageModel
+    public class MedicamentoUpdateModel : BasePageModel, IUpdateMedicamento
     {
         private readonly IConfiguration configuration;
         private readonly IValidacion<MedicamentoEntidad> validador;
@@ -40,7 +41,7 @@ namespace ProyectoArqSoft.Pages
             validador = new MedicamentoValidacion();
         }
 
-        public IActionResult OnPostLoad(int id)
+        public IActionResult CargarMedicamentoParaEdicion(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock
@@ -76,7 +77,7 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult ActualizarMedicamento()
         {
             MedicamentoEntidad medicamento = ConstruirMedicamento();
             Validacion resultado = ValidarMedicamento(medicamento);
