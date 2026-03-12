@@ -41,7 +41,7 @@ namespace ProyectoArqSoft.Pages
         {
         }
 
-        public IActionResult CrearMedicamento()
+        public IActionResult OnPostCrearMedicamento()
         {
             MedicamentoEntidad medicamento = ConstruirMedicamento();
             Validacion resultado = ValidarMedicamento(medicamento);

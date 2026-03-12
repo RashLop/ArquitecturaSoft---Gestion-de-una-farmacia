@@ -4,6 +4,6 @@ namespace ProyectoArqSoft.Interfaces
 {
     public interface ICreateMedicamento
     {
-        IActionResult CrearMedicamento();
+        IActionResult OnPostCrearMedicamento();
     }
 }
