@@ -1,57 +1,27 @@
-﻿@page
-@model ProyectoArqSoft.Pages.ClienteCreateModel
+@page
+@model ProyectoArqSoft.Pages.ClienteEditModel
 @{
 }
 
-<<<<<<< Updated upstream
-<h1>Nuevo cliente</h1>
-<div class="card-body p-4">
-<form method="post">
-    <div class="form-group">
-        <label>Nombre:</label>
-        <input asp-for="@Model.Nombre" class="form-control"required/>
-    </div>
-    <div class="form-group">
-        <label>Tipo Cliente:</label>
-        <input asp-for="@Model.Tipo_Cliente" class="form-control"required/>
-    </div>
-    <div class="form-group">
-        <label>Carnet:</label>
-        <input asp-for="@Model.Carnet" class="form-control"required/>
-    </div>
-
-    <div class="form-group">
-        <label>Edad:</label>
-        <input asp-for="@Model.Edad" class="form-control"required/>
-    </div>
-
-    <div class="form-group">
-        <label>Telefono:</label>
-        <input asp-for="@Model.Telefono" class="form-control"required/>
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Guardar</button>
-    <a asp-page="Cliente" class="btn btn-secondary mt-2">Volver</a>
-
-</form>
-=======
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-success text-white">
-                    <h2 class="h4 mb-0">Nuevo Cliente</h2>
+                <div class="card-header bg-warning">
+                    <h2 class="h4 mb-0">Actualizar Cliente</h2>
                 </div>
 
                 <div class="card-body p-4">
-                    <form method="post" asp-page-handler="CrearCliente">
+                    <form method="post" asp-page-handler="ActualizarCliente">
+                        <input type="hidden" asp-for="IdCliente" />
+
                         <div class="mb-3">
                             <label class="form-label">Tipo de Cliente</label>
                             <select asp-for="TipoCliente" class="form-control" required>
                                 <option value="">Seleccione...</option>
-                                <option value="Regular">regular</option>
-                                <option value="Cronico">cronico</option>
-                                <option value="Seguro">convenio/seguro</option>
-                                <option value="Institucional">institucional</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Frecuente">Frecuente</option>
+                                <option value="VIP">VIP</option>
                             </select>
                         </div>
 
@@ -113,7 +83,7 @@
                         }
 
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <button type="submit" class="btn btn-warning">Guardar</button>
                             <a asp-page="Cliente" class="btn btn-secondary">Volver</a>
                         </div>
                     </form>
@@ -121,5 +91,4 @@
             </div>
         </div>
     </div>
->>>>>>> Stashed changes
 </div>
