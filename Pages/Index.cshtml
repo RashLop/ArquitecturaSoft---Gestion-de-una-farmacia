@@ -26,9 +26,9 @@
                             inventario, ventas y personal farmacéutico.
                         </p>
 
-                        //<a asp-page="/Auth/Login" class="btn-main me-3">
-                          //  Iniciar Sesión
-                        //</a>
+                        <a asp-page="/Auth/Login" class="btn-main me-3">
+                            Iniciar Sesión
+                        </a>
                     }
                     else
                     {
@@ -38,10 +38,10 @@
                             Bienvenido, <span class="text-accent">@Model.Usuario</span>
                         </h1>
 
-                        <p>Accede rápidamente a los módulos del sistema.</p>
+                        <p>Accede rápidamente a los productos del sistema.</p>
 
-                        <a asp-page="/Medicamentos/Index" class="btn-main">
-                            Ir al Sistema
+                        <a asp-page="/Medicamento/Medicamento" class="btn-main">
+                            Ir a los medicamentos
                         </a>
                     }
 
@@ -56,6 +56,8 @@
             </div>
         </div>
     </section>
+
+
 
     <!-- SECCIÓN INSTITUCIONAL -->
     <section class="section bg-light text-center">
@@ -83,6 +85,63 @@
         </div>
     </section>
 
+    @if (Model.MedicamentoDataTable.Rows.Count > 0)
+    {
+        <section class="section">
+            <div class="container">
+
+                <h3 class="mb-4 text-success fw-bold text-center">
+                    Medicamentos Destacados
+                </h3>
+
+                <div class="row g-4">
+
+                    @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
+                    {
+                        <div class="col-md-4">
+
+                            <a asp-page="@(Model.Usuario != null ? "/Medicamento/Medicamento" : "/Auth/Login")"
+                               class="text-decoration-none">
+
+                                <div class="med-card">
+
+                                    <div class="med-icon">
+                                        💊
+                                    </div>
+
+                                    <h5 class="med-title">
+                                        @row["nombre"]
+                                    </h5>
+
+                                    <p class="med-info">
+                                        <strong>Presentación:</strong> @row["presentacion"]
+                                    </p>
+
+                                    <p class="med-info">
+                                        <strong>Clasificación:</strong> @row["clasificacion"]
+                                    </p>
+
+                                    <p class="med-info">
+                                        <strong>Concentración:</strong> @row["concentracion"]
+                                    </p>
+
+                                    <div class="med-price">
+                                        Bs. @row["precio"]
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </section>
+    }
+
     @if (Model.Usuario != null)
     {
         <!-- MÓDULOS -->
@@ -95,24 +154,24 @@
                     <div class="col-lg-4">
                         <div class="card-module">
                             <h3>💊 Medicamentos</h3>
-                            <p>Administración completa del inventario.</p>
-                            <a asp-page="/Medicamentos/Index">Entrar</a>
+                            <p>Administración completa del inventario de medicamentos.</p>
+                            <a asp-page="/Medicamento/Medicamento">Entrar</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card-module">
+                            <h3>👥 Clientes</h3>
+                            <p>Gestión y registro de clientes de la farmacia.</p>
+                            <a asp-page="/Cliente/Cliente">Entrar</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="card-module">
                             <h3>🧪 Bioquímicos</h3>
-                            <p>Gestión del personal autorizado.</p>
-                            <a asp-page="/Bioquimicos/Index">Entrar</a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="card-module">
-                            <h3>💰 Ventas</h3>
-                            <p>Registro y control de ventas.</p>
-                            <a asp-page="/Ventas">Entrar</a>
+                            <p>Administración del personal bioquímico autorizado.</p>
+                            <a asp-page="/Bioquimico/Bioquimico">Entrar</a>
                         </div>
                     </div>
 
@@ -124,64 +183,54 @@
         <section class="cta text-center">
             <div class="container">
                 <h2 class="text-white">Acceso Rápido</h2>
-                <a asp-page="/Ventas/Create" class="btn-main mt-3">
-                    Registrar Nueva Venta
+                <a asp-page="/Cliente/ClienteCreate" class="btn-main mt-3">
+                    Registrar Nuevo Cliente
                 </a>
             </div>
         </section>
     }
 
-    <!-- FOOTER -->
-    <footer class="footer mt-5">
+    <!-- ESTADÍSTICAS -->
+    <section class="stats-section">
         <div class="container">
-            <div class="row">
+
+            <div class="row text-center g-4">
 
                 <div class="col-md-3">
-                    <h5>Síguenos</h5>
-                    <ul>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">LinkedIn</a></li>
-                    </ul>
+                    <div class="stat-card">
+                        <div class="stat-icon">💊</div>
+                        <h2>@Model.MedicamentoDataTable.Rows.Count+</h2>
+                        <p>Medicamentos</p>
+                    </div>
                 </div>
 
                 <div class="col-md-3">
-                    <h5>Atención</h5>
-                    <ul>
-                        <li><a href="#">Atención al cliente</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a asp-page="/Privacy">Política de privacidad</a></li>
-                    </ul>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <h2>120+</h2>
+                        <p>Clientes</p>
+                    </div>
                 </div>
 
                 <div class="col-md-3">
-                    <h5>Servicios</h5>
-                    <ul>
-                        <li><a href="#">Servicios de salud</a></li>
-                        <li><a href="#">Entrega a domicilio</a></li>
-                        <li><a href="#">Ventas corporativas</a></li>
-                    </ul>
+                    <div class="stat-card">
+                        <div class="stat-icon">🧪</div>
+                        <h2>8</h2>
+                        <p>Bioquímicos</p>
+                    </div>
                 </div>
 
                 <div class="col-md-3">
-                    <h5>Contacto</h5>
-                    <ul>
-                        <li>📍 Cochabamba, Bolivia</li>
-                        <li>📞 +591 77777777</li>
-                        <li>✉️ contacto@vitalcare.com</li>
-                    </ul>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <h2>350+</h2>
+                        <p>Ventas Registradas</p>
+                    </div>
                 </div>
 
             </div>
 
-            <hr />
-
-            <div class="text-center">
-                <p>
-                    © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
-                </p>
-            </div>
         </div>
-    </footer>
+    </section>
 
-</div>
+    
