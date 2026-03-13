@@ -3,13 +3,12 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Interfaces;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoUpdateModel : BasePageModel, IUpdateMedicamento
+    public class MedicamentoUpdateModel : BasePageModel         
     {
         private readonly IConfiguration configuration;
         private readonly IValidacion<MedicamentoEntidad> validador;

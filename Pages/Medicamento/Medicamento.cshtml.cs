@@ -3,12 +3,11 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Interfaces;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoModel : BasePageModel, IMedicamento
+    public class MedicamentoModel : BasePageModel
     {
         private readonly IConfiguration configuration;
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
