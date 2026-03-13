@@ -20,7 +20,7 @@
 
         <div class="card-module p-3">
 
-            <div class="d-flex gap-2">
+            <div class="input-group">
 
                 <input type="text"
                        name="filtro"
@@ -29,14 +29,12 @@
                        value="@Model.Estado.FiltroActual" />
 
                 <button type="submit"
-                        class="btn btn-success text-white"
-                        style="width:120px">
+                        class="btn btn-success btn-fixed">
                     Buscar
                 </button>
 
                 <a asp-page="Medicamento"
-                   class="btn btn-secondary text-white d-flex align-items-center justify-content-center"
-                   style="width:120px">
+                   class="btn btn-secondary btn-fixed">
                     Limpiar
                 </a>
 

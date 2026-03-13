@@ -57,6 +57,34 @@
         </div>
     </section>
 
+
+
+    <!-- SECCIÓN INSTITUCIONAL -->
+    <section class="section bg-light text-center">
+        <div class="container">
+            <h2 class="mb-3">Comprometidos con la Salud</h2>
+            <p class="text-muted mb-5">
+                VitalCare proporciona herramientas modernas para optimizar
+                los procesos farmacéuticos y garantizar una atención segura.
+            </p>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h4 class="text-success">✔ Seguridad</h4>
+                    <p>Control de accesos y protección de datos.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="text-success">✔ Eficiencia</h4>
+                    <p>Gestión rápida y ordenada de inventario.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="text-success">✔ Confianza</h4>
+                    <p>Registro transparente de cada transacción.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     @if (Model.MedicamentoDataTable.Rows.Count > 0)
     {
         <section class="section">
@@ -113,32 +141,6 @@
             </div>
         </section>
     }
-
-    <!-- SECCIÓN INSTITUCIONAL -->
-    <section class="section bg-light text-center">
-        <div class="container">
-            <h2 class="mb-3">Comprometidos con la Salud</h2>
-            <p class="text-muted mb-5">
-                VitalCare proporciona herramientas modernas para optimizar
-                los procesos farmacéuticos y garantizar una atención segura.
-            </p>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h4 class="text-success">✔ Seguridad</h4>
-                    <p>Control de accesos y protección de datos.</p>
-                </div>
-                <div class="col-md-4">
-                    <h4 class="text-success">✔ Eficiencia</h4>
-                    <p>Gestión rápida y ordenada de inventario.</p>
-                </div>
-                <div class="col-md-4">
-                    <h4 class="text-success">✔ Confianza</h4>
-                    <p>Registro transparente de cada transacción.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     @if (Model.Usuario != null)
     {
@@ -231,57 +233,4 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-3">
-                    <h5>Síguenos</h5>
-                    <ul>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">LinkedIn</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Atención</h5>
-                    <ul>
-                        <li><a href="#">Atención al cliente</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a asp-page="/Privacy">Política de privacidad</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Servicios</h5>
-                    <ul>
-                        <li><a href="#">Servicios de salud</a></li>
-                        <li><a href="#">Entrega a domicilio</a></li>
-                        <li><a href="#">Ventas corporativas</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Contacto</h5>
-                    <ul>
-                        <li>📍 Cochabamba, Bolivia</li>
-                        <li>📞 +591 77777777</li>
-                        <li>✉️ contacto@vitalcare.com</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <hr />
-
-            <div class="text-center">
-                <p>
-                    © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
-                </p>
-            </div>
-        </div>
-    </footer>
-
-</div>
+    

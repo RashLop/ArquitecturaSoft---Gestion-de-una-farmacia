@@ -9,34 +9,167 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VitalCare.styles.css" asp-append-version="true" />
 </head>
+
 <body>
-    <header class="navbar">
-        <img src="~/images/vitalcare.png" height="80" />
 
-        <nav>
-            <a asp-page="/Index">Inicio</a>
-            <a asp-page="/Privacy">Privacidad</a>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
+            <div class="container">
 
-            @{
-                var usuario = Context.Session.GetString("Usuario");
-            }
+                <a class="navbar-brand d-flex align-items-center" asp-page="/Index">
+                    <img src="~/images/vitalcare.png" height="40" class="me-2" />
+                    VitalCare
+                </a>
 
-            @if (usuario != null)
-            {
-                <a asp-page="/Medicamento/Medicamento">Nuestros Medicamentos</a>
-                <a asp-page="/Cliente/Cliente">Clientes</a>
-                <a asp-page="/Bioquimico/Bioquimico">Bioquímicos</a>
-                <a asp-page="/Auth/Logout">Cerrar Sesión</a>
-            }
-            else
-            {
-                <a asp-page="/Auth/Login">Login</a>
-            }
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarVitalCare">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarVitalCare">
+
+                    <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Index">Inicio</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Privacy">Privacidad</a>
+                        </li>
+
+                        @{
+                            var usuario = Context.Session.GetString("Usuario");
+                        }
+
+                        @if (usuario != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown">
+                                    Sistema
+                                </a>
+
+                                <ul class="dropdown-menu">
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-page="/Medicamento/Medicamento">
+                                            💊 Medicamentos
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-page="/Cliente/Cliente">
+                                            👥 Clientes
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-page="/Bioquimico/Bioquimico">
+                                            🧪 Bioquímicos
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-warning"
+                                   asp-page="/Auth/Logout">
+                                    Cerrar Sesión
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                   asp-page="/Auth/Login">
+                                    Login
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+                </div>
+
+            </div>
         </nav>
     </header>
-    
+
+
     @RenderBody()
-    
+
+
+    <!-- FOOTER -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <h5>Síguenos</h5>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Atención</h5>
+                    <ul>
+                        <li><a href="#">Atención al cliente</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                        <li><a asp-page="/Privacy">Política de privacidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Servicios</h5>
+                    <ul>
+                        <li><a href="#">Servicios de salud</a></li>
+                        <li><a href="#">Entrega a domicilio</a></li>
+                        <li><a href="#">Ventas corporativas</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Contacto</h5>
+                    <ul>
+                        <li>📍 Cochabamba, Bolivia</li>
+                        <li>📞 +591 77777777</li>
+                        <li>✉️ contacto@vitalcare.com</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="text-center">
+                <p>
+                    © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
+                </p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        window.addEventListener("scroll", function(){
+            let navbar = document.querySelector(".navbar");
+            navbar.classList.toggle("scrolled", window.scrollY > 50);
+        });
+    </script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @RenderSection("Scripts", required: false)

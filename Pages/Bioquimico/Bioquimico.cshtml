@@ -4,13 +4,13 @@
 
 <h2>Listado de Bioquímicos</h2>
 
-<form method="get" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre o CI..." value="@Model.FiltroActual" />
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <a asp-page="/Bioquimico/Bioquimico" class="btn btn-secondary">Limpiar</a>
-    </div>
-</form>
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre o CI..." value="@Model.FiltroActual" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a asp-page="/Bioquimico/Bioquimico" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
 
 <div class="mb-3">
     <a asp-page="/Bioquimico/BioquimicoCreate" class="btn btn-success">Nuevo Bioquímico</a>
