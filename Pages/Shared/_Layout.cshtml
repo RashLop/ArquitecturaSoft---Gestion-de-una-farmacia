@@ -10,27 +10,33 @@
     <link rel="stylesheet" href="~/VitalCare.styles.css" asp-append-version="true" />
 </head>
 <body>
-
     <header class="navbar">
         <img src="~/images/vitalcare.png" height="80" />
 
         <nav>
             <a asp-page="/Index">Inicio</a>
             <a asp-page="/Privacy">Privacidad</a>
-            <a asp-page="/Medicamento/Medicamento">Nuestros Medicamentos</a>
-            <a asp-page="/Cliente/Cliente">Clientes</a>
-            <a asp-page="/Bioquimico/Bioquimico">Bioquímicos</a>
 
-            
-            @*<a asp-page="/Reportes/Index">Reportes</a>*@    
-        
+            @{
+                var usuario = Context.Session.GetString("Usuario");
+            }
+
+            @if (usuario != null)
+            {
+                <a asp-page="/Medicamento/Medicamento">Nuestros Medicamentos</a>
+                <a asp-page="/Cliente/Cliente">Clientes</a>
+                <a asp-page="/Bioquimico/Bioquimico">Bioquímicos</a>
+                <a asp-page="/Auth/Logout">Cerrar Sesión</a>
+            }
+            else
+            {
+                <a asp-page="/Auth/Login">Login</a>
+            }
         </nav>
     </header>
-
     
-        @RenderBody()
+    @RenderBody()
     
-
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @RenderSection("Scripts", required: false)
