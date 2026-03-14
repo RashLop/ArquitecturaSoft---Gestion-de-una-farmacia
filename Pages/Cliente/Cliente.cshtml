@@ -49,10 +49,11 @@
             <thead class="table-success">
                 <tr>
                     <th>Nombre</th>
-                    <th>Apellido Materno</th>
                     <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
                     <th>Tipo de cliente</th>
                     <th>Carnet</th>
+                    <th>Extencion</th>
                     <th>Fecha de nacimiento</th>
                     <th>Telefono</th>
                     <th style="width:170px">Acciones</th>
@@ -64,14 +65,16 @@
                 {
                     <tr>
                         <td class="fw-semibold">@row["nombre"]</td>
-                        <td>@row["apellido_materno"]</td>
                         <td>@row["apellido_paterno"]</td>
+                        <td>@row["apellido_materno"]</td>
+                       
                         <td>
                             <span class="badge bg-info text-dark">
                                 @row["tipo_cliente"]
                             </span>
                         </td>
-                        <td>@row["ci"] @row["ci_extencion"]</td>
+                        <td>@row["ci"] </td>
+                        <td>@row["ci_extencion"]</td>
                         <td>@Convert.ToDateTime(row["fecha_de_nacimiento"]).ToString("dd/MM/yyyy")</td>
                         <td>@row["telefono"]</td>
                         <td>
