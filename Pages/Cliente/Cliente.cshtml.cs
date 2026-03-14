@@ -1,174 +1,113 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Validaciones;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
-    public class ClienteModel : PageModel
+    public class ClienteModel : BasePageModel
     {
-        public DataTable Clientes_DataTable { get; set; } = new DataTable();
-
-        [BindProperty(SupportsGet = true)]
-        public string TipoBusqueda { get; set; }
-
-        [BindProperty(SupportsGet = true)]
-        public string TextoBusqueda { get; set; }
-
-        public string Mensaje { get; set; } = "";
-
         private readonly IConfiguration configuration;
+
+        public DataTable ClienteDataTable { get; set; } = new DataTable();
 
         public ClienteModel(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
 
-        public void OnGet()
+        public void OnGet(string? filtro, string? mensaje, string? error)
         {
-            CargarClientes();
+            CargarParametros(filtro, mensaje, error);
 
-            if (!string.IsNullOrEmpty(TipoBusqueda) && !string.IsNullOrEmpty(TextoBusqueda))
-            {
-                BuscarCliente();
-            }
-        }
+            Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Estado.MensajeError = resultado.MensajeError;
 
-        void CargarClientes()
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
-                            FROM cliente
-                            WHERE estado = 1
-                            ORDER BY nombre";
-
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-                    MySqlCommand comando = new MySqlCommand(query, connection);
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
-                    adapter.Fill(Clientes_DataTable);
-                }
-            }
-            catch (Exception ex)
-            {
-                Mensaje = "Error al cargar clientes: " + ex.Message;
-            }
-        }
-
-        void BuscarCliente()
-        {
-            if (string.IsNullOrEmpty(TextoBusqueda) || string.IsNullOrEmpty(TipoBusqueda))
-            {
+            if (!resultado.EsValido)
                 return;
-            }
 
-            string texto = TextoBusqueda.Trim();
-
-            if ((TipoBusqueda == "ci" || TipoBusqueda == "telefono") && !EsNumero(texto))
-            {
-                Mensaje = "Criterio inválido";
-                Clientes_DataTable.Rows.Clear();
-                return;
-            }
-
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = "";
-
-            switch (TipoBusqueda)
-            {
-                case "nombre":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
-                            FROM cliente
-                            WHERE estado = 1 AND nombre LIKE @dato
-                            ORDER BY nombre";
-                    break;
-                case "ci":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
-                            FROM cliente
-                            WHERE estado = 1 AND ci LIKE @dato
-                            ORDER BY nombre";
-                    break;
-                case "telefono":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
-                            FROM cliente
-                            WHERE estado = 1 AND telefono LIKE @dato
-                            ORDER BY nombre";
-                    break;
-                default:
-                    return;
-            }
-
-            Clientes_DataTable.Rows.Clear();
-
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open();
-                    MySqlCommand comando = new MySqlCommand(query, connection);
-                    comando.Parameters.AddWithValue("@dato", "%" + texto + "%");
-                    MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
-                    adapter.Fill(Clientes_DataTable);
-                }
-
-                if (Clientes_DataTable.Rows.Count == 0)
-                {
-                    Mensaje = "No se encontraron clientes";
-                }
-            }
-            catch (Exception ex)
-            {
-                Mensaje = "Error en la búsqueda: " + ex.Message;
-            }
+            CargarClientes(Estado.FiltroActual);
         }
 
-        bool EsNumero(string texto)
+        public IActionResult OnPostEliminarClienteLogicamente(int id)
         {
-            foreach (char c in texto)
-            {
-                if (!char.IsDigit(c))
-                    return false;
-            }
-            return true;
+            EliminarClienteLogicamente(id);
+            return RedirectToPage("Cliente", new { mensaje = "Cliente eliminado correctamente" });
         }
 
-        public IActionResult OnPostDelete(int id)
+        private void CargarParametros(string? filtro, string? mensaje, string? error)
+        {
+            Estado.FiltroActual = FiltroHelper.LimpiarFiltro(filtro);
+            Estado.Mensaje = mensaje ?? string.Empty;
+            Estado.MensajeError = error ?? string.Empty;
+        }
+
+        private void CargarClientes(string filtro)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
-                {
-                    connection.Open(); 
-                    // Soft delete
-                    string deleteQuery = "UPDATE cliente SET estado = 0 WHERE idCliente = @id";
-                    MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
-                    deleteCommand.Parameters.AddWithValue("@id", id);
-                    int rowsAffected = deleteCommand.ExecuteNonQuery();
+                connection.Open();
 
-                    if (rowsAffected == 0)
-                    {
-                        TempData["ErrorMessage"] = "Cliente no encontrado";
-                        return RedirectToPage();
-                    }
+                string query = ConstruirQuery(filtro);
+                MySqlCommand command = new MySqlCommand(query, connection);
 
-                    TempData["SuccessMessage"] = "Cliente eliminado exitosamente";
-                }
+                FiltroSqlHelper.AgregarParametrosLike(command, filtro);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                adapter.Fill(ClienteDataTable);
             }
-            catch (MySqlException ex) when (ex.Number == 1451)
+        }
+
+        private string ConstruirQuery(string filtro)
+        {
+            string query = @"SELECT idCliente,
+                                    tipo_cliente,
+                                    nombre,
+                                    apellido_materno,
+                                    apellido_paterno,
+                                    ci_extencion,
+                                    ci,
+                                    fecha_de_nacimiento,
+                                    telefono
+                             FROM cliente
+                             WHERE estado = 1";
+
+            query += FiltroSqlHelper.ConstruirCondicionLike(
+                filtro,
+                "nombre",
+                "apellido_materno",
+                "apellido_paterno",
+                "tipo_cliente",
+                "ci",
+                "ci_extencion",
+                "telefono"
+            );
+
+            query += " ORDER BY nombre, apellido_paterno, apellido_materno";
+
+            return query;
+        }
+
+        private void EliminarClienteLogicamente(int id)
+        {
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            string query = @"UPDATE cliente
+                             SET estado = 0,
+                                 ultima_actualizacion = NOW()
+                             WHERE idCliente = @id";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                TempData["ErrorMessage"] = "No se puede eliminar: cliente con ventas asociadas";
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Error al eliminar: {ex.Message}";
-            }
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id", id);
 
-            return RedirectToPage();
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
