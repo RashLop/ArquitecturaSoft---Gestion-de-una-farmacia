@@ -7,105 +7,169 @@ namespace ProyectoArqSoft.Pages
 {
     public class BioquimicoModel : PageModel
     {
-        public DataTable BioquimicoDataTable { get; set; } = new DataTable();
-        public string FiltroActual { get; set; } = string.Empty;
-        public string Mensaje { get; set; } = string.Empty;
-        public string MensajeError { get; set; } = string.Empty;
+        public DataTable Bioquimicos_DataTable { get; set; } = new DataTable();
 
-        private readonly IConfiguration _configuration;
+        [BindProperty(SupportsGet = true)]
+        public string TipoBusqueda { get; set; }
 
-        public BioquimicoModel(IConfiguration configuration) => _configuration = configuration;
+        [BindProperty(SupportsGet = true)]
+        public string TextoBusqueda { get; set; }
 
-        public void OnGet(string? filtro, string? mensaje, string? error)
-{
-    FiltroActual = filtro ?? string.Empty;
-    Mensaje = mensaje ?? string.Empty;
-    MensajeError = error ?? string.Empty;
+        public string Mensaje { get; set; } = "";
 
-    if (!string.IsNullOrWhiteSpace(FiltroActual))
-    {
-        
-        if (FiltroActual.Length < 3 || FiltroActual.Any(c => !char.IsLetterOrDigit(c) && c != ' '))
+        private readonly IConfiguration configuration;
+
+        public BioquimicoModel(IConfiguration configuration)
         {
-            MensajeError = "Criterio inválido";
-            return;
+            this.configuration = configuration;
         }
-    }
 
-    Select(FiltroActual);
-}
-
-        private void Select(string filtro)
-{
-    string connectionString = _configuration.GetConnectionString("MySqlConnection")!;
-    bool hayFiltro = !string.IsNullOrWhiteSpace(filtro);
-    
-   
-    bool esCi = hayFiltro && filtro.All(char.IsDigit);
-
-    string query = @"SELECT idBioquimico, nombres, apellidos, ci, telefono, activo 
-                     FROM bioquimico WHERE activo = 1";
-
-    if (hayFiltro)
-    {
-        if (esCi)
+        public void OnGet()
         {
-            query += " AND ci = @valor";
-        }
-        else
-        {
-            
-            string[] partes = filtro.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < partes.Length; i++)
+            CargarBioquimicos();
+
+            if (!string.IsNullOrEmpty(TipoBusqueda) && !string.IsNullOrEmpty(TextoBusqueda))
             {
-                query += $" AND (nombres LIKE @valor{i} OR apellidos LIKE @valor{i})";
+                BuscarBioquimico();
             }
         }
-    }
-    query += " ORDER BY idBioquimico ASC";
 
-    using (var conn = new MySqlConnection(connectionString))
-    {
-        conn.Open();
-        using (var cmd = new MySqlCommand(query, conn))
+        void CargarBioquimicos()
         {
-            if (hayFiltro)
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            string query = @"SELECT idBioquimico, 
+                                    CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    telefono,
+                                    activo
+                            FROM bioquimico
+                            WHERE activo = 1
+                            ORDER BY nombres, apellido_paterno";
+
+            try
             {
-                if (esCi)
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    cmd.Parameters.AddWithValue("@valor", filtro);
-                }
-                else
-                {
-                    string[] partes = filtro.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < partes.Length; i++)
-                    {
-                        cmd.Parameters.AddWithValue($"@valor{i}", "%" + partes[i] + "%");
-                    }
+                    connection.Open();
+                    MySqlCommand comando = new MySqlCommand(query, connection);
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
+                    adapter.Fill(Bioquimicos_DataTable);
                 }
             }
-            var adapter = new MySqlDataAdapter(cmd);
-            adapter.Fill(BioquimicoDataTable);
+            catch (Exception ex)
+            {
+                Mensaje = "Error al cargar bioquímicos: " + ex.Message;
+            }
         }
-    }
-}
+
+        void BuscarBioquimico()
+        {
+            if (string.IsNullOrEmpty(TextoBusqueda) || string.IsNullOrEmpty(TipoBusqueda))
+            {
+                return;
+            }
+
+            string texto = TextoBusqueda.Trim();
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            string query = "";
+
+            switch (TipoBusqueda)
+            {
+                case "nombre":
+                    query = @"SELECT idBioquimico, 
+                                    CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    telefono,
+                                    activo
+                            FROM bioquimico
+                            WHERE activo = 1 AND (nombres LIKE @dato OR apellido_paterno LIKE @dato OR apellido_materno LIKE @dato)
+                            ORDER BY nombres, apellido_paterno";
+                    break;
+                case "ci":
+                    query = @"SELECT idBioquimico, 
+                                    CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    telefono,
+                                    activo
+                            FROM bioquimico
+                            WHERE activo = 1 AND (ci LIKE @dato OR ci_extencion LIKE @dato)
+                            ORDER BY nombres, apellido_paterno";
+                    break;
+                case "telefono":
+                    query = @"SELECT idBioquimico, 
+                                    CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    telefono,
+                                    activo
+                            FROM bioquimico
+                            WHERE activo = 1 AND telefono LIKE @dato
+                            ORDER BY nombres, apellido_paterno";
+                    break;
+                default:
+                    return;
+            }
+
+            Bioquimicos_DataTable.Rows.Clear();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    MySqlCommand comando = new MySqlCommand(query, connection);
+                    comando.Parameters.AddWithValue("@dato", "%" + texto + "%");
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(comando);
+                    adapter.Fill(Bioquimicos_DataTable);
+                }
+
+                if (Bioquimicos_DataTable.Rows.Count == 0)
+                {
+                    Mensaje = "No se encontraron bioquímicos";
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensaje = "Error en la búsqueda: " + ex.Message;
+            }
+        }
 
         public IActionResult OnPostDelete(int id)
         {
-            string connectionString = _configuration.GetConnectionString("MySqlConnection")!;
-            
-            using (var conn = new MySqlConnection(connectionString))
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+
+            try
             {
-                conn.Open();
-                
-                string query = "UPDATE bioquimico SET activo = 0 WHERE idBioquimico = @id";
-                using (var cmd = new MySqlCommand(query, conn))
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.ExecuteNonQuery();
+                    connection.Open();
+                    string deleteQuery = "UPDATE bioquimico SET activo = 0 WHERE idBioquimico = @id";
+                    MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
+                    deleteCommand.Parameters.AddWithValue("@id", id);
+                    int rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        TempData["ErrorMessage"] = "Bioquímico no encontrado";
+                        return RedirectToPage();
+                    }
+
+                    TempData["SuccessMessage"] = "Bioquímico eliminado exitosamente";
                 }
             }
-            return RedirectToPage("/Bioquimico/Bioquimico", new { mensaje = "Bioquímico eliminado correctamente" });
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al eliminar: {ex.Message}";
+            }
+
+            return RedirectToPage();
         }
     }
 }

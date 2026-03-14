@@ -7,33 +7,58 @@
 <h2>Registrar Bioquímico</h2>
 
 <form method="post">
+    @Html.AntiForgeryToken()
+
     <div class="form-group mb-2">
         <label>Nombres</label>
         <input asp-for="Nombres" class="form-control" />
     </div>
 
-    <div class="form-group mb-2">
-        <label>Apellidos</label>
-        <input asp-for="Apellidos" class="form-control" />
+    <div class="row">
+        <div class="col-md-6 form-group mb-2">
+            <label>Apellido Paterno</label>
+            <input asp-for="Apellido_Paterno" class="form-control" />
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label>Apellido Materno</label>
+            <input asp-for="Apellido_Materno" class="form-control" />
+        </div>
     </div>
 
-    <div class="form-group mb-2">
-        <label>CI</label>
-        <input asp-for="Ci" class="form-control" />
+    <div class="row">
+        <div class="col-md-6 form-group mb-2">
+            <label>Carnet de Identidad</label>
+            <input asp-for="Ci" class="form-control" />
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label>Extensión</label>
+            <select asp-for="Ci_Extencion" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="LP">LP</option>
+                <option value="CB">CB</option>
+                <option value="SC">SC</option>
+                <option value="CH">CH</option>
+                <option value="OR">OR</option>
+                <option value="PT">PT</option>
+                <option value="TJ">TJ</option>
+                <option value="BN">BN</option>
+                <option value="PD">PD</option>
+            </select>
+        </div>
     </div>
 
-    <div class="form-group mb-2">
+    <div class="form-group mb-3">
         <label>Teléfono</label>
         <input asp-for="Telefono" class="form-control" />
     </div>
 
-   
-
-    @if (!string.IsNullOrEmpty(Model.MensajeError))
+    @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">@Model.MensajeError</div>
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a asp-page="/Bioquimico/Bioquimico" class="btn btn-secondary">Volver</a>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success" style="min-width: 100px;">Guardar</button>
+        <a asp-page="Bioquimico" class="btn btn-secondary" style="min-width: 100px;">Volver</a>
+    </div>
 </form>

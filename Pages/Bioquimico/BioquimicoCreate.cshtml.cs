@@ -1,104 +1,115 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
-using System.Linq;
+using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Pages
 {
     public class BioquimicoCreateModel : PageModel
     {
+        [BindProperty]
+        public string Nombres { get; set; }
+
+        [BindProperty]
+        public string Apellido_Paterno { get; set; }
+
+        [BindProperty]
+        public string Apellido_Materno { get; set; }
+
+        [BindProperty]
+        public string Ci { get; set; }
+
+        [BindProperty]
+        public string Ci_Extencion { get; set; }
+
+        [BindProperty]
+        public string Telefono { get; set; }
+
         private readonly IConfiguration configuration;
-
-        [BindProperty]
-        public string Nombres { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Apellidos { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Ci { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Telefono { get; set; } = string.Empty;
-
-        [BindProperty]
-        public bool Activo { get; set; }
-
-        public string MensajeError { get; set; } = string.Empty;
+        private readonly BioquimicoValidacion _validacion;
 
         public BioquimicoCreateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
+            _validacion = new BioquimicoValidacion();
         }
 
         public void OnGet()
         {
+            Ci_Extencion = "LP";
         }
 
         public IActionResult OnPost()
         {
-            if (string.IsNullOrWhiteSpace(Nombres) ||
-                string.IsNullOrWhiteSpace(Apellidos) ||
-                string.IsNullOrWhiteSpace(Ci) ||
-                string.IsNullOrWhiteSpace(Telefono))
+            var bioquimico = new ProyectoArqSoft.Models.Bioquimico
             {
-                MensajeError = "Complete los campos obligatorios";
+                Nombres = Nombres,
+                Apellido_Paterno = Apellido_Paterno,
+                Apellido_Materno = Apellido_Materno,
+                Ci = Ci,
+                Ci_Extencion = Ci_Extencion,
+                Telefono = Telefono
+            };
+
+            if (!_validacion.EsValido(bioquimico))
+            {
+                TempData["ErrorMessage"] = _validacion.ObtenerMensajesError();
                 return Page();
             }
 
-            if (!EsTelefonoValido(Telefono))
+            if (string.IsNullOrWhiteSpace(Ci_Extencion))
             {
-                MensajeError = "Teléfono inválido";
-                return Page();
+                Ci_Extencion = "LP";
             }
-
-            Activo = true;
 
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+
+            try
             {
-                connection.Open();
-
-                string queryExiste = @"SELECT COUNT(*) 
-                                       FROM bioquimico
-                                       WHERE ci = @ci";
-
-                using (MySqlCommand cmdExiste = new MySqlCommand(queryExiste, connection))
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    cmdExiste.Parameters.AddWithValue("@ci", Ci.Trim());
-                    int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+                    connection.Open();
 
-                    if (existe > 0)
+                    string insertQuery = @"INSERT INTO bioquimico 
+                        (nombres, apellido_paterno, apellido_materno, ci, ci_extencion, telefono, activo, fecha_registro) 
+                        VALUES 
+                        (@nombres, @apellido_paterno, @apellido_materno, @ci, @ci_extencion, @telefono, 1, NOW())";
+
+                    using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                     {
-                        MensajeError = "Bioquímico ya registrado";
-                        return Page();
+                        command.Parameters.AddWithValue("@nombres", Nombres?.Trim());
+                        command.Parameters.AddWithValue("@apellido_paterno", Apellido_Paterno?.Trim());
+                        command.Parameters.AddWithValue("@apellido_materno", Apellido_Materno?.Trim());
+                        command.Parameters.AddWithValue("@ci", Ci?.Trim());
+                        command.Parameters.AddWithValue("@ci_extencion", Ci_Extencion.Trim().ToUpper());
+                        command.Parameters.AddWithValue("@telefono", Telefono?.Trim());
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            TempData["SuccessMessage"] = "Bioquímico registrado exitosamente";
+                            return RedirectToPage("Bioquimico");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "No se pudo registrar el bioquímico";
+                            return Page();
+                        }
                     }
                 }
-
-                string queryInsert = @"INSERT INTO bioquimico
-                                       (nombres, apellidos, ci, telefono, activo)
-                                       VALUES
-                                       (@nombres, @apellidos, @ci, @telefono, @activo)";
-
-                using (MySqlCommand cmdInsert = new MySqlCommand(queryInsert, connection))
-                {
-                    cmdInsert.Parameters.AddWithValue("@nombres", Nombres.Trim());
-                    cmdInsert.Parameters.AddWithValue("@apellidos", Apellidos.Trim());
-                    cmdInsert.Parameters.AddWithValue("@ci", Ci.Trim());
-                    cmdInsert.Parameters.AddWithValue("@telefono", Telefono.Trim());
-                    cmdInsert.Parameters.AddWithValue("@activo", Activo);
-
-                    cmdInsert.ExecuteNonQuery();
-                }
             }
-
-            return RedirectToPage("/Bioquimico/Bioquimico", new { mensaje = "Bioquímico registrado correctamente" });
-        }
-
-        private bool EsTelefonoValido(string telefono)
-        {
-            telefono = telefono.Trim();
-            return telefono.All(char.IsDigit) && telefono.Length == 8;
+            catch (MySqlException ex) when (ex.Number == 1062)
+            {
+                TempData["ErrorMessage"] = "Ya existe un bioquímico con ese CI";
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al registrar: {ex.Message}";
+                return Page();
+            }
         }
     }
 }

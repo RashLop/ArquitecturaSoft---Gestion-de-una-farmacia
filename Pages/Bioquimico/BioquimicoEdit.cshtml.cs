@@ -1,66 +1,90 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
-using System.Linq;
+using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Pages
 {
     public class BioquimicoEditModel : PageModel
     {
-        private readonly IConfiguration configuration;
-
         [BindProperty]
         public int IdBioquimico { get; set; }
 
         [BindProperty]
-        public string Nombres { get; set; } = string.Empty;
+        public string Nombres { get; set; }
 
         [BindProperty]
-        public string Apellidos { get; set; } = string.Empty;
+        public string Apellido_Paterno { get; set; }
 
         [BindProperty]
-        public string Ci { get; set; } = string.Empty;
+        public string Apellido_Materno { get; set; }
 
         [BindProperty]
-        public string Telefono { get; set; } = string.Empty;
+        public string Ci { get; set; }
 
-        public string MensajeError { get; set; } = string.Empty;
+        [BindProperty]
+        public string Ci_Extencion { get; set; }
+
+        [BindProperty]
+        public string Telefono { get; set; }
+
+        [BindProperty]
+        public bool Activo { get; set; }
+
+        private readonly IConfiguration configuration;
+        private readonly BioquimicoValidacion _validacion;
 
         public BioquimicoEditModel(IConfiguration configuration)
         {
             this.configuration = configuration;
+            _validacion = new BioquimicoValidacion();
         }
 
         public IActionResult OnGet(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
-
-                string query = @"SELECT idBioquimico, nombres, apellidos, ci, telefono
-                                 FROM bioquimico
-                                 WHERE idBioquimico = @id";
-
-                using (MySqlCommand command = new MySqlCommand(query, connection))
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@id", id);
+                    connection.Open();
+                    string query = @"SELECT idBioquimico, nombres, apellido_paterno, apellido_materno, 
+                                            ci, ci_extencion, telefono, activo
+                                    FROM bioquimico 
+                                    WHERE idBioquimico = @id";
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        if (!reader.Read())
-                        {
-                            return RedirectToPage("/Bioquimico/Bioquimico", new { error = "Bioquímico no encontrado" });
-                        }
+                        command.Parameters.AddWithValue("@id", id);
 
-                        IdBioquimico = Convert.ToInt32(reader["idBioquimico"]);
-                        Nombres = reader["nombres"].ToString() ?? string.Empty;
-                        Apellidos = reader["apellidos"].ToString() ?? string.Empty;
-                        Ci = reader["ci"].ToString() ?? string.Empty;
-                        Telefono = reader["telefono"].ToString() ?? string.Empty;
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                IdBioquimico = reader.GetInt32("idBioquimico");
+                                Nombres = reader.GetString("nombres");
+                                Apellido_Paterno = reader.GetString("apellido_paterno");
+                                Apellido_Materno = reader.GetString("apellido_materno");
+                                Ci = reader.GetString("ci");
+                                Ci_Extencion = reader.IsDBNull(reader.GetOrdinal("ci_extencion")) ? "LP" : reader.GetString("ci_extencion");
+                                Telefono = reader.GetString("telefono");
+                                Activo = reader.GetBoolean("activo");
+                            }
+                            else
+                            {
+                                TempData["ErrorMessage"] = "Bioquímico no encontrado";
+                                return RedirectToPage("Bioquimico");
+                            }
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al cargar bioquímico: {ex.Message}";
+                return RedirectToPage("Bioquimico");
             }
 
             return Page();
@@ -68,86 +92,82 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPost()
         {
-            if (string.IsNullOrWhiteSpace(Nombres) ||
-                string.IsNullOrWhiteSpace(Apellidos) ||
-                string.IsNullOrWhiteSpace(Ci) ||
-                string.IsNullOrWhiteSpace(Telefono))
+            var bioquimico = new ProyectoArqSoft.Models.Bioquimico
             {
-                MensajeError = "Complete los campos obligatorios";
+                Nombres = Nombres,
+                Apellido_Paterno = Apellido_Paterno,
+                Apellido_Materno = Apellido_Materno,
+                Ci = Ci,
+                Ci_Extencion = Ci_Extencion,
+                Telefono = Telefono
+            };
+
+            if (!_validacion.EsValido(bioquimico))
+            {
+                TempData["ErrorMessage"] = _validacion.ObtenerMensajesError();
                 return Page();
             }
 
-            if (!EsTelefonoValido(Telefono))
+            if (string.IsNullOrWhiteSpace(Ci_Extencion))
             {
-                MensajeError = "Teléfono inválido";
-                return Page();
+                Ci_Extencion = "LP";
             }
 
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
-
-                string queryExiste = @"SELECT COUNT(*) 
-                                       FROM bioquimico
-                                       WHERE idBioquimico = @id";
-
-                using (MySqlCommand cmdExiste = new MySqlCommand(queryExiste, connection))
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    cmdExiste.Parameters.AddWithValue("@id", IdBioquimico);
-                    int existe = Convert.ToInt32(cmdExiste.ExecuteScalar());
+                    connection.Open();
 
-                    if (existe == 0)
+                    string updateQuery = @"UPDATE bioquimico 
+                                        SET nombres = @nombres,
+                                            apellido_paterno = @apellido_paterno,
+                                            apellido_materno = @apellido_materno,
+                                            ci = @ci,
+                                            ci_extencion = @ci_extencion,
+                                            telefono = @telefono,
+                                            activo = @activo,
+                                            ultima_actualizacion = NOW()
+                                        WHERE idBioquimico = @id";
+
+                    using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                     {
-                        return RedirectToPage("/Bioquimico/Bioquimico", new { error = "Bioquímico no encontrado" });
+                        command.Parameters.AddWithValue("@id", IdBioquimico);
+                        command.Parameters.AddWithValue("@nombres", Nombres?.Trim());
+                        command.Parameters.AddWithValue("@apellido_paterno", Apellido_Paterno?.Trim());
+                        command.Parameters.AddWithValue("@apellido_materno", Apellido_Materno?.Trim());
+                        command.Parameters.AddWithValue("@ci", Ci?.Trim());
+                        command.Parameters.AddWithValue("@ci_extencion", Ci_Extencion.Trim().ToUpper());
+                        command.Parameters.AddWithValue("@telefono", Telefono?.Trim());
+                        command.Parameters.AddWithValue("@activo", Activo);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            TempData["SuccessMessage"] = "Bioquímico actualizado exitosamente";
+                            return RedirectToPage("Bioquimico");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "No se pudo actualizar el bioquímico";
+                            return Page();
+                        }
                     }
-                }
-
-                string queryCiDuplicado = @"SELECT COUNT(*)
-                                            FROM bioquimico
-                                            WHERE ci = @ci AND idBioquimico <> @id";
-
-                using (MySqlCommand cmdDuplicado = new MySqlCommand(queryCiDuplicado, connection))
-                {
-                    cmdDuplicado.Parameters.AddWithValue("@ci", Ci.Trim());
-                    cmdDuplicado.Parameters.AddWithValue("@id", IdBioquimico);
-
-                    int duplicado = Convert.ToInt32(cmdDuplicado.ExecuteScalar());
-
-                    if (duplicado > 0)
-                    {
-                        MensajeError = "Ya existe un bioquímico con ese CI";
-                        return Page();
-                    }
-                }
-
-                string queryUpdate = @"UPDATE bioquimico
-                                       SET nombres = @nombres,
-                                           apellidos = @apellidos,
-                                           ci = @ci,
-                                           telefono = @telefono
-                                       WHERE idBioquimico = @id";
-
-                using (MySqlCommand cmdUpdate = new MySqlCommand(queryUpdate, connection))
-                {
-                    cmdUpdate.Parameters.AddWithValue("@nombres", Nombres.Trim());
-                    cmdUpdate.Parameters.AddWithValue("@apellidos", Apellidos.Trim());
-                    cmdUpdate.Parameters.AddWithValue("@ci", Ci.Trim());
-                    cmdUpdate.Parameters.AddWithValue("@telefono", Telefono.Trim());
-                    cmdUpdate.Parameters.AddWithValue("@id", IdBioquimico);
-
-                    cmdUpdate.ExecuteNonQuery();
                 }
             }
-
-            return RedirectToPage("/Bioquimico/Bioquimico", new { mensaje = "Bioquímico actualizado correctamente" });
-        }
-
-        private bool EsTelefonoValido(string telefono)
-        {
-            telefono = telefono.Trim();
-            return telefono.All(char.IsDigit) && telefono.Length == 8;
+            catch (MySqlException ex) when (ex.Number == 1062)
+            {
+                TempData["ErrorMessage"] = "Ya existe un bioquímico con ese CI";
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al actualizar: {ex.Message}";
+                return Page();
+            }
         }
     }
 }
