@@ -28,6 +28,7 @@ input {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
+    box-sizing: border-box;
 }
 
 button {
@@ -38,6 +39,7 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
     button:hover {
