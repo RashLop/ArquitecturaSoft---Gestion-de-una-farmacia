@@ -1,47 +1,92 @@
-@page
+ï»¿@page
 @model ProyectoArqSoft.Pages.ClienteCreateModel
 @{
-    ViewData["Title"] = "Registrar Cliente";
 }
 
-<h2>Registrar Cliente</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h2 class="h4 mb-0">Nuevo Cliente</h2>
+                </div>
 
-<form method="post">
-    <div class="form-group mb-2">
-        <label>Tipo de Cliente</label>
-        <select asp-for="Tipo_Cliente" class="form-control">
-            <option value="">Seleccione...</option>
-            <option value="Regular">Regular</option>
-            <option value="Frecuente">Frecuente</option>
-            <option value="VIP">VIP</option>
-        </select>
+                <div class="card-body p-4">
+                    <form method="post" asp-page-handler="CrearCliente">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Cliente</label>
+                            <select asp-for="TipoCliente" class="form-control" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Frecuente">Frecuente</option>
+                                <option value="VIP">VIP</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input asp-for="Nombre" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Apellido Materno</label>
+                                <input asp-for="ApellidoMaterno" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Apellido Paterno</label>
+                                <input asp-for="ApellidoPaterno" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Extension CI</label>
+                                <select asp-for="CiExtencion" class="form-control" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="LP">LP</option>
+                                    <option value="CB">CB</option>
+                                    <option value="SC">SC</option>
+                                    <option value="OR">OR</option>
+                                    <option value="PT">PT</option>
+                                    <option value="CH">CH</option>
+                                    <option value="TJ">TJ</option>
+                                    <option value="BE">BE</option>
+                                    <option value="PD">PD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Carnet</label>
+                                <input asp-for="Ci" class="form-control" placeholder="Ej: 1234567 o 1234567-1A" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha de Nacimiento</label>
+                                <input asp-for="FechaDeNacimiento" type="date" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Telefono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger">@Model.Estado.MensajeError</div>
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a asp-page="Cliente" class="btn btn-secondary">Volver</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group mb-2">
-        <label>Nombre Completo</label>
-        <input asp-for="Nombre" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Carnet de Identidad</label>
-        <input asp-for="Carnet" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Edad</label>
-        <input asp-for="Edad" type="number" class="form-control" />
-    </div>
-
-    <div class="form-group mb-3">
-        <label>Teléfono</label>
-        <input asp-for="Telefono" class="form-control" />
-    </div>
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-    }
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a asp-page="Cliente" class="btn btn-secondary">Volver</a>
-</form>
+</div>

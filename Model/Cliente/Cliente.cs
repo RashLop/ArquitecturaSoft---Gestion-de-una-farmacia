@@ -1,38 +1,41 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace ProyectoArqSoft.Models;
+ï»¿namespace ProyectoArqSoft.Models;
 
 public class Cliente
 {
     public int IdCliente { get; set; }
+    public string TipoCliente { get; set; } = string.Empty;
+    public string Nombre { get; set; } = string.Empty;
+    public string ApellidoMaterno { get; set; } = string.Empty;
+    public string ApellidoPaterno { get; set; } = string.Empty;
+    public string CiExtencion { get; set; } = string.Empty;
+    public string Ci { get; set; } = string.Empty;
+    public DateTime FechaDeNacimiento { get; set; }
+    public string Telefono { get; set; } = string.Empty;
+    public short Estado { get; set; } = 1;
+    public DateTime FechaRegistro { get; set; }
+    public DateTime UltimaActualizacion { get; set; }
 
-    [Required(ErrorMessage = "El tipo de cliente es requerido")]
-    public string TipoCliente { get; set; }
+    public Cliente()
+    {
+    }
 
-    [Required(ErrorMessage = "El nombre es requerido")]
-    [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres")]
-    public string Nombre { get; set; }
-
-    [Required(ErrorMessage = "El CI es requerido")]
-    [StringLength(20, MinimumLength = 5, ErrorMessage = "El CI debe tener entre 5 y 20 dígitos")]
-    public string Ci { get; set; }
-
-    [Required(ErrorMessage = "La edad es requerida")]
-    [Range(18, 120, ErrorMessage = "La edad debe estar entre 18 y 120 años")]
-    public int Edad { get; set; }
-
-    [Required(ErrorMessage = "El teléfono es requerido")]
-    [StringLength(20, MinimumLength = 7, ErrorMessage = "El teléfono debe tener entre 7 y 20 caracteres")]
-    public string Telefono { get; set; }
-
-    public Cliente() { }
-
-    public Cliente(string tipoCliente, string nombre, string ci, int edad, string telefono)
+    public Cliente(
+        string tipoCliente,
+        string nombre,
+        string apellidoMaterno,
+        string apellidoPaterno,
+        string ciExtencion,
+        string ci,
+        DateTime fechaDeNacimiento,
+        string telefono)
     {
         TipoCliente = tipoCliente;
         Nombre = nombre;
+        ApellidoMaterno = apellidoMaterno;
+        ApellidoPaterno = apellidoPaterno;
+        CiExtencion = ciExtencion;
         Ci = ci;
-        Edad = edad;
+        FechaDeNacimiento = fechaDeNacimiento;
         Telefono = telefono;
     }
 }
