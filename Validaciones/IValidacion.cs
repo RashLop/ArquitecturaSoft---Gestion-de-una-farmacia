@@ -2,6 +2,8 @@ namespace ProyectoArqSoft.Validaciones
 {
     public interface IValidacion<T>
     {
-        Validacion Validar(T entidad);
+        List<string> Errores { get; }
+        bool EsValido(T entidad);
+        string ObtenerMensajesError();
     }
 }

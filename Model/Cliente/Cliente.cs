@@ -1,38 +1,33 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ProyectoArqSoft.Models;
 
 public class Cliente
 {
     public int IdCliente { get; set; }
-
-    [Required(ErrorMessage = "El tipo de cliente es requerido")]
-    public string TipoCliente { get; set; }
-
-    [Required(ErrorMessage = "El nombre es requerido")]
-    [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres")]
+    public string Tipo_Cliente { get; set; }
     public string Nombre { get; set; }
-
-    [Required(ErrorMessage = "El CI es requerido")]
-    [StringLength(20, MinimumLength = 5, ErrorMessage = "El CI debe tener entre 5 y 20 dígitos")]
+    public string Apellido_Materno { get; set; }
+    public string Apellido_Paterno { get; set; }
+    public string Ci_Extencion { get; set; }
     public string Ci { get; set; }
-
-    [Required(ErrorMessage = "La edad es requerida")]
-    [Range(18, 120, ErrorMessage = "La edad debe estar entre 18 y 120 años")]
-    public int Edad { get; set; }
-
-    [Required(ErrorMessage = "El teléfono es requerido")]
-    [StringLength(20, MinimumLength = 7, ErrorMessage = "El teléfono debe tener entre 7 y 20 caracteres")]
+    public DateTime Fecha_De_Nacimiento { get; set; }
     public string Telefono { get; set; }
+    public short Estado { get; set; }
+    public DateTime Fecha_Registro { get; set; }
+    public DateTime? Ultima_Actualizacion { get; set; }
 
-    public Cliente() { }
+    // Propiedades calculadas para facilitar el uso
+    public string NombreCompleto => $"{Nombre} {Apellido_Paterno} {Apellido_Materno}".Trim();
+    public string CiCompleto => $"{Ci} {Ci_Extencion}".Trim();
 
-    public Cliente(string tipoCliente, string nombre, string ci, int edad, string telefono)
+    // Edad calculada
+    public int Edad
     {
-        TipoCliente = tipoCliente;
-        Nombre = nombre;
-        Ci = ci;
-        Edad = edad;
-        Telefono = telefono;
+        get
+        {
+            var today = DateTime.Today;
+            var age = today.Year - Fecha_De_Nacimiento.Year;
+            if (Fecha_De_Nacimiento.Date > today.AddYears(-age)) age--;
+            return age;
+        }
     }
 }

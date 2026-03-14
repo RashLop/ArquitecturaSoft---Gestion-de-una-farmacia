@@ -37,10 +37,18 @@ namespace ProyectoArqSoft.Pages
         void CargarClientes()
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
+            string query = @"SELECT idCliente, 
+                                    CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    tipo_cliente, 
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    fecha_de_nacimiento,
+                                    TIMESTAMPDIFF(YEAR, fecha_de_nacimiento, CURDATE()) as edad,
+                                    telefono
                             FROM cliente
                             WHERE estado = 1
-                            ORDER BY nombre";
+                            ORDER BY nombre, apellido_paterno";
 
             try
             {
@@ -66,36 +74,52 @@ namespace ProyectoArqSoft.Pages
             }
 
             string texto = TextoBusqueda.Trim();
-
-            if ((TipoBusqueda == "ci" || TipoBusqueda == "telefono") && !EsNumero(texto))
-            {
-                Mensaje = "Criterio inválido";
-                Clientes_DataTable.Rows.Clear();
-                return;
-            }
-
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = "";
 
             switch (TipoBusqueda)
             {
                 case "nombre":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
+                    query = @"SELECT idCliente, 
+                                    CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    tipo_cliente, 
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    fecha_de_nacimiento,
+                                    TIMESTAMPDIFF(YEAR, fecha_de_nacimiento, CURDATE()) as edad,
+                                    telefono
                             FROM cliente
-                            WHERE estado = 1 AND nombre LIKE @dato
-                            ORDER BY nombre";
+                            WHERE estado = 1 AND (nombre LIKE @dato OR apellido_paterno LIKE @dato OR apellido_materno LIKE @dato)
+                            ORDER BY nombre, apellido_paterno";
                     break;
                 case "ci":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
+                    query = @"SELECT idCliente, 
+                                    CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    tipo_cliente, 
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    fecha_de_nacimiento,
+                                    TIMESTAMPDIFF(YEAR, fecha_de_nacimiento, CURDATE()) as edad,
+                                    telefono
                             FROM cliente
-                            WHERE estado = 1 AND ci LIKE @dato
-                            ORDER BY nombre";
+                            WHERE estado = 1 AND (ci LIKE @dato OR ci_extencion LIKE @dato)
+                            ORDER BY nombre, apellido_paterno";
                     break;
                 case "telefono":
-                    query = @"SELECT idCliente, nombre, tipo_cliente, ci, edad, telefono
+                    query = @"SELECT idCliente, 
+                                    CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as nombre_completo,
+                                    tipo_cliente, 
+                                    CONCAT(ci, ' ', ci_extencion) as ci_completo,
+                                    ci,
+                                    ci_extencion,
+                                    fecha_de_nacimiento,
+                                    TIMESTAMPDIFF(YEAR, fecha_de_nacimiento, CURDATE()) as edad,
+                                    telefono
                             FROM cliente
                             WHERE estado = 1 AND telefono LIKE @dato
-                            ORDER BY nombre";
+                            ORDER BY nombre, apellido_paterno";
                     break;
                 default:
                     return;
@@ -125,16 +149,6 @@ namespace ProyectoArqSoft.Pages
             }
         }
 
-        bool EsNumero(string texto)
-        {
-            foreach (char c in texto)
-            {
-                if (!char.IsDigit(c))
-                    return false;
-            }
-            return true;
-        }
-
         public IActionResult OnPostDelete(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
@@ -143,8 +157,7 @@ namespace ProyectoArqSoft.Pages
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open(); 
-                    // Soft delete
+                    connection.Open();
                     string deleteQuery = "UPDATE cliente SET estado = 0 WHERE idCliente = @id";
                     MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
                     deleteCommand.Parameters.AddWithValue("@id", id);

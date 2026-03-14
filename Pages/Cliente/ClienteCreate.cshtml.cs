@@ -1,95 +1,107 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
-using System.Text.RegularExpressions;
 
 namespace ProyectoArqSoft.Pages
 {
     public class ClienteCreateModel : PageModel
     {
-        private readonly IConfiguration Configuration;
+        [BindProperty]
+        public string Tipo_Cliente { get; set; }
 
         [BindProperty]
         public string Nombre { get; set; }
 
         [BindProperty]
-        public string Tipo_Cliente { get; set; }
+        public string Apellido_Paterno { get; set; }
 
         [BindProperty]
-        public string Carnet { get; set; }
+        public string Apellido_Materno { get; set; }
 
         [BindProperty]
-        public int Edad { get; set; }
+        public string Ci { get; set; }
+
+        [BindProperty]
+        public string Ci_Extencion { get; set; }
+
+        [BindProperty]
+        public DateTime Fecha_De_Nacimiento { get; set; }
 
         [BindProperty]
         public string Telefono { get; set; }
 
+        private readonly IConfiguration configuration;
+
         public ClienteCreateModel(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
         }
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            return Page();
-        }
-
-        private bool ValidarNombre(string nombre)
-        {
-            return !string.IsNullOrEmpty(nombre) &&
-                   nombre.Length >= 3 &&
-                   Regex.IsMatch(nombre, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
-        }
-
-        private bool ValidarCarnet(string carnet)
-        {
-            return !string.IsNullOrEmpty(carnet) &&
-                   carnet.Length >= 5 &&
-                   carnet.Length <= 20 &&
-                   Regex.IsMatch(carnet, @"^\d+$");
-        }
-
-        private bool ValidarTelefono(string telefono)
-        {
-            return !string.IsNullOrEmpty(telefono) &&
-                   telefono.Length >= 7 &&
-                   telefono.Length <= 20 &&
-                   Regex.IsMatch(telefono, @"^[\d\s\+\-\(\)]+$");
+            Fecha_De_Nacimiento = DateTime.Today.AddYears(-18);
+            Ci_Extencion = "LP";
         }
 
         public IActionResult OnPost()
         {
-            if (!ValidarNombre(Nombre))
+            if (string.IsNullOrWhiteSpace(Tipo_Cliente))
             {
-                TempData["ErrorMessage"] = "El nombre solo puede contener letras y espacios, mínimo 3 caracteres";
+                TempData["ErrorMessage"] = "El tipo de cliente es requerido";
                 return Page();
             }
 
-            if (!ValidarCarnet(Carnet))
+            if (string.IsNullOrWhiteSpace(Nombre))
             {
-                TempData["ErrorMessage"] = "El carnet solo puede contener números y debe tener entre 5 y 20 dígitos";
+                TempData["ErrorMessage"] = "El nombre es requerido";
                 return Page();
             }
 
-            if (Edad < 18)
+            if (string.IsNullOrWhiteSpace(Apellido_Paterno))
             {
-                TempData["ErrorMessage"] = "El cliente debe ser mayor de 18 años para registrarse";
+                TempData["ErrorMessage"] = "El apellido paterno es requerido";
                 return Page();
             }
 
-            if (Edad > 120)
+            if (string.IsNullOrWhiteSpace(Apellido_Materno))
             {
-                TempData["ErrorMessage"] = "La edad no puede ser mayor a 120 años";
+                TempData["ErrorMessage"] = "El apellido materno es requerido";
                 return Page();
             }
 
-            if (!ValidarTelefono(Telefono))
+            if (string.IsNullOrWhiteSpace(Ci))
             {
-                TempData["ErrorMessage"] = "El teléfono debe tener entre 7 y 20 caracteres válidos (números, +, -, (), espacios)";
+                TempData["ErrorMessage"] = "El carnet es requerido";
                 return Page();
             }
 
-            string connectionString = Configuration.GetConnectionString("MySqlConnection")!;
+            if (string.IsNullOrWhiteSpace(Ci_Extencion))
+            {
+                Ci_Extencion = "LP";
+            }
+
+            if (Fecha_De_Nacimiento == DateTime.MinValue)
+            {
+                TempData["ErrorMessage"] = "La fecha de nacimiento es requerida";
+                return Page();
+            }
+
+            var edad = DateTime.Today.Year - Fecha_De_Nacimiento.Year;
+            if (Fecha_De_Nacimiento.Date > DateTime.Today.AddYears(-edad)) edad--;
+
+            if (edad < 18)
+            {
+                TempData["ErrorMessage"] = "El cliente debe ser mayor de 18 años";
+                return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(Telefono))
+            {
+                TempData["ErrorMessage"] = "El teléfono es requerido";
+                return Page();
+            }
+
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
             try
             {
@@ -97,36 +109,45 @@ namespace ProyectoArqSoft.Pages
                 {
                     connection.Open();
 
-                    string checkQuery = "SELECT COUNT(*) FROM cliente WHERE ci = @ci";
-                    MySqlCommand checkCommand = new MySqlCommand(checkQuery, connection);
-                    checkCommand.Parameters.AddWithValue("@ci", Carnet);
-                    int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                    string insertQuery = @"INSERT INTO cliente 
+                        (tipo_cliente, nombre, apellido_paterno, apellido_materno, ci, ci_extencion, fecha_de_nacimiento, telefono, estado, fecha_registro) 
+                        VALUES 
+                        (@tipo_cliente, @nombre, @apellido_paterno, @apellido_materno, @ci, @ci_extencion, @fecha_de_nacimiento, @telefono, 1, NOW())";
 
-                    if (count > 0)
+                    using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                     {
-                        TempData["ErrorMessage"] = "Ya existe un cliente con ese carnet";
-                        return Page();
+                        command.Parameters.AddWithValue("@tipo_cliente", Tipo_Cliente?.Trim());
+                        command.Parameters.AddWithValue("@nombre", Nombre?.Trim());
+                        command.Parameters.AddWithValue("@apellido_paterno", Apellido_Paterno?.Trim());
+                        command.Parameters.AddWithValue("@apellido_materno", Apellido_Materno?.Trim());
+                        command.Parameters.AddWithValue("@ci", Ci?.Trim());
+                        command.Parameters.AddWithValue("@ci_extencion", Ci_Extencion.Trim().ToUpper());
+                        command.Parameters.AddWithValue("@fecha_de_nacimiento", Fecha_De_Nacimiento);
+                        command.Parameters.AddWithValue("@telefono", Telefono?.Trim());
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            TempData["SuccessMessage"] = "Cliente registrado exitosamente";
+                            return RedirectToPage("Cliente");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "No se pudo registrar el cliente";
+                            return Page();
+                        }
                     }
-
-                    string insertQuery = @"INSERT INTO cliente (tipo_cliente, nombre, ci, edad, telefono, estado)
-                                         VALUES(@tipo_cliente, @nombre, @ci, @edad, @telefono, 1)";
-
-                    MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection);
-                    insertCommand.Parameters.AddWithValue("@tipo_cliente", Tipo_Cliente);
-                    insertCommand.Parameters.AddWithValue("@nombre", Nombre);
-                    insertCommand.Parameters.AddWithValue("@ci", Carnet);
-                    insertCommand.Parameters.AddWithValue("@edad", Edad);
-                    insertCommand.Parameters.AddWithValue("@telefono", Telefono);
-
-                    insertCommand.ExecuteNonQuery();
                 }
-
-                TempData["SuccessMessage"] = "Cliente creado exitosamente";
-                return RedirectToPage("Cliente");
+            }
+            catch (MySqlException ex) when (ex.Number == 1062)
+            {
+                TempData["ErrorMessage"] = "Ya existe un cliente con ese CI";
+                return Page();
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Error al crear el cliente: " + ex.Message;
+                TempData["ErrorMessage"] = $"Error al registrar: {ex.Message}";
                 return Page();
             }
         }

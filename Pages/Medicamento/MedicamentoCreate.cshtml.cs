@@ -1,28 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using ProyectoArqSoft.Models;
 using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Pages.Base;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using MySql.Data.MySqlClient;
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoCreateModel : BasePageModel
+    public class MedicamentoCreateModel : PageModel
     {
-        private readonly IConfiguration configuration;
-        private readonly IValidacion<MedicamentoEntidad> validador;
+        [BindProperty]
+        public string Nombre { get; set; }
 
         [BindProperty]
-        public string Nombre { get; set; } = string.Empty;
+        public string Presentacion { get; set; }
 
         [BindProperty]
-        public string Presentacion { get; set; } = string.Empty;
+        public string Clasificacion { get; set; }
 
         [BindProperty]
-        public string Clasificacion { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Concentracion { get; set; } = string.Empty;
+        public string Concentracion { get; set; }
 
         [BindProperty]
         public decimal Precio { get; set; }
@@ -30,71 +26,102 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
+        private readonly IConfiguration configuration;
+        private readonly MedicamentoValidacion _medicamentoValidacion;
+
+        public List<string> Presentaciones { get; set; } = new List<string>
+        {
+            "Tabletas", "Cápsulas", "Jarabe", "Inyectable",
+            "Crema", "Gotas", "Suspensión", "Polvo",
+            "Ampollas", "Supositorios", "Parche", "Inhalador",
+            "Solución", "Emulsión", "Gel", "Ungüento"
+        };
+
+        public List<string> Clasificaciones { get; set; } = new List<string>
+        {
+            "Analgésico", "Antiinflamatorio", "Antibiótico",
+            "Antihistamínico", "Antidepresivo", "Antihipertensivo",
+            "Antidiabético", "Antifúngico", "Antiviral",
+            "Vacuna", "Suplemento", "Ansiolítico",
+            "Anticonvulsivo", "Antipsicótico", "Relajante Muscular",
+            "Antiácido", "Laxante", "Antidiarreico", "Otros"
+        };
+
         public MedicamentoCreateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
-            validador = new MedicamentoValidacion();
+            _medicamentoValidacion = new MedicamentoValidacion();
         }
 
         public void OnGet()
         {
+            // Valores por defecto
+            Precio = 0;
+            Stock = 0;
         }
 
-        public IActionResult OnPostCrearMedicamento()
+        public IActionResult OnPost()
         {
-            MedicamentoEntidad medicamento = ConstruirMedicamento();
-            Validacion resultado = ValidarMedicamento(medicamento);
-
-            if (!resultado.EsValido)
+            // Crear objeto Medicamento para validar
+            var medicamento = new ProyectoArqSoft.Models.Medicamento
             {
-                Estado.MensajeError = resultado.MensajeError;
-                return Page();
-            }
-
-            GuardarMedicamento(medicamento);
-
-            return RedirectToPage("Medicamento");
-        }
-        private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
-        {
-            return validador.Validar(medicamento);
-        }
-
-        private void GuardarMedicamento(MedicamentoEntidad medicamento)
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"INSERT INTO medicamento 
-                            (nombre, presentacion, clasificacion, concentracion, precio, stock)
-                            VALUES
-                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@nombre", medicamento.Nombre);
-                command.Parameters.AddWithValue("@presentacion", medicamento.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", medicamento.Clasificacion);
-                command.Parameters.AddWithValue("@concentracion", medicamento.Concentracion);
-                command.Parameters.AddWithValue("@precio", medicamento.Precio);
-                command.Parameters.AddWithValue("@stock", medicamento.Stock);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-        }
-
-        private MedicamentoEntidad ConstruirMedicamento()
-        {
-            return new MedicamentoEntidad
-            {
-                Nombre = StringHelper.QuitarEspacios(Nombre),
-                Presentacion = StringHelper.Limpiar(Presentacion),
-                Clasificacion = StringHelper.Limpiar(Clasificacion),
-                Concentracion = StringHelper.Limpiar(Concentracion),
+                Nombre = Nombre,
+                Presentacion = Presentacion,
+                Clasificacion = Clasificacion,
+                Concentracion = Concentracion,
                 Precio = Precio,
                 Stock = Stock
             };
+
+            // Usar EsValido() para validar
+            if (!_medicamentoValidacion.EsValido(medicamento))
+            {
+                TempData["ErrorMessage"] = _medicamentoValidacion.ObtenerMensajesError();
+                return Page();
+            }
+
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string insertQuery = @"INSERT INTO medicamento 
+                        (nombre, presentacion, clasificacion, concentracion, precio, stock, estado, fecha_registro, ultima_actualizacion) 
+                        VALUES 
+                        (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock, 1, NOW(), NOW())";
+
+                    using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@nombre", Nombre?.Trim());
+                        command.Parameters.AddWithValue("@presentacion", Presentacion);
+                        command.Parameters.AddWithValue("@clasificacion", Clasificacion);
+                        command.Parameters.AddWithValue("@concentracion", Concentracion?.Trim());
+                        command.Parameters.AddWithValue("@precio", Precio);
+                        command.Parameters.AddWithValue("@stock", Stock);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            TempData["SuccessMessage"] = "Medicamento registrado exitosamente";
+                            return RedirectToPage("Medicamento");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "No se pudo registrar el medicamento";
+                            return Page();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al registrar: {ex.Message}";
+                return Page();
+            }
         }
     }
 }

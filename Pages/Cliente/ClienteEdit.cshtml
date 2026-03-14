@@ -7,6 +7,7 @@
 <h2>Editar Cliente</h2>
 
 <form method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="IdCliente" />
 
     <div class="form-group mb-2">
@@ -19,19 +20,46 @@
         </select>
     </div>
 
-    <div class="form-group mb-2">
-        <label>Nombre Completo</label>
-        <input asp-for="Nombre" class="form-control" />
+    <div class="row">
+        <div class="col-md-4 form-group mb-2">
+            <label>Nombre</label>
+            <input asp-for="Nombre" class="form-control" />
+        </div>
+        <div class="col-md-4 form-group mb-2">
+            <label>Apellido Paterno</label>
+            <input asp-for="Apellido_Paterno" class="form-control" />
+        </div>
+        <div class="col-md-4 form-group mb-2">
+            <label>Apellido Materno</label>
+            <input asp-for="Apellido_Materno" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 form-group mb-2">
+            <label>Carnet de Identidad</label>
+            <input asp-for="Ci" class="form-control" />
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label>Extensión</label>
+            <select asp-for="Ci_Extencion" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="LP">LP</option>
+                <option value="CB">CB</option>
+                <option value="SC">SC</option>
+                <option value="CH">CH</option>
+                <option value="OR">OR</option>
+                <option value="PT">PT</option>
+                <option value="TJ">TJ</option>
+                <option value="BN">BN</option>
+                <option value="PD">PD</option>
+            </select>
+        </div>
     </div>
 
     <div class="form-group mb-2">
-        <label>Carnet de Identidad</label>
-        <input asp-for="Carnet" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Edad</label>
-        <input asp-for="Edad" type="number" class="form-control" />
+        <label>Fecha de Nacimiento</label>
+        <input asp-for="Fecha_De_Nacimiento" type="date" class="form-control" />
     </div>
 
     <div class="form-group mb-3">
@@ -48,6 +76,8 @@
         <div class="alert alert-success">@TempData["SuccessMessage"]</div>
     }
 
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <a asp-page="Cliente" class="btn btn-secondary">Volver</a>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success" style="min-width: 120px;">Guardar Cambios</button>
+        <a asp-page="Cliente" class="btn btn-secondary" style="min-width: 100px;">Volver</a>
+    </div>
 </form>

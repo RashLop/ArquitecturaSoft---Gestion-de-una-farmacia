@@ -1,32 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Helpers;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using ProyectoArqSoft.Models;
 using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Pages.Base;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
-
+using MySql.Data.MySqlClient;
 
 namespace ProyectoArqSoft.Pages
 {
-    public class MedicamentoUpdateModel : BasePageModel         
+    public class MedicamentoUpdateModel : PageModel
     {
-        private readonly IConfiguration configuration;
-        private readonly IValidacion<MedicamentoEntidad> validador;
+        [BindProperty]
+        public int IdMedicamento { get; set; }  // Cambiado de Id a IdMedicamento
 
         [BindProperty]
-        public int IdMedicamento { get; set; }
+        public string Nombre { get; set; }
 
         [BindProperty]
-        public string Nombre { get; set; } = string.Empty;
+        public string Presentacion { get; set; }
 
         [BindProperty]
-        public string Presentacion { get; set; } = string.Empty;
+        public string Clasificacion { get; set; }
 
         [BindProperty]
-        public string Clasificacion { get; set; } = string.Empty;
-
-        [BindProperty]
-        public string Concentracion { get; set; } = string.Empty;
+        public string Concentracion { get; set; }
 
         [BindProperty]
         public decimal Precio { get; set; }
@@ -34,118 +29,146 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
-        public void OnGet()
+        // Propiedades para los combos
+        public List<string> Presentaciones { get; set; } = new List<string>
         {
-        }
+            "Tabletas", "Cápsulas", "Jarabe", "Inyectable",
+            "Crema", "Gotas", "Suspensión", "Polvo",
+            "Ampollas", "Supositorios", "Parche", "Inhalador",
+            "Solución", "Emulsión", "Gel", "Ungüento"
+        };
+
+        public List<string> Clasificaciones { get; set; } = new List<string>
+        {
+            "Analgésico", "Antiinflamatorio", "Antibiótico",
+            "Antihistamínico", "Antidepresivo", "Antihipertensivo",
+            "Antidiabético", "Antifúngico", "Antiviral",
+            "Vacuna", "Suplemento", "Ansiolítico",
+            "Anticonvulsivo", "Antipsicótico", "Relajante Muscular",
+            "Antiácido", "Laxante", "Antidiarreico", "Otros"
+        };
+
+        private readonly IConfiguration configuration;
+        private readonly MedicamentoValidacion _medicamentoValidacion;
+
         public MedicamentoUpdateModel(IConfiguration configuration)
         {
             this.configuration = configuration;
-            validador = new MedicamentoValidacion();
+            _medicamentoValidacion = new MedicamentoValidacion();
         }
 
-        public IActionResult OnPostCargarMedicamentoParaEdicion(int id)
+        public IActionResult OnGet(int id)
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock
-                             FROM medicamento
-                             WHERE id_medicamento = @id_medicamento";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_medicamento", id);
-
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    if (reader.Read())
+                    connection.Open();
+                    string query = @"SELECT idMedicamento, nombre, presentacion, clasificacion, concentracion, precio, stock 
+                                    FROM medicamento 
+                                    WHERE idMedicamento = @id AND estado = 1";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        IdMedicamento = Convert.ToInt32(reader["id_medicamento"]);
-                        Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString());
-                        Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString());
-                        Clasificacion = StringHelper.LimpiarEspacios(reader["clasificacion"].ToString());
-                        Concentracion = StringHelper.LimpiarEspacios(reader["concentracion"].ToString());
-                        Precio = Convert.ToDecimal(reader["precio"]);
-                        Stock = Convert.ToInt32(reader["stock"]);
-                    }
-                    else
-                    {
-                        return RedirectToPage("Medicamento");
+                        command.Parameters.AddWithValue("@id", id);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                IdMedicamento = reader.GetInt32("idMedicamento");
+                                Nombre = reader.GetString("nombre");
+                                Presentacion = reader.GetString("presentacion");
+                                Clasificacion = reader.GetString("clasificacion");
+                                Concentracion = reader.GetString("concentracion");
+                                Precio = reader.GetDecimal("precio");
+                                Stock = reader.GetInt32("stock");
+                            }
+                            else
+                            {
+                                TempData["ErrorMessage"] = "Medicamento no encontrado";
+                                return RedirectToPage("Medicamento");
+                            }
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al cargar medicamento: {ex.Message}";
+                return RedirectToPage("Medicamento");
             }
 
             return Page();
         }
 
-        public IActionResult OnPostActualizarMedicamento()
+        public IActionResult OnPost()
         {
-            MedicamentoEntidad medicamento = ConstruirMedicamento();
-            Validacion resultado = ValidarMedicamento(medicamento);
-
-            if (!resultado.EsValido)
+            var medicamento = new ProyectoArqSoft.Models.Medicamento
             {
-                Estado.MensajeError = resultado.MensajeError;
-                return Page();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            ActualizarMedicamento(medicamento);
-
-            return RedirectToPage("Medicamento");
-        }
-
-        private MedicamentoEntidad ConstruirMedicamento()
-        {
-            return new MedicamentoEntidad
-            {
-                Id = IdMedicamento,
-                Nombre = StringHelper.QuitarEspacios(Nombre),
-                Presentacion = StringHelper.LimpiarEspacios(Presentacion),
-                Clasificacion = StringHelper.LimpiarEspacios(Clasificacion),
-                Concentracion = StringHelper.LimpiarEspacios(Concentracion),
+                Nombre = Nombre,
+                Presentacion = Presentacion,
+                Clasificacion = Clasificacion,
+                Concentracion = Concentracion,
                 Precio = Precio,
                 Stock = Stock
             };
-        }
 
-        private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
-        {
-            return validador.Validar(medicamento);
-        }
-
-        private void ActualizarMedicamento(MedicamentoEntidad medicamento)
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"UPDATE medicamento
-                             SET nombre=@nombre,
-                                 presentacion=@presentacion,
-                                 clasificacion=@clasificacion,
-                                 concentracion=@concentracion,
-                                 precio=@precio,
-                                 stock=@stock,
-                                 ultima_actualizacion = NOW()
-                             WHERE id_medicamento=@id_medicamento";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            if (!_medicamentoValidacion.EsValido(medicamento))
             {
-                MySqlCommand command = new MySqlCommand(query, connection);
+                TempData["ErrorMessage"] = _medicamentoValidacion.ObtenerMensajesError();
+                return Page();
+            }
 
-                command.Parameters.AddWithValue("@id_medicamento", IdMedicamento);
-                command.Parameters.AddWithValue("@nombre", medicamento.Nombre);
-                command.Parameters.AddWithValue("@presentacion", medicamento.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", medicamento.Clasificacion);
-                command.Parameters.AddWithValue("@concentracion", medicamento.Concentracion);
-                command.Parameters.AddWithValue("@precio", medicamento.Precio);
-                command.Parameters.AddWithValue("@stock", medicamento.Stock);
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
-                connection.Open();
-                command.ExecuteNonQuery();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string updateQuery = @"UPDATE medicamento 
+                                        SET nombre = @nombre,
+                                            presentacion = @presentacion,
+                                            clasificacion = @clasificacion,
+                                            concentracion = @concentracion,
+                                            precio = @precio,
+                                            stock = @stock,
+                                            ultima_actualizacion = NOW()
+                                        WHERE idMedicamento = @idMedicamento";
+
+                    using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@idMedicamento", IdMedicamento);
+                        command.Parameters.AddWithValue("@nombre", Nombre?.Trim());
+                        command.Parameters.AddWithValue("@presentacion", Presentacion);
+                        command.Parameters.AddWithValue("@clasificacion", Clasificacion);
+                        command.Parameters.AddWithValue("@concentracion", Concentracion?.Trim());
+                        command.Parameters.AddWithValue("@precio", Precio);
+                        command.Parameters.AddWithValue("@stock", Stock);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            TempData["SuccessMessage"] = "Medicamento actualizado exitosamente";
+                            return RedirectToPage("Medicamento");
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "No se pudo actualizar el medicamento";
+                            return Page();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error al actualizar: {ex.Message}";
+                return Page();
             }
         }
     }
