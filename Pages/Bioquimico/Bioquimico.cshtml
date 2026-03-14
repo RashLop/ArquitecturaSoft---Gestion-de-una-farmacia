@@ -1,66 +1,139 @@
 ﻿@page
 @model ProyectoArqSoft.Pages.BioquimicoModel
-@{ ViewData["Title"] = "Bioquímicos"; }
+@{
+    ViewData["Title"] = "Bioquímicos";
+    var modalId = "confirmarEliminarBioquimicoModal";
+}
 
-<h2>Listado de Bioquímicos</h2>
+<div class="container mt-5">
 
-    <form method="get" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="filtro" class="form-control" placeholder="Buscar por nombre o CI..." value="@Model.FiltroActual" />
-            <button type="submit" class="btn btn-primary">Buscar</button>
-            <a asp-page="/Bioquimico/Bioquimico" class="btn btn-secondary">Limpiar</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-success">Bioquímicos Registrados</h2>
+        <a asp-page="BioquimicoCreate" class="btn-main">
+            + Nuevo Bioquímico
+        </a>
+    </div>
+
+    <form method="get" class="mb-4">
+        <div class="card-module p-3">
+            <div class="input-group">
+                <input type="text"
+                       name="filtro"
+                       class="form-control"
+                       placeholder="Buscar por nombres, apellidos o CI..."
+                       value="@Model.Estado.FiltroActual" />
+
+                <button type="submit" class="btn btn-success btn-fixed">
+                    Buscar
+                </button>
+
+                <a asp-page="Bioquimico" class="btn btn-secondary btn-fixed">
+                    Limpiar
+                </a>
+            </div>
         </div>
     </form>
 
-<div class="mb-3">
-    <a asp-page="/Bioquimico/BioquimicoCreate" class="btn btn-success">Nuevo Bioquímico</a>
+    @if (!string.IsNullOrEmpty(Model.Estado.Mensaje))
+    {
+        <div class="alert alert-success shadow-sm">@Model.Estado.Mensaje</div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
+    {
+        <div class="alert alert-danger shadow-sm">@Model.Estado.MensajeError</div>
+    }
+
+    <div class="card-module">
+        <table class="table table-hover align-middle">
+            <thead class="table-success">
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Carnet</th>
+                    <th>Extensión</th>
+                    <th>Teléfono</th>
+                    <th style="width:170px">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.BioquimicoDataTable != null && Model.BioquimicoDataTable.Rows.Count > 0)
+                {
+                    @foreach (System.Data.DataRow row in Model.BioquimicoDataTable.Rows)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@row["nombres"]</td>
+                            <td>@row["apellido_paterno"]</td>
+                            <td>@row["apellido_materno"]</td>
+                            <td>@row["ci"]</td>
+                            <td>@row["ci_extencion"]</td>
+                            <td>@row["telefono"]</td>
+                            <td>
+                                <a asp-page="BioquimicoEdit" asp-route-id="@row["idBioquimico"]" class="btn btn-warning btn-sm">
+                                    Editar
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#@modalId"
+                                        data-id="@row["idBioquimico"]"
+                                        data-nombre="@row["nombres"] @row["apellido_paterno"]">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">No se encontraron bioquímicos.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    
+    <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@(modalId)Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: #0b5d3b;">
+                    <h5 class="modal-title" id="@(modalId)Label">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">¿Está seguro de que desea eliminar a este bioquímico?</p>
+                    <p class="fw-semibold mb-0" id="bioquimicoEliminarNombre"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="post" asp-page-handler="Eliminar">
+                        <input type="hidden" name="id" id="bioquimicoEliminarId" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@if (!string.IsNullOrEmpty(Model.Mensaje)) 
-{ 
-    <div class="alert alert-success">@Model.Mensaje</div>
-}
-@if (!string.IsNullOrEmpty(Model.MensajeError))
-{ 
-    <div class="alert alert-danger">@Model.MensajeError</div> 
-}
+@section Scripts {
+    <script>
+        (() => {
+            const modal = document.getElementById('@modalId');
+            if (!modal) return;
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th>CI</th>
-            <th>Teléfono</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.BioquimicoDataTable.Rows.Count > 0)
-        {
-            foreach (System.Data.DataRow row in Model.BioquimicoDataTable.Rows)
-            {
-                <tr>
-                    <td>@row["nombres"]</td>
-                    <td>@row["apellidos"]</td>
-                    <td>@row["ci"]</td>
-                    <td>@row["telefono"]</td>
-                    <td>
-                        <a asp-page="/Bioquimico/BioquimicoEdit" asp-route-id="@row["idBioquimico"]" class="btn btn-warning btn-sm">Editar</a>
-                        
-                        <form method="post" asp-page-handler="Delete" asp-route-id="@row["idBioquimico"]" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm" 
-                                    onclick="return confirm('¿Está seguro de eliminar a este bioquímico?');">
-                                Eliminar
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr><td colspan="5" class="text-center">No se encontraron bioquímicos.</td></tr>
-        }
-    </tbody>
-</table>
+            modal.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const nombre = button.getAttribute('data-nombre');
+
+                modal.querySelector('#bioquimicoEliminarId').value = id;
+                modal.querySelector('#bioquimicoEliminarNombre').textContent = nombre;
+            });
+        })();
+    </script>
+}
