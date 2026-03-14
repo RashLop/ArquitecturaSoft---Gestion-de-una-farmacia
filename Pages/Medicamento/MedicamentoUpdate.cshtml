@@ -55,9 +55,13 @@
                             </select>
                             <label asp-for="Clasificacion"></label>
                         </div>
-
                         <div class="form-floating mb-3">
-                            <input asp-for="Concentracion" class="form-control med-input" placeholder="Concentración" required />
+                            <input asp-for="Concentracion"
+                                class="form-control med-input"
+                                placeholder="Ej: 250 mg/5ml"
+                                pattern="^\d+(\.\d+)?\s?(mg|g|mcg|ml|%)\s*(\/\s*(\d+(\.\d+)?)?\s?(ml|l))?$"
+                                title="Formato válido: 500 mg, 250 mg/5ml, 0.9 %"
+                                required />
                             <label asp-for="Concentracion"></label>
                         </div>
 

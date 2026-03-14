@@ -21,20 +21,44 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Presentacion" class="form-control med-input" placeholder="Presentación" required />
+                            <select asp-for="Presentacion" class="form-select med-input" required>
+                                <option value="" selected disabled>Seleccione una presentación</option>
+                                <option value="Cápsulas">Cápsulas</option>
+                                <option value="Tabletas">Tabletas</option>
+                                <option value="Jarabe">Jarabe</option>
+                                <option value="Suspensión">Suspensión</option>
+                                <option value="Inyectable">Inyectable</option>
+                                <option value="Crema">Crema</option>
+                                <option value="Pomada">Pomada</option>
+                                <option value="Gotas">Gotas</option>
+                                <option value="Polvo">Polvo</option>
+                            </select>
                             <label asp-for="Presentacion"></label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Clasificacion" class="form-control med-input" placeholder="Clasificación" required />
+                            <select asp-for="Clasificacion" class="form-select med-input" required>
+                                <option value="" selected disabled>Seleccione una clasificación</option>
+                                <option value="Antibiótico">Antibiótico</option>
+                                <option value="Analgésico">Analgésico</option>
+                                <option value="Antiinflamatorio">Antiinflamatorio</option>
+                                <option value="Antialérgico">Antialérgico</option>
+                                <option value="Antipirético">Antipirético</option>
+                                <option value="Vitaminas">Vitaminas</option>
+                                <option value="Antiséptico">Antiséptico</option>
+                            </select>
                             <label asp-for="Clasificacion"></label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Concentracion" class="form-control med-input" placeholder="Concentración" required />
+                            <input asp-for="Concentracion"
+                                class="form-control med-input"
+                                placeholder="Ej: 250 mg/5ml"
+                                pattern="^\d+(\.\d+)?\s?(mg|g|mcg|ml|%)\s*(\/\s*(\d+(\.\d+)?)?\s?(ml|l))?$"
+                                title="Formato válido: 500 mg, 250 mg/5ml, 0.9 %"
+                                required />
                             <label asp-for="Concentracion"></label>
                         </div>
-
                         <div class="form-floating mb-3">
                             <input asp-for="Precio" type="number" step="0.01" class="form-control med-input" placeholder="Precio" required />
                             <label asp-for="Precio"></label>
