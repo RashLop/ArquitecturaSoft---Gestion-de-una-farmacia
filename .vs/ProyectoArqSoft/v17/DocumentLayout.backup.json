@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\desktop\\carpeta maestra\\materias\\13vo semestre\\arquitectura del sooftware\\farmaciarash\\arquitecturasoft---gestion-de-una-farmacia\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\desktop\\carpeta maestra\\materias\\13vo semestre\\arquitectura del sooftware\\farmaciarash\\arquitecturasoft---gestion-de-una-farmacia\\pages\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -37,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\desktop\\carpeta maestra\\materias\\13vo semestre\\arquitectura del sooftware\\farmaciarash\\arquitecturasoft---gestion-de-una-farmacia\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\desktop\\carpeta maestra\\materias\\13vo semestre\\arquitectura del sooftware\\farmaciarash\\arquitecturasoft---gestion-de-una-farmacia\\pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|solutionrelative:pages\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9615C0A3-A98D-49F8-A6A3-F7D20020D89E}|ProyectoArqSoft.csproj|c:\\users\\asus\\desktop\\carpeta maestra\\materias\\13vo semestre\\arquitectura del sooftware\\farmaciarash\\arquitecturasoft---gestion-de-una-farmacia\\pages\\index.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -106,11 +106,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "MedicamentoUpdate.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Medicamento\\MedicamentoUpdate.cshtml",
               "RelativeDocumentMoniker": "Pages\\Medicamento\\MedicamentoUpdate.cshtml",
@@ -118,8 +118,7 @@
               "RelativeToolTip": "Pages\\Medicamento\\MedicamentoUpdate.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-13T15:00:18.845Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T15:00:18.845Z"
             },
             {
               "$type": "Document",
@@ -131,8 +130,7 @@
               "RelativeToolTip": "Pages\\Bioquimico\\Bioquimico.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-13T14:00:35.606Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T14:00:35.606Z"
             },
             {
               "$type": "Document",
@@ -144,12 +142,11 @@
               "RelativeToolTip": "Pages\\Index.cshtml.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAAIwDYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-13T03:25:17.899Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T03:25:17.899Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Medicamento.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Medicamento\\Medicamento.cshtml",
               "RelativeDocumentMoniker": "Pages\\Medicamento\\Medicamento.cshtml",
@@ -157,8 +154,7 @@
               "RelativeToolTip": "Pages\\Medicamento\\Medicamento.cshtml",
               "ViewState": "AgIAAA4AAAAAAAAAAAAgwC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-13T02:58:29.475Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T02:58:29.475Z"
             },
             {
               "$type": "Document",
@@ -170,8 +166,7 @@
               "RelativeToolTip": "Pages\\Medicamento\\Medicamento.cshtml.cs",
               "ViewState": "AgIAADMAAAAAAAAAAAAcwFgAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-13T03:06:20.535Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T03:06:20.535Z"
             },
             {
               "$type": "Document",
@@ -183,12 +178,11 @@
               "RelativeToolTip": "Pages\\Privacy.cshtml",
               "ViewState": "AgIAALcAAAAAAAAAAAAswMUAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-13T02:54:45.883Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-13T02:54:45.883Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Pages\\Shared\\_Layout.cshtml",
@@ -196,18 +190,17 @@
               "RelativeToolTip": "Pages\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAAJkAAAAAAAAAAAAiwKQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-10T17:37:30.113Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T17:37:30.113Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Auth\\Login.cshtml",
               "RelativeDocumentMoniker": "Pages\\Auth\\Login.cshtml",
               "ToolTip": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Auth\\Login.cshtml",
               "RelativeToolTip": "Pages\\Auth\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-10T17:37:23.141Z",
               "EditorCaption": ""
@@ -226,7 +219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -234,12 +227,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-09T17:15:46.271Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-09T17:15:46.271Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -247,12 +239,11 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-09T17:15:49.408Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-09T17:15:49.408Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "login.css",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\wwwroot\\css\\login.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\login.css",
@@ -260,12 +251,11 @@
               "RelativeToolTip": "wwwroot\\css\\login.css",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-03-10T18:02:57.225Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T18:02:57.225Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
@@ -273,18 +263,17 @@
               "RelativeToolTip": "wwwroot\\css\\site.css",
               "ViewState": "AgIAAIoAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-03-10T18:02:58.444Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T18:02:58.444Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 0,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Index.cshtml",
               "RelativeDocumentMoniker": "Pages\\Index.cshtml",
               "ToolTip": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Index.cshtml",
               "RelativeToolTip": "Pages\\Index.cshtml",
-              "ViewState": "AgIAAN8AAAAAAAAAAAAswOsAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAKwAAAAAAAAAAAAswLMAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-13T02:43:20.155Z",
               "EditorCaption": ""
@@ -374,7 +363,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Logout.cshtml",
               "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\CARPETA MAESTRA\\materias\\13vo semestre\\arquitectura del sooftware\\FarmaciaRash\\ArquitecturaSoft---Gestion-de-una-farmacia\\Pages\\Auth\\Logout.cshtml",
               "RelativeDocumentMoniker": "Pages\\Auth\\Logout.cshtml",
@@ -382,8 +371,7 @@
               "RelativeToolTip": "Pages\\Auth\\Logout.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-10T17:59:06.545Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T17:59:06.545Z"
             },
             {
               "$type": "Document",
@@ -395,8 +383,7 @@
               "RelativeToolTip": "Pages\\Error.cshtml",
               "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-10T17:59:15.039Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T17:59:15.039Z"
             },
             {
               "$type": "Document",
@@ -408,8 +395,7 @@
               "RelativeToolTip": "Pages\\Cliente\\Cliente.cshtml",
               "ViewState": "AgIAACoAAAAAAAAAAAAUwC4AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-09T16:38:09.069Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-09T16:38:09.069Z"
             }
           ]
         }
