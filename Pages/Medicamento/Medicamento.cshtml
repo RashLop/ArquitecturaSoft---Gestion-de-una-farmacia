@@ -14,7 +14,6 @@
         </a>
     </div>
 
-
     <!-- BUSCADOR -->
     <form method="get" class="mb-4">
 
@@ -44,8 +43,6 @@
 
     </form>
 
-
-
     <!-- MENSAJES -->
     @if (!string.IsNullOrEmpty(Model.Estado.Mensaje))
     {
@@ -56,7 +53,6 @@
     {
         <div class="alert alert-danger shadow-sm">@Model.Estado.MensajeError</div>
     }
-
 
     <!-- TABLA -->
     <div class="card-module">
@@ -98,6 +94,7 @@
 
                         <td>
 
+                            <!-- EDITAR -->
                             <form method="post"
                                   asp-page="MedicamentoUpdate"
                                   asp-page-handler="CargarMedicamentoParaEdicion"
@@ -114,21 +111,15 @@
 
                             </form>
 
-
-                            <form method="post"
-                                  asp-page-handler="EliminarMedicamentoLogicamente"
-                                  style="display:inline;">
-
-                                <input type="hidden"
-                                       name="id"
-                                       value="@row["id_medicamento"]" />
-
-                                <button type="submit"
-                                        class="btn btn-danger btn-sm">
-                                    Eliminar
-                                </button>
-
-                            </form>
+                            <!-- BOTON ELIMINAR (abre modal) -->
+                            <button type="button"
+                                    class="btn btn-danger btn-sm btnEliminar"
+                                    data-id="@row["id_medicamento"]"
+                                    data-nombre="@row["nombre"]"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminarMedicamento">
+                                Eliminar
+                            </button>
 
                         </td>
 
@@ -142,3 +133,89 @@
     </div>
 
 </div>
+
+<!-- MODAL CONFIRMAR ELIMINACION -->
+
+<div class="modal fade"
+     id="modalEliminarMedicamento"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content shadow">
+
+            <div class="modal-header bg-success text-white">
+
+                <h5 class="modal-title">
+                    Confirmar eliminación
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>¿Está seguro de que desea eliminar este medicamento?</p>
+
+                <p class="fw-bold" id="nombreMedicamentoEliminar"></p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <form method="post"
+                      asp-page-handler="EliminarMedicamento">
+
+                    <input type="hidden"
+                           id="idMedicamentoEliminar"
+                           name="id" />
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Eliminar
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const botonesEliminar = document.querySelectorAll(".btnEliminar");
+
+    botonesEliminar.forEach(btn => {
+
+        btn.addEventListener("click", function () {
+
+            const id = this.getAttribute("data-id");
+            const nombre = this.getAttribute("data-nombre");
+
+            document.getElementById("idMedicamentoEliminar").value = id;
+            document.getElementById("nombreMedicamentoEliminar").textContent = nombre;
+
+        });
+
+    });
+
+});
+
+</script>
