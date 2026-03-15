@@ -4,44 +4,78 @@
     ViewData["Title"] = "Registrar Bioquímico";
 }
 
-<h2>Registrar Bioquímico</h2>
+<section class="section">
+    <div class="container">
 
-<form method="post" asp-page-handler="CrearBioquimico">
-    <div class="form-group mb-2">
-        <label>Nombres</label>
-        <input asp-for="Nombres" class="form-control" />
+        <div class="row justify-content-center">
+
+            <div class="col-lg-6 col-md-8">
+
+                <div class="card-module">
+
+                    <h3 class="text-center mb-4 text-success">
+                        🧪 Registrar Bioquímico
+                    </h3>
+
+                    <form method="post" asp-page-handler="CrearBioquimico">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombres</label>
+                            <input asp-for="Nombres" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Apellido Paterno</label>
+                            <input asp-for="ApellidoPaterno" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Apellido Materno</label>
+                            <input asp-for="ApellidoMaterno" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">CI</label>
+                            <input asp-for="Ci" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Extensión CI</label>
+                            <input asp-for="CiExtencion" class="form-control" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Teléfono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger">
+                                @Model.Estado.MensajeError
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-between">
+
+                            <a asp-page="/Bioquimico/Bioquimico"
+                               class="btn btn-outline-secondary">
+                                Volver
+                            </a>
+
+                            <button type="submit" class="btn-main">
+                                Guardar Bioquímico
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-
-    <div class="form-group mb-2">
-        <label>Apellido Paterno</label>
-        <input asp-for="ApellidoPaterno" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Apellido Materno</label>
-        <input asp-for="ApellidoMaterno" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>CI</label>
-        <input asp-for="Ci" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Extensión CI</label>
-        <input asp-for="CiExtencion" class="form-control" />
-    </div>
-
-    <div class="form-group mb-2">
-        <label>Teléfono</label>
-        <input asp-for="Telefono" class="form-control" />
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
-    {
-        <div class="alert alert-danger">@Model.Estado.MensajeError</div>
-    }
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a asp-page="/Bioquimico/Bioquimico" class="btn btn-secondary">Volver</a>
-</form>
+</section>
