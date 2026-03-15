@@ -15,8 +15,13 @@
     </div>
 
     <div class="form-group mb-2">
-        <label>Apellidos</label>
-        <input asp-for="Apellidos" class="form-control" />
+        <label>Apellido Paterno</label>
+        <input asp-for="ApellidoPaterno" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
+        <label>Apellido Materno</label>
+        <input asp-for="ApellidoMaterno" class="form-control" />
     </div>
 
     <div class="form-group mb-2">
@@ -25,15 +30,18 @@
     </div>
 
     <div class="form-group mb-2">
+        <label>Extensión CI</label>
+        <input asp-for="CiExtencion" class="form-control" />
+    </div>
+
+    <div class="form-group mb-2">
         <label>Teléfono</label>
         <input asp-for="Telefono" class="form-control" />
     </div>
 
-    
-
-    @if (!string.IsNullOrEmpty(Model.MensajeError))
+    @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
     {
-        <div class="alert alert-danger">@Model.MensajeError</div>
+        <div class="alert alert-danger">@Model.Estado.MensajeError</div>
     }
 
     <button type="submit" class="btn btn-primary">Actualizar</button>
