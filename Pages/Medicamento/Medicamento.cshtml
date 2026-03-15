@@ -175,7 +175,7 @@
                 </button>
 
                 <form method="post"
-                      asp-page-handler="EliminarMedicamento">
+                      asp-page-handler="EliminarMedicamentoLogicamente">
 
                     <input type="hidden"
                            id="idMedicamentoEliminar"
@@ -197,25 +197,17 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const botonesEliminar = document.querySelectorAll(".btnEliminar");
 
-document.addEventListener("DOMContentLoaded", function () {
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener("click", function () {
+                const id = this.getAttribute("data-id");
+                const nombre = this.getAttribute("data-nombre");
 
-    const botonesEliminar = document.querySelectorAll(".btnEliminar");
-
-    botonesEliminar.forEach(btn => {
-
-        btn.addEventListener("click", function () {
-
-            const id = this.getAttribute("data-id");
-            const nombre = this.getAttribute("data-nombre");
-
-            document.getElementById("idMedicamentoEliminar").value = id;
-            document.getElementById("nombreMedicamentoEliminar").textContent = nombre;
-
+                document.getElementById("idMedicamentoEliminar").value = id;
+                document.getElementById("nombreMedicamentoEliminar").textContent = nombre;
+            });
         });
-
     });
-
-});
-
 </script>
