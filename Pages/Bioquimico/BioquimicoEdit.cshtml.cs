@@ -38,8 +38,15 @@ namespace ProyectoArqSoft.Pages
             validador = new BioquimicoFormularioValidacion();
         }
 
-        public IActionResult OnGet(int id)
+        // GET vacío (igual que Cliente)
+        public void OnGet()
         {
+        }
+
+        // Cargar bioquímico para edición (POST)
+        public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
+        {
+            Console.WriteLine("ID recibido: " + id);
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT idBioquimico,
                                     nombres,
@@ -77,7 +84,8 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-        public IActionResult OnPost()
+        // Guardar cambios
+        public IActionResult OnPostActualizarBioquimico()
         {
             BioquimicoEntidad bioquimico = ConstruirBioquimico();
             Validacion resultado = ValidarBioquimico(bioquimico);

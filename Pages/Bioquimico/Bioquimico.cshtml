@@ -70,9 +70,19 @@
                             <td>@row["ci_extencion"]</td>
                             <td>@row["telefono"]</td>
                             <td>
-                                <a asp-page="BioquimicoEdit" asp-route-id="@row["idBioquimico"]" class="btn btn-warning btn-sm">
-                                    Editar
-                                </a>
+
+                                <form method="post"
+                                      asp-page="BioquimicoEdit"
+                                      asp-page-handler="CargarBioquimicoParaEdicion"
+                                      style="display:inline;">
+
+                                    <input type="hidden" name="id" value="@row["idBioquimico"]" />
+
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        Editar
+                                    </button>
+
+                                </form>
 
                                 <button type="button"
                                         class="btn btn-danger btn-sm"
@@ -82,7 +92,10 @@
                                         data-nombre="@row["nombres"] @row["apellido_paterno"]">
                                     Eliminar
                                 </button>
+
                             </td>
+
+
                         </tr>
                     }
                 }
