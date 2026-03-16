@@ -45,8 +45,8 @@ namespace ProyectoArqSoft.Validaciones
 
             if (!string.IsNullOrWhiteSpace(cliente.Telefono))
             {
-                if (cliente.Telefono.Length > 8)
-                    return new Validacion(false, "El telefono no puede superar 45 caracteres");
+                if (cliente.Telefono.Length != 8)
+                    return new Validacion(false, "El teléfono debe tener exactamente 8 dígitos");
 
                 if (!Regex.IsMatch(cliente.Telefono, @"^[\d\s\+\-\(\)]+$"))
                     return new Validacion(false, "El telefono contiene caracteres invalidos");
