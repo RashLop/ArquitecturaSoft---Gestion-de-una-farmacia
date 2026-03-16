@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Validaciones;
-using BioquimicoEntidad = ProyectoArqSoft.Models.Bioquimico;
+using ProyectoArqSoft.Application.Validaciones;
+using ProyectoArqSoft.Base;
+using BioquimicoEntidad = ProyectoArqSoft.Domain.Entities.Bioquimico.Bioquimico;
 
 namespace ProyectoArqSoft.Pages
 {

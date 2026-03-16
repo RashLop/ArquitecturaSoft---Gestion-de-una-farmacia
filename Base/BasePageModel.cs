@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ProyectoArqSoft.Pages.EstadoPaginas;
-namespace ProyectoArqSoft.Pages.Base
+namespace ProyectoArqSoft.Base
 {
     public abstract class BasePageModel : PageModel
     {

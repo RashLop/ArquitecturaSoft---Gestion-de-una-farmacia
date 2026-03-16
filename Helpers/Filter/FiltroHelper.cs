@@ -1,4 +1,4 @@
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Application.Validaciones;
 
 namespace ProyectoArqSoft.Helpers
 {

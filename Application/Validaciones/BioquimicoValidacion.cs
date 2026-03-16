@@ -1,5 +1,5 @@
 using ProyectoArqSoft.Models;
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Application.Validaciones
 {
     public static class BioquimicoValidacion
     {

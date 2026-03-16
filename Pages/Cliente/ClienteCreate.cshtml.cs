@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using ProyectoArqSoft.Application.Validaciones;
+using ProyectoArqSoft.Base;
 using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Validaciones;
-using ClienteEntidad = ProyectoArqSoft.Models.Cliente;
+using ClienteEntidad = ProyectoArqSoft.Domain.Entities.Cliente.Cliente;
 
 namespace ProyectoArqSoft.Pages
 {

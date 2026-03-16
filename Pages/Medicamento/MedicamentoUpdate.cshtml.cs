@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Pages.Base;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using MedicamentoEntidad = ProyectoArqSoft.Domain.Entities.Medicamento.Medicamento;
+using ProyectoArqSoft.Base;
+using ProyectoArqSoft.Application.Validaciones;
 
 
 namespace ProyectoArqSoft.Pages

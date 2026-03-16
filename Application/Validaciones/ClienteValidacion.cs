@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Entities.Cliente;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Application.Validaciones
 {
     public class ClienteValidacion : IValidacion<Cliente>
     {

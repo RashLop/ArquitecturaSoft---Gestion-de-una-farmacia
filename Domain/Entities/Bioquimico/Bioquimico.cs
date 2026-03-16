@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Models;
+namespace ProyectoArqSoft.Domain.Entities.Bioquimico;
 
 public class Bioquimico
 {

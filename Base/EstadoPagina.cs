@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Pages.EstadoPaginas
+namespace ProyectoArqSoft.Base
 {
     public class EstadoPagina
     {

@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Application.Validaciones
 {
     public class Validacion
     {
