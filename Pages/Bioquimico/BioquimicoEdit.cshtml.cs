@@ -38,15 +38,12 @@ namespace ProyectoArqSoft.Pages
             validador = new BioquimicoFormularioValidacion();
         }
 
-        // GET vacío (igual que Cliente)
         public void OnGet()
         {
         }
 
-        // Cargar bioquímico para edición (POST)
         public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
         {
-            Console.WriteLine("ID recibido: " + id);
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT idBioquimico,
                                     nombres,
