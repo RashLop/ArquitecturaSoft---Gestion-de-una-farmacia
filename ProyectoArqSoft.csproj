@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Interfaces\" />
-    <Folder Include="Application\Factories\" />
-    <Folder Include="Application\Services\" />
-    <Folder Include="Infrastructure\" />
-    <Folder Include="Infrastructure\Repositories\" />
     <Folder Include="wwwroot\images\" />
     <PackageReference Include="MySql.Data" Version="9.6.0" />
   </ItemGroup>

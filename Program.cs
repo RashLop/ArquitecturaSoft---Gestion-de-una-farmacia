@@ -1,7 +1,14 @@
-
+using ProyectoArqSoft.Application.Factories;
+using ProyectoArqSoft.Application.Services;
+using ProyectoArqSoft.Domain.Interfaces;
+using ProyectoArqSoft.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//se hace Dependecy inyection(D) en program
+builder.Services.AddScoped<IMedicamentoFactory, MedicamentoFactory>();
+builder.Services.AddScoped<IMedicamentoRepository, MedicamentoRepository>();
+builder.Services.AddScoped<MedicamentoService>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 
