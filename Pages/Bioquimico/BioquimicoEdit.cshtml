@@ -21,7 +21,6 @@
 
                     <form method="post" asp-page-handler="ActualizarBioquimico">
 
-                        <!-- ID oculto -->
                         <input type="hidden" asp-for="IdBioquimico" />
 
                         <div class="form-floating mb-3">
@@ -57,11 +56,19 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="CiExtencion"
-                                   class="form-control med-input"
-                                   placeholder="Extensión CI"
-                                   required />
-                            <label asp-for="CiExtencion"></label>
+                            <select asp-for="CiExtencion" class="form-select med-input" required>
+                                <option value="" disabled></option>
+                                <option value="LP">LP</option>
+                                <option value="CB">CB</option>
+                                <option value="SC">SC</option>
+                                <option value="OR">OR</option>
+                                <option value="PT">PT</option>
+                                <option value="CH">CH</option>
+                                <option value="TJ">TJ</option>
+                                <option value="BE">BE</option>
+                                <option value="PD">PD</option>
+                            </select>
+                            <label asp-for="CiExtencion">Extensión CI</label>
                         </div>
 
                         <div class="form-floating mb-3">
