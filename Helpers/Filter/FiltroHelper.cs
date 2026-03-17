@@ -6,7 +6,7 @@ namespace ProyectoArqSoft.Helpers
     {
         public static string LimpiarFiltro(string? filtro)
         {
-            return StringHelper.LimpiarEspacios(filtro);
+            return StringHelper.QuitarEspacios(filtro);
         }
 
         public static Validacion ValidarFiltro(string filtro, int minimoCaracteres = 3)
