@@ -1,27 +1,28 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Pages
 {
     public class MedicamentoCreateModel : BasePageModel
     {
-        private readonly IConfiguration configuration;
-        private readonly IValidacion<MedicamentoEntidad> validador;
+        private readonly IMedicamentoService medicamentoService;
 
         [BindProperty]
         public string Nombre { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Presentación")]
         public string Presentacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Clasificación")]
         public string Clasificacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Concentración")]
         public string Concentracion { get; set; } = string.Empty;
 
         [BindProperty]
@@ -30,10 +31,9 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
-        public MedicamentoCreateModel(IConfiguration configuration)
+        public MedicamentoCreateModel(IMedicamentoService medicamentoService)
         {
-            this.configuration = configuration;
-            validador = new MedicamentoValidacion();
+            this.medicamentoService = medicamentoService;
         }
 
         public void OnGet()
@@ -42,8 +42,13 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearMedicamento()
         {
-            MedicamentoEntidad medicamento = ConstruirMedicamento();
-            Validacion resultado = ValidarMedicamento(medicamento);
+            Validacion resultado = medicamentoService.Crear(
+                Nombre,
+                Presentacion,
+                Clasificacion,
+                Concentracion,
+                Precio,
+                Stock);
 
             if (!resultado.EsValido)
             {
@@ -51,50 +56,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            GuardarMedicamento(medicamento);
-
             return RedirectToPage("Medicamento");
-        }
-        private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
-        {
-            return validador.Validar(medicamento);
-        }
-
-        private void GuardarMedicamento(MedicamentoEntidad medicamento)
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"INSERT INTO medicamento 
-                            (nombre, presentacion, clasificacion, concentracion, precio, stock)
-                            VALUES
-                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@nombre", medicamento.Nombre);
-                command.Parameters.AddWithValue("@presentacion", medicamento.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", medicamento.Clasificacion);
-                command.Parameters.AddWithValue("@concentracion", medicamento.Concentracion);
-                command.Parameters.AddWithValue("@precio", medicamento.Precio);
-                command.Parameters.AddWithValue("@stock", medicamento.Stock);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-        }
-
-        private MedicamentoEntidad ConstruirMedicamento()
-        {
-            return new MedicamentoEntidad
-            {
-                Nombre = StringHelper.QuitarEspacios(Nombre),
-                Presentacion = StringHelper.Limpiar(Presentacion),
-                Clasificacion = StringHelper.Limpiar(Clasificacion),
-                Concentracion = StringHelper.Limpiar(Concentracion),
-                Precio = Precio,
-                Stock = Stock
-            };
         }
     }
 }

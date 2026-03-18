@@ -1,4 +1,9 @@
 
+using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using ProyectoArqSoft.FactoryCreators;
+using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Validaciones;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +14,17 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<MedicamentoRepositoryCreator>();
+
+builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
+{
+    var creator = provider.GetRequiredService<MedicamentoRepositoryCreator>();
+    return creator.CreateRepo();
+});
+builder.Services.AddScoped<IValidacion<MedicamentoEntidad>, MedicamentoValidacion>();
+builder.Services.AddScoped<IMedicamentoService, MedicamentoService>();
+
 
 var app = builder.Build();
 

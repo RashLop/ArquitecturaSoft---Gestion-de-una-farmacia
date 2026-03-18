@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Validaciones;
@@ -15,18 +16,25 @@ namespace ProyectoArqSoft.Pages
         public string Nombres { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Apellido Materno") ]
         public string ApellidoMaterno { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Apellido Paterno")]
         public string ApellidoPaterno { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Extensión CI")]
+
         public string CiExtencion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "CI")]
         public string Ci { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Teléfono")]
+
         public string Telefono { get; set; } = string.Empty;
 
         public BioquimicoCreateModel(IConfiguration configuration)
