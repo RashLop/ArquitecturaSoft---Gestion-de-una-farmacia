@@ -6,68 +6,76 @@
 
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-8 col-xl-7 col-md-10">
 
             <div class="med-card shadow-sm">
-
                 <div class="med-card-header text-center">
-                    <h2 class="mb-0">Registrar Bioquímico</h2>
-                    <p class="text-muted mt-2 mb-0">
-                        Completa los datos para registrar un nuevo bioquímico
-                    </p>
+                    <h2 class="mb-0">Nuevo Bioquímico</h2>
+                    <p class="text-muted mt-2 mb-0">Completa los datos para registrar un bioquímico</p>
                 </div>
 
                 <div class="med-card-body">
-
                     <form method="post" asp-page-handler="CrearBioquimico">
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="Nombres"
-                                   class="form-control med-input"
-                                   placeholder="Nombres"
-                                   required />
-                            <label asp-for="Nombres"></label>
+                        <!-- NOMBRES Y APELLIDOS -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="Nombres" class="form-control med-input" placeholder="Nombres" required />
+                                    <label asp-for="Nombres"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Apellido Paterno" required />
+                                    <label asp-for="ApellidoPaterno"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Apellido Materno" required />
+                                    <label asp-for="ApellidoMaterno"></label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="ApellidoPaterno"
-                                   class="form-control med-input"
-                                   placeholder="Apellido Paterno"
-                                   required />
-                            <label asp-for="ApellidoPaterno"></label>
+                        <!-- CI Y EXTENSION -->
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="Ci"
+                                           class="form-control med-input"
+                                           placeholder="Ej: 1234567 o 1234567-1A"
+                                           required />
+                                    <label asp-for="Ci"></label>
+                                </div>
+                                <div class="form-text">
+                                    Ej: 1234567 o 1234567-1A
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="form-floating">
+                                    <select asp-for="CiExtencion" class="form-select med-input" required>
+                                        <option value="" selected disabled>Ext.</option>
+                                        <option value="LP">LP</option>
+                                        <option value="CB">CB</option>
+                                        <option value="SC">SC</option>
+                                        <option value="OR">OR</option>
+                                        <option value="PT">PT</option>
+                                        <option value="CH">CH</option>
+                                        <option value="TJ">TJ</option>
+                                        <option value="BE">BE</option>
+                                        <option value="PD">PD</option>
+                                    </select>
+                                    <label asp-for="CiExtencion"></label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="ApellidoMaterno"
-                                   class="form-control med-input"
-                                   placeholder="Apellido Materno"
-                                   required />
-                            <label asp-for="ApellidoMaterno"></label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input asp-for="Ci"
-                                   class="form-control med-input"
-                                   placeholder="CI"
-                                   required />
-                            <label asp-for="Ci"></label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <select asp-for="CiExtencion" class="form-select med-input" required>
-                                <option value="" selected disabled></option>
-                                <option value="LP">LP</option>
-                                <option value="CB">CB</option>
-                                <option value="SC">SC</option>
-                                <option value="OR">OR</option>
-                                <option value="PT">PT</option>
-                                <option value="CH">CH</option>
-                                <option value="TJ">TJ</option>
-                                <option value="BE">BE</option>
-                                <option value="PD">PD</option>
-                            </select>
-                            <label asp-for="CiExtencion">Extensión CI</label>
-                        </div>
-
+                        <!-- TELEFONO -->
                         <div class="form-floating mb-3">
                             <input asp-for="Telefono"
                                    class="form-control med-input"
@@ -76,28 +84,28 @@
                             <label asp-for="Telefono"></label>
                         </div>
 
-                        @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
+                        <!-- MENSAJES -->
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
-                            <div class="alert alert-danger med-alert">
+                            <div class="alert alert-danger med-alert" role="alert">
                                 @Model.Estado.MensajeError
                             </div>
                         }
 
+                        <!-- BOTONES -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a asp-page="/Bioquimico/Bioquimico"
-                               class="btn med-btn-secondary">
+                            <a asp-page="/Bioquimico/Bioquimico" class="btn med-btn-secondary">
                                 Volver
                             </a>
 
-                            <button type="submit"
-                                    class="btn med-btn-primary">
+                            <button type="submit" class="btn med-btn-primary">
                                 Guardar
                             </button>
                         </div>
 
                     </form>
-
                 </div>
+
             </div>
 
         </div>

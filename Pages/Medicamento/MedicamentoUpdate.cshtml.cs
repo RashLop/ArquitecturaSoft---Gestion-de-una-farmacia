@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.FactoryCreators;
 using ProyectoArqSoft.FactoryProducts;
@@ -20,12 +21,15 @@ namespace ProyectoArqSoft.Pages
         public string Nombre { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Presentación")]
         public string Presentacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Clasificación")]
         public string Clasificacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Concentración")]
         public string Concentracion { get; set; } = string.Empty;
 
         [BindProperty]
