@@ -50,38 +50,48 @@
                         @if (usuario != null)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   href="#"
-                                   role="button"
-                                   data-bs-toggle="dropdown">
-                                    Sistema
+                                <a class="nav-link dropdown-toggle" href="#" id="medicamentosDropdown" role="button">
+                                    💊 Medicamentos
                                 </a>
-
                                 <ul class="dropdown-menu">
-
                                     <li>
-                                        <a class="dropdown-item"
-                                           asp-page="/Medicamento/Medicamento">
-                                            💊 Medicamentos
+                                        <a class="dropdown-item" asp-page="/Medicamento/Medicamento">
+                                            Gestionar Medicamentos
                                         </a>
                                     </li>
-
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-page="/Cliente/Cliente">
-                                            👥 Clientes
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item"
-                                           asp-page="/Bioquimico/Bioquimico">
-                                            🧪 Bioquímicos
-                                        </a>
-                                    </li>
-
+                                  
                                 </ul>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="ventasDropdown" role="button">
+                                    👥 Ventas
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Cliente/Cliente">
+                                            Gestionar Clientes
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="bioquimicosDropdown" role="button">
+                                    🧪 Bioquímicos
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
+                                            Gestionar Bioquímicos
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+
+
 
                             <li class="nav-item">
                                 <a class="nav-link text-warning"
