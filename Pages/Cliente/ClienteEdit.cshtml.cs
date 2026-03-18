@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
@@ -16,27 +17,36 @@ namespace ProyectoArqSoft.Pages
         public int IdCliente { get; set; }
 
         [BindProperty]
+        [Display(Name = "Tipo de Cliente")]
         public string TipoCliente { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Apellido Materno")]
         public string ApellidoMaterno { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Apellido Paterno")]
+
         public string ApellidoPaterno { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "CI Extensión")]
         public string CiExtencion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "CI")]
         public string Ci { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Fecha de Nacimiento")]
         public DateTime FechaDeNacimiento { get; set; }
 
         [BindProperty]
+        [Display(Name = "Teléfono")]
         public string Telefono { get; set; } = string.Empty;
 
         public ClienteEditModel(IConfiguration configuration)
