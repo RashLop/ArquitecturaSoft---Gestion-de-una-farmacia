@@ -1,24 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.FactoryCreators;
-using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
     public class MedicamentoModel : BasePageModel
     {
-        private readonly IRepository<MedicamentoEntidad> repository;
+        private readonly IMedicamentoService medicamentoService;
 
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
 
-        public MedicamentoModel(IConfiguration configuration)
+        public MedicamentoModel(IMedicamentoService medicamentoService)
         {
-            RepositoryCreator<MedicamentoEntidad> creator = new MedicamentoRepositoryCreator(configuration);
-            repository = creator.CreateRepo();
+            this.medicamentoService = medicamentoService;
         }
 
         public void OnGet(string? filtro, string? mensaje, string? error)
@@ -36,8 +33,14 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarMedicamentoLogicamente(int id)
         {
-            MedicamentoEntidad medicamento = new MedicamentoEntidad { Id = id };
-            repository.Delete(medicamento);
+            Validacion resultado = medicamentoService.EliminarLogicamente(id);
+
+            if (!resultado.EsValido)
+            {
+                Estado.MensajeError = resultado.MensajeError;
+                return Page();
+            }
+
             return RedirectToPage();
         }
 
@@ -50,7 +53,7 @@ namespace ProyectoArqSoft.Pages
 
         private void CargarMedicamentos(string filtro)
         {
-            MedicamentoDataTable = repository.GetAll(filtro);
+            MedicamentoDataTable = medicamentoService.ObtenerTodos(filtro);
         }
     }
 }

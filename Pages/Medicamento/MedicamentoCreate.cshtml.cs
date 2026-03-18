@@ -1,18 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.FactoryCreators;
-using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 
 namespace ProyectoArqSoft.Pages
 {
     public class MedicamentoCreateModel : BasePageModel
     {
-        private readonly IRepository<MedicamentoEntidad> repository;
-        private readonly IValidacion<MedicamentoEntidad> validador;
+        private readonly IMedicamentoService medicamentoService;
 
         [BindProperty]
         public string Nombre { get; set; } = string.Empty;
@@ -27,7 +23,6 @@ namespace ProyectoArqSoft.Pages
 
         [BindProperty]
         [Display(Name = "Concentración")]
-
         public string Concentracion { get; set; } = string.Empty;
 
         [BindProperty]
@@ -36,11 +31,9 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
-        public MedicamentoCreateModel(IConfiguration configuration)
+        public MedicamentoCreateModel(IMedicamentoService medicamentoService)
         {
-            RepositoryCreator<MedicamentoEntidad> creator = new MedicamentoRepositoryCreator(configuration);
-            repository = creator.CreateRepo();
-            validador = new MedicamentoValidacion();
+            this.medicamentoService = medicamentoService;
         }
 
         public void OnGet()
@@ -49,8 +42,13 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearMedicamento()
         {
-            MedicamentoEntidad medicamento = ConstruirMedicamento();
-            Validacion resultado = ValidarMedicamento(medicamento);
+            Validacion resultado = medicamentoService.Crear(
+                Nombre,
+                Presentacion,
+                Clasificacion,
+                Concentracion,
+                Precio,
+                Stock);
 
             if (!resultado.EsValido)
             {
@@ -58,27 +56,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            repository.Insert(medicamento);
-
             return RedirectToPage("Medicamento");
-        }
-
-        private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
-        {
-            return validador.Validar(medicamento);
-        }
-
-        private MedicamentoEntidad ConstruirMedicamento()
-        {
-            return new MedicamentoEntidad
-            {
-                Nombre = StringHelper.QuitarEspacios(Nombre),
-                Presentacion = StringHelper.Limpiar(Presentacion),
-                Clasificacion = StringHelper.Limpiar(Clasificacion),
-                Concentracion = StringHelper.Limpiar(Concentracion),
-                Precio = Precio,
-                Stock = Stock
-            };
         }
     }
 }
