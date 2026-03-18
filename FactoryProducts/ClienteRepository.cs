@@ -1,4 +1,4 @@
-using ProyectoArqSoft.Models;
+/*using ProyectoArqSoft.Models;
 using System.Data;
 
 namespace ProyectoArqSoft.FactoryProducts
@@ -25,4 +25,4 @@ namespace ProyectoArqSoft.FactoryProducts
             throw new NotImplementedException();
         }
     }
-}
+}*/
