@@ -169,5 +169,20 @@ namespace ProyectoArqSoft.FactoryProducts
 
             return query;
         }
+
+        public int Count()
+        {
+            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            string query = "SELECT COUNT(*) FROM medicamento WHERE estado = 1";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                connection.Open();
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
+
     }
 }

@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
 using MySql.Data.MySqlClient;
+using ProyectoArqSoft.FactoryProducts;
 using System.Data;
+using ProyectoArqSoft.FactoryCreators;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -15,16 +17,24 @@ namespace ProyectoArqSoft.Pages
 
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
+        //estadisticas
+        private readonly MedicamentoRepository _medicamentoRepository;
+        //private readonly ClienteRepository _clienteRepo;
+        //private readonly BioquimicoRepository _bioquimicoRepo;
+
+        public int TotalMedicamentos { get; set; }
+
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, MedicamentoRepository medicamentoRepository)
         {
             _logger = logger;
             this.configuration = configuration;
+            _medicamentoRepository = medicamentoRepository;
         }
 
         public void OnGet()
         {
             Usuario = HttpContext.Session.GetString("Usuario");
-
+            TotalMedicamentos = _medicamentoRepository.Count();
             CargarMedicamentosDestacados();
         }
 
