@@ -16,6 +16,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<MedicamentoRepositoryCreator>();
+builder.Services.AddScoped<MedicamentoRepository>();
 
 builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
 {
