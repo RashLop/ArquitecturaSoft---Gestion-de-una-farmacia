@@ -340,3 +340,14 @@ body {
     .dropdown-item:hover {
         background-color: var(--gris-fondo);
     }
+
+/* Mostrar dropdown al pasar el mouse */
+.navbar .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+/* Suavizar efecto */
+.dropdown-menu {
+    transition: all 0.3s ease;
+}
