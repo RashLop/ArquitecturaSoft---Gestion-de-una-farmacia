@@ -4,6 +4,7 @@ using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -16,12 +17,16 @@ namespace ProyectoArqSoft.Pages
         public string Nombre { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Concentración")]
+
         public string Presentacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Clasificación")]   
         public string Clasificacion { get; set; } = string.Empty;
 
         [BindProperty]
+        [Display(Name = "Concentración")]
         public string Concentracion { get; set; } = string.Empty;
 
         [BindProperty]
