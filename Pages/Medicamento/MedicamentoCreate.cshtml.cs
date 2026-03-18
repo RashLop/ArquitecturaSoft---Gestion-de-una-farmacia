@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.FactoryCreators;
+using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Validaciones;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 
 namespace ProyectoArqSoft.Pages
 {
     public class MedicamentoCreateModel : BasePageModel
     {
-        private readonly IConfiguration configuration;
+        private readonly IRepository<MedicamentoEntidad> repository;
         private readonly IValidacion<MedicamentoEntidad> validador;
 
         [BindProperty]
@@ -32,7 +33,8 @@ namespace ProyectoArqSoft.Pages
 
         public MedicamentoCreateModel(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            RepositoryCreator<MedicamentoEntidad> creator = new MedicamentoRepositoryCreator(configuration);
+            repository = creator.CreateRepo();
             validador = new MedicamentoValidacion();
         }
 
@@ -51,37 +53,14 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            GuardarMedicamento(medicamento);
+            repository.Insert(medicamento);
 
             return RedirectToPage("Medicamento");
         }
+
         private Validacion ValidarMedicamento(MedicamentoEntidad medicamento)
         {
             return validador.Validar(medicamento);
-        }
-
-        private void GuardarMedicamento(MedicamentoEntidad medicamento)
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"INSERT INTO medicamento 
-                            (nombre, presentacion, clasificacion, concentracion, precio, stock)
-                            VALUES
-                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@nombre", medicamento.Nombre);
-                command.Parameters.AddWithValue("@presentacion", medicamento.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", medicamento.Clasificacion);
-                command.Parameters.AddWithValue("@concentracion", medicamento.Concentracion);
-                command.Parameters.AddWithValue("@precio", medicamento.Precio);
-                command.Parameters.AddWithValue("@stock", medicamento.Stock);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
         }
 
         private MedicamentoEntidad ConstruirMedicamento()
