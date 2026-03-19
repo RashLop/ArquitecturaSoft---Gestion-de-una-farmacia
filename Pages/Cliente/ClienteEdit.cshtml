@@ -36,6 +36,9 @@
                                 <label class="form-label fw-bold">Razón Social</label>
                                 <input asp-for="RazonSocial" class="form-control" />
                                 <span asp-validation-for="RazonSocial" class="text-danger"></span>
+                                <small class="text-muted">
+                                
+                                </small>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Fecha de Registro</label>
@@ -69,5 +72,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 }

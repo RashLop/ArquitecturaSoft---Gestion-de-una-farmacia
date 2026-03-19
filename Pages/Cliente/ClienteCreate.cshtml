@@ -33,8 +33,12 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-8">
                                 <label class="form-label fw-bold">Razón Social</label>
-                                <input asp-for="RazonSocial" class="form-control" placeholder="Nombre de la empresa" />
+                                <input asp-for="RazonSocial" class="form-control" placeholder="Ej: Farmacias de Similares S.A. de C.V." />
                                 <span asp-validation-for="RazonSocial" class="text-danger"></span>
+                                <small class="text-muted">
+                                    Mínimo 10 caracteres, máximo 36. Solo letras, espacios, puntos y guiones.<br />
+                                    Los espacios múltiples se normalizarán automáticamente.
+                                </small>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Fecha de Registro</label>
@@ -64,5 +68,6 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 }

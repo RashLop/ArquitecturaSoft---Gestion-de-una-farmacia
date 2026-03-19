@@ -53,12 +53,12 @@ namespace ProyectoArqSoft.Services
 
         public Validacion Crear(string nit, string razonSocial, string? correoElectronico, DateTime fechaRegistro)
         {
-            _logger.LogInformation("Creando nuevo cliente: {RazonSocial}", razonSocial);
+            _logger.LogInformation("Creando nuevo cliente con razón social: {RazonSocial}", razonSocial);
 
             Cliente cliente = new Cliente
             {
                 Nit = StringHelper.QuitarEspacios(nit),
-                RazonSocial = StringHelper.LimpiarEspacios(razonSocial),
+                RazonSocial = razonSocial, 
                 CorreoElectronico = string.IsNullOrWhiteSpace(correoElectronico) ? null : StringHelper.QuitarEspacios(correoElectronico),
                 FechaRegistro = fechaRegistro
             };
@@ -66,6 +66,8 @@ namespace ProyectoArqSoft.Services
             Validacion resultado = _validador.Validar(cliente);
             if (!resultado.EsValido)
                 return resultado;
+
+            _logger.LogInformation("Razón social normalizada: {RazonSocial}", cliente.RazonSocial);
 
             try
             {
@@ -91,7 +93,7 @@ namespace ProyectoArqSoft.Services
             {
                 IdCliente = id,
                 Nit = StringHelper.QuitarEspacios(nit),
-                RazonSocial = StringHelper.LimpiarEspacios(razonSocial),
+                RazonSocial = razonSocial,
                 CorreoElectronico = string.IsNullOrWhiteSpace(correoElectronico) ? null : StringHelper.QuitarEspacios(correoElectronico),
                 FechaRegistro = fechaRegistro
             };
@@ -99,6 +101,8 @@ namespace ProyectoArqSoft.Services
             Validacion resultado = _validador.Validar(cliente);
             if (!resultado.EsValido)
                 return resultado;
+
+            _logger.LogInformation("Razón social normalizada: {RazonSocial}", cliente.RazonSocial);
 
             try
             {

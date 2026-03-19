@@ -28,7 +28,6 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
-            // Valor por defecto: fecha actual
             FechaRegistro = DateTime.Today;
         }
 
