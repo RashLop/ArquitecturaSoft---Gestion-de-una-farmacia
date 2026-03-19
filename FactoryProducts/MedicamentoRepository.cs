@@ -18,9 +18,9 @@ namespace ProyectoArqSoft.FactoryProducts
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"INSERT INTO medicamento
-                            (nombre, presentacion, clasificacion, concentracion, precio, stock)
+                            (nombre, presentacion, clasificacion, concentracion, precio, stock, estado, fecha_registro)
                             VALUES
-                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
+                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock, 1, NOW())";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -42,14 +42,14 @@ namespace ProyectoArqSoft.FactoryProducts
         {
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"UPDATE medicamento
-                             SET nombre=@nombre,
-                                 presentacion=@presentacion,
-                                 clasificacion=@clasificacion,
-                                 concentracion=@concentracion,
-                                 precio=@precio,
-                                 stock=@stock,
+                             SET nombre = @nombre,
+                                 presentacion = @presentacion,
+                                 clasificacion = @clasificacion,
+                                 concentracion = @concentracion,
+                                 precio = @precio,
+                                 stock = @stock,
                                  ultima_actualizacion = NOW()
-                             WHERE id_medicamento=@id_medicamento";
+                             WHERE id_medicamento = @id_medicamento";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -96,17 +96,27 @@ namespace ProyectoArqSoft.FactoryProducts
             DataTable tabla = new DataTable();
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
 
-                string query = ConstruirQuery(filtro);
-                MySqlCommand command = new MySqlCommand(query, connection);
+                    string query = ConstruirQuery(filtro);
+                    MySqlCommand command = new MySqlCommand(query, connection);
 
-                FiltroSqlHelper.AgregarParametrosLike(command, filtro);
+                    if (!string.IsNullOrWhiteSpace(filtro))
+                    {
+                        command.Parameters.AddWithValue("@filtro", $"%{filtro}%");
+                    }
 
-                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
-                adapter.Fill(tabla);
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                    adapter.Fill(tabla);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en GetAll: {ex.Message}", ex);
             }
 
             return tabla;
@@ -119,29 +129,36 @@ namespace ProyectoArqSoft.FactoryProducts
                              FROM medicamento
                              WHERE id_medicamento = @id_medicamento";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_medicamento", id);
-
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    if (reader.Read())
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@id_medicamento", id);
+
+                    connection.Open();
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        return new Medicamento
+                        if (reader.Read())
                         {
-                            Id = Convert.ToInt32(reader["id_medicamento"]),
-                            Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString()),
-                            Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString()),
-                            Clasificacion = StringHelper.LimpiarEspacios(reader["clasificacion"].ToString()),
-                            Concentracion = StringHelper.LimpiarEspacios(reader["concentracion"].ToString()),
-                            Precio = Convert.ToDecimal(reader["precio"]),
-                            Stock = Convert.ToInt32(reader["stock"])
-                        };
+                            return new Medicamento
+                            {
+                                Id = Convert.ToInt32(reader["id_medicamento"]),
+                                Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString() ?? ""),
+                                Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString() ?? ""),
+                                Clasificacion = StringHelper.LimpiarEspacios(reader["clasificacion"].ToString() ?? ""),
+                                Concentracion = StringHelper.LimpiarEspacios(reader["concentracion"].ToString() ?? ""),
+                                Precio = Convert.ToDecimal(reader["precio"]),
+                                Stock = Convert.ToInt32(reader["stock"])
+                            };
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en GetById: {ex.Message}", ex);
             }
 
             return null;
@@ -154,16 +171,17 @@ namespace ProyectoArqSoft.FactoryProducts
                                     presentacion,
                                     clasificacion,
                                     concentracion,
-                                    precio
+                                    precio,
+                                    stock
                              FROM medicamento
                              WHERE estado = 1";
 
-            query += FiltroSqlHelper.ConstruirCondicionLike(
-                filtro,
-                "nombre",
-                "presentacion",
-                "clasificacion"
-            );
+            if (!string.IsNullOrWhiteSpace(filtro))
+            {
+                query += @" AND (nombre LIKE @filtro 
+                            OR presentacion LIKE @filtro 
+                            OR clasificacion LIKE @filtro)";
+            }
 
             query += " ORDER BY nombre";
 
@@ -175,14 +193,20 @@ namespace ProyectoArqSoft.FactoryProducts
             string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = "SELECT COUNT(*) FROM medicamento WHERE estado = 1";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                connection.Open();
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    connection.Open();
 
-                return Convert.ToInt32(command.ExecuteScalar());
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en Count: {ex.Message}", ex);
             }
         }
-
     }
 }

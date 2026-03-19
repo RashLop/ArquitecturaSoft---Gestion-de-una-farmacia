@@ -1,63 +1,68 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySql.Data.MySqlClient;
 using ProyectoArqSoft.FactoryProducts;
+using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento; // Alias para la entidad
 using System.Data;
-using ProyectoArqSoft.FactoryCreators;
 
 namespace ProyectoArqSoft.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration configuration;
+        private readonly IRepository<MedicamentoEntidad> _medicamentoRepository; // Usando el alias
 
         public string? Usuario { get; set; }
-
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
-
-        //estadisticas
-        private readonly MedicamentoRepository _medicamentoRepository;
-        //private readonly ClienteRepository _clienteRepo;
-        //private readonly BioquimicoRepository _bioquimicoRepo;
-
         public int TotalMedicamentos { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, MedicamentoRepository medicamentoRepository)
+        // Constructor con la interfaz usando el alias
+        public IndexModel(
+            ILogger<IndexModel> logger,
+            IRepository<MedicamentoEntidad> medicamentoRepository) // Usando el alias
         {
             _logger = logger;
-            this.configuration = configuration;
             _medicamentoRepository = medicamentoRepository;
         }
 
         public void OnGet()
         {
             Usuario = HttpContext.Session.GetString("Usuario");
-            TotalMedicamentos = _medicamentoRepository.Count();
-            CargarMedicamentosDestacados();
+
+            try
+            {
+                // Usar el repositorio para obtener el total
+                var todosMedicamentos = _medicamentoRepository.GetAll();
+                TotalMedicamentos = todosMedicamentos?.Rows.Count ?? 0;
+
+                CargarMedicamentosDestacados();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar datos en Index");
+            }
         }
 
         private void CargarMedicamentosDestacados()
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                // Obtener todos los medicamentos y filtrar los destacados
+                var todos = _medicamentoRepository.GetAll();
 
-                string query = @"SELECT nombre,
-                                        presentacion,
-                                        clasificacion,
-                                        concentracion,
-                                        precio
-                                 FROM medicamento
-                                 WHERE estado = 1
-                                 ORDER BY RAND()
-                                 LIMIT 3";
+                if (todos != null && todos.Rows.Count > 0)
+                {
+                    // Tomar los primeros 3 (o menos si hay menos)
+                    var destacados = todos.AsEnumerable().Take(3);
 
-                MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
-                adapter.Fill(MedicamentoDataTable);
+                    if (destacados.Any())
+                    {
+                        MedicamentoDataTable = destacados.CopyToDataTable();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar medicamentos destacados");
             }
         }
     }

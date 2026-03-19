@@ -1,101 +1,95 @@
 ﻿@page
-@model ProyectoArqSoft.Pages.ClienteModel
+@model ProyectoArqSoft.Pages.ClienteModel  // ← SIN .Cliente, directo
 @{
     var modalId = "confirmarEliminarClienteModal";
 }
 
 <div class="container mt-5">
 
+    <!-- TITULO Y BOTON NUEVO -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-success">Clientes Registrados</h2>
-
-        <a asp-page="ClienteCreate" class="btn-main">
-            + Nuevo Cliente
-        </a>
+        <h2 class="fw-bold" style="color: var(--azul-vital);">👥 Clientes</h2>
+        <a asp-page="/Cliente/ClienteCreate" class="btn-main">+ Nuevo Cliente</a>
     </div>
 
+    <!-- BUSCADOR -->
     <form method="get" class="mb-4">
         <div class="card-module p-3">
             <div class="input-group">
                 <input type="text"
                        name="filtro"
                        class="form-control"
-                       placeholder="Buscar por nombre, apellidos, tipo, CI o teléfono..."
+                       placeholder="Buscar por NIT, razón social o correo..."
                        value="@Model.Estado.FiltroActual" />
-
-                <button type="submit" class="btn btn-success btn-fixed">
-                    Buscar
-                </button>
-
-                <a asp-page="Cliente" class="btn btn-secondary btn-fixed">
-                    Limpiar
-                </a>
+                <button type="submit" class="btn btn-success">Buscar</button>
+                <a asp-page="/Cliente/Cliente" class="btn btn-secondary">Limpiar</a>
             </div>
         </div>
     </form>
 
+    <!-- MENSAJES -->
     @if (!string.IsNullOrEmpty(Model.Estado.Mensaje))
     {
-        <div class="alert alert-success shadow-sm">@Model.Estado.Mensaje</div>
+        <div class="alert alert-success">@Model.Estado.Mensaje</div>
     }
 
     @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
     {
-        <div class="alert alert-danger shadow-sm">@Model.Estado.MensajeError</div>
+        <div class="alert alert-danger">@Model.Estado.MensajeError</div>
     }
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- TABLA -->
     <div class="card-module">
-        <table class="table table-hover align-middle">
+        <table class="table table-hover">
             <thead class="table-success">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Tipo de cliente</th>
-                    <th>Carnet</th>
-                    <th>Extención</th>
-                    <th>Fecha de nacimiento</th>
-                    <th>Teléfono</th>
-                    <th style="width:170px">Acciones</th>
+                    <th>NIT</th>
+                    <th>Razón Social</th>
+                    <th>Correo Electrónico</th>
+                    <th>Fecha Registro</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-
             <tbody>
-                @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
+                @if (Model.ClienteDataTable != null && Model.ClienteDataTable.Rows.Count > 0)
+                {
+                    @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
+                    {
+                        <tr>
+                            <td>@row["nit"]</td>
+                            <td>@row["razon_social"]</td>
+                            <td>@row["correo_electronico"]</td>
+                            <td>@Convert.ToDateTime(row["fecha_registro"]).ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-page="/Cliente/ClienteEdit" asp-route-id="@row["idCliente"]"
+                                   class="btn btn-warning btn-sm">Editar</a>
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#@modalId"
+                                        data-id="@row["idCliente"]"
+                                        data-nombre="@row["razon_social"]">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td class="fw-semibold">@row["nombre"]</td>
-                        <td>@row["apellido_paterno"]</td>
-                        <td>@row["apellido_materno"]</td>
-                       
-                        <td>
-                            <span class="badge bg-info text-dark">
-                                @row["tipo_cliente"]
-                            </span>
-                        </td>
-                        <td>@row["ci"] </td>
-                        <td>@row["ci_extencion"]</td>
-                        <td>@Convert.ToDateTime(row["fecha_de_nacimiento"]).ToString("dd/MM/yyyy")</td>
-                        <td>@row["telefono"]</td>
-                        <td>
-                            <form method="post"
-                                  asp-page="ClienteEdit"
-                                  asp-page-handler="CargarClienteParaEdicion"
-                                  style="display:inline;">
-                                <input type="hidden" name="id" value="@row["idCliente"]" />
-                                <button type="submit" class="btn btn-warning btn-sm">
-                                    Editar
-                                </button>
-                            </form>
-
-                            <button type="button"
-                                    class="btn btn-danger btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#@modalId"
-                                    data-id="@row["idCliente"]"
-                                    data-nombre="@row["nombre"] @row["apellido_paterno"]">
-                                Eliminar
-                            </button>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            No hay clientes registrados
                         </td>
                     </tr>
                 }
@@ -103,21 +97,22 @@
         </table>
     </div>
 
-    <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@(modalId)Label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <div class="modal fade" id="@modalId" tabindex="-1">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header text-white" style="background-color: #0b5d3b;">
-                    <h5 class="modal-title" id="@(modalId)Label">Confirmar eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-2">¿Está seguro de que desea eliminar a este cliente?</p>
-                    <p class="fw-semibold mb-0" id="clienteEliminarNombre"></p>
+                    <p>¿Está seguro de eliminar al cliente <strong id="clienteNombre"></strong>?</p>
+                    <p class="text-danger">Esta acción no se puede deshacer.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form method="post" asp-page-handler="EliminarClienteLogicamente">
-                        <input type="hidden" name="id" id="clienteEliminarId" />
+                        <input type="hidden" name="id" id="clienteId" />
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </div>
@@ -129,18 +124,13 @@
 
 @section Scripts {
     <script>
-        (() => {
-            const modal = document.getElementById('@modalId');
-            if (!modal) return;
-
+        const modal = document.getElementById('@modalId');
+        if (modal) {
             modal.addEventListener('show.bs.modal', event => {
                 const button = event.relatedTarget;
-                const id = button.getAttribute('data-id');
-                const nombre = button.getAttribute('data-nombre');
-
-                modal.querySelector('#clienteEliminarId').value = id;
-                modal.querySelector('#clienteEliminarNombre').textContent = nombre;
+                document.getElementById('clienteNombre').textContent = button.getAttribute('data-nombre');
+                document.getElementById('clienteId').value = button.getAttribute('data-id');
             });
-        })();
+        }
     </script>
 }
