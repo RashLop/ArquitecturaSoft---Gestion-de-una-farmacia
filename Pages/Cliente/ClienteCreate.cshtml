@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ProyectoArqSoft.Pages.ClienteCreateModel
 @{
 }
@@ -16,94 +16,69 @@
                 <div class="med-card-body">
                     <form method="post" asp-page-handler="CrearCliente">
 
-                        <!-- TIPO DE CLIENTE -->
-                        <div class="form-floating mb-3">
-                            <select asp-for="TipoCliente" class="form-select med-input" required>
-                                <option value="" selected disabled>Seleccione un tipo de cliente</option>
-                                <option value="Regular">Regular</option>
-                                <option value="Frecuente">Crónico</option>
-                                <option value="VIP">Seguro / Institucional</option>
-                            </select>
-                            <label asp-for="TipoCliente"></label>
-                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold d-block mb-3">Tipo de registro</label>
 
-                        <!-- NOMBRE Y APELLIDOS EN UNA SOLA FILA -->
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Nombre" class="form-control med-input" placeholder="Nombre" required />
-                                    <label asp-for="Nombre"></label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="border rounded-4 p-3 w-100 h-100 bg-white shadow-sm" for="tipoClienteFormal" style="cursor:pointer;">
+                                        <input asp-for="EsConsumidorFinal"
+                                               id="tipoClienteFormal"
+                                               type="radio"
+                                               value="false"
+                                               class="form-check-input me-2" />
+                                        <span class="fw-semibold d-block mb-1">Cliente con datos fiscales</span>
+                                        <span class="text-muted small">Registra NIT, razon social y, si corresponde, correo electronico.</span>
+                                    </label>
                                 </div>
-                            </div>
 
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Apellido Paterno" required />
-                                    <label asp-for="ApellidoPaterno"></label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Apellido Materno" required />
-                                    <label asp-for="ApellidoMaterno"></label>
+                                <div class="col-md-6">
+                                    <label class="border rounded-4 p-3 w-100 h-100 bg-light shadow-sm" for="tipoConsumidorFinal" style="cursor:pointer;">
+                                        <input asp-for="EsConsumidorFinal"
+                                               id="tipoConsumidorFinal"
+                                               type="radio"
+                                               value="true"
+                                               class="form-check-input me-2" />
+                                        <span class="fw-semibold d-block mb-1">Consumidor Final</span>
+                                        <span class="text-muted small">El sistema registrara automaticamente NIT = CF y razon social = Consumidor Final.</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- CI Y EXTENSION EN LA MISMA FILA -->
-                        <div class="row">
-                            <div class="col-md-8 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Ci"
-                                           class="form-control med-input"
-                                           placeholder="Ej: 1234567 o 1234567-1A"
-                                           required />
-                                    <label asp-for="Ci"></label>
-                                </div>
-                                <div class="form-text">
-                                    Ej: 1234567 o 1234567-1A
-                                </div>
+                        <div id="bloqueConsumidorFinal" class="alert alert-success border-0 shadow-sm mb-4" style="display:none;">
+                            Se registrara la venta como <strong>Consumidor Final</strong>. No necesitas ingresar NIT, razon social ni correo electronico.
+                        </div>
+
+                        <div id="datosClienteFiscal">
+                            <div class="form-floating mb-3">
+                                <input asp-for="Nit"
+                                       class="form-control med-input"
+                                       placeholder="NIT"
+                                       inputmode="numeric"
+                                       maxlength="20"
+                                       pattern="\d*"
+                                       required />
+                                <label asp-for="Nit"></label>
                             </div>
 
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <select asp-for="CiExtencion" class="form-select med-input" required>
-                                        <option value="" selected disabled>Seleccione extensión</option>
-                                        <option value="LP">LP</option>
-                                        <option value="CB">CB</option>
-                                        <option value="SC">SC</option>
-                                        <option value="OR">OR</option>
-                                        <option value="PT">PT</option>
-                                        <option value="CH">CH</option>
-                                        <option value="TJ">TJ</option>
-                                        <option value="BE">BE</option>
-                                        <option value="PD">PD</option>
-                                    </select>
-                                    <label asp-for="CiExtencion"></label>
-                                </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="RazonSocial"
+                                       class="form-control med-input"
+                                       placeholder="Razon Social"
+                                       required />
+                                <label asp-for="RazonSocial"></label>
+                            </div>
+
+                            <div id="correoElectronicoGroup" class="form-floating mb-3">
+                                <input asp-for="CorreoElectronico"
+                                       type="email"
+                                       class="form-control med-input"
+                                       placeholder="Correo Electronico" />
+                                <label asp-for="CorreoElectronico"></label>
                             </div>
                         </div>
 
-                        <!-- FECHA NACIMIENTO -->
-                        <div class="form-floating mb-3">
-                            <input asp-for="FechaDeNacimiento"
-                                   type="date"
-                                   class="form-control med-input"
-                                   placeholder="Fecha de Nacimiento"
-                                   required />
-                            <label asp-for="FechaDeNacimiento"></label>
-                        </div>
-
-                        <!-- TELEFONO -->
-                        <div class="form-floating mb-3">
-                            <input asp-for="Telefono"
-                                   class="form-control med-input"
-                                   placeholder="Teléfono" />
-                            <label asp-for="Telefono"></label>
-                        </div>
-
-                        <!-- MENSAJES -->
                         @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
                             <div class="alert alert-danger med-alert" role="alert">
@@ -111,7 +86,6 @@
                             </div>
                         }
 
-                        <!-- BOTONES -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a asp-page="Cliente" class="btn med-btn-secondary">Volver</a>
                             <button type="submit" class="btn med-btn-primary">Guardar</button>
@@ -124,3 +98,43 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const opcionFormal = document.getElementById('tipoClienteFormal');
+            const opcionConsumidorFinal = document.getElementById('tipoConsumidorFinal');
+            const bloqueInformativo = document.getElementById('bloqueConsumidorFinal');
+            const contenedor = document.getElementById('datosClienteFiscal');
+            const correoGroup = document.getElementById('correoElectronicoGroup');
+            const nit = document.getElementById('Nit');
+            const razonSocial = document.getElementById('RazonSocial');
+            const correo = document.getElementById('CorreoElectronico');
+
+            if (!opcionFormal.checked && !opcionConsumidorFinal.checked) {
+                opcionFormal.checked = true;
+            }
+
+            const actualizarFormulario = () => {
+                const esConsumidorFinal = opcionConsumidorFinal.checked;
+
+                bloqueInformativo.style.display = esConsumidorFinal ? '' : 'none';
+                contenedor.style.display = esConsumidorFinal ? 'none' : '';
+                correoGroup.style.display = esConsumidorFinal ? 'none' : '';
+
+                nit.required = !esConsumidorFinal;
+                razonSocial.required = !esConsumidorFinal;
+
+                if (esConsumidorFinal) {
+                    nit.value = '';
+                    razonSocial.value = '';
+                    correo.value = '';
+                }
+            };
+
+            actualizarFormulario();
+            opcionFormal.addEventListener('change', actualizarFormulario);
+            opcionConsumidorFinal.addEventListener('change', actualizarFormulario);
+        })();
+    </script>
+}

@@ -7,11 +7,11 @@ public class LoginModel : PageModel
 {
     [BindProperty]
     [Required]
-    public string Usuario { get; set; }
+    public string Usuario { get; set; } = string.Empty;
 
     [BindProperty]
     [Required]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     public IActionResult OnPost()
     {
