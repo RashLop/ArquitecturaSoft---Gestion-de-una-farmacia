@@ -27,21 +27,27 @@ namespace ProyectoArqSoft.Pages
         public string? Filtro { get; set; }
 
         public void OnGet()
-        {
-            // 1. Validar el filtro antes de procesar la búsqueda
-            var validacion = _busquedaValidator.Validar(Filtro ?? "");
+{
+    // 1. Validar el filtro antes de procesar la búsqueda
+    var validacion = _busquedaValidator.Validar(Filtro ?? "");
 
-            if (!validacion.EsValido)
-            {
-                // Si el filtro es inválido (ej: un punto "."), enviamos el error a la vista
-                TempData["Error"] = validacion.MensajeError;
-                dtBioquimicos = new DataTable(); // Aseguramos que la tabla esté vacía
-                return;
-            }
+    if (!validacion.EsValido)
+    {
+        // CAMBIO: Usar Estado.MensajeError en lugar de TempData
+        Estado.MensajeError = validacion.MensajeError; 
+        dtBioquimicos = new DataTable(); 
+        return;
+    }
 
-            // 2. Si es válido, llamamos al servicio para obtener los datos
-            dtBioquimicos = _bioquimicoService.ObtenerTodos(Filtro ?? "");
-        }
+    // 2. Si es válido, llamamos al servicio para obtener los datos
+    dtBioquimicos = _bioquimicoService.ObtenerTodos(Filtro ?? "");
+
+    // Opcional: Si la búsqueda es válida pero no hay resultados
+    if (dtBioquimicos.Rows.Count == 0 && !string.IsNullOrWhiteSpace(Filtro))
+    {
+        Estado.Mensaje = "No se encontraron resultados para: " + Filtro;
+    }
+}
 
         public IActionResult OnPostEliminar(int id)
         {

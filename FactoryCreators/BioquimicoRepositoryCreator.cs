@@ -16,7 +16,7 @@ namespace ProyectoArqSoft.FactoryCreators
 
         public override IRepository<Bioquimico> CreateRepo()
         {
-            // Aquí es donde la fábrica "fabrica" el objeto concreto
+            
             return new BioquimicoRepository(_configuration);
         }
     }
