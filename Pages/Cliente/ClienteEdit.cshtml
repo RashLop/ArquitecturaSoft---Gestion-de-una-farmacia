@@ -59,7 +59,8 @@
                                        placeholder="NIT"
                                        inputmode="numeric"
                                        maxlength="20"
-                                       pattern="\d*"
+                                       pattern="[0-9]{5,20}"
+                                       title="Formato valido: 123456789"
                                        required />
                                 <label asp-for="Nit"></label>
                             </div>
@@ -68,6 +69,9 @@
                                 <input asp-for="RazonSocial"
                                        class="form-control med-input"
                                        placeholder="Razon Social"
+                                       minlength="3"
+                                       maxlength="45"
+                                       title="Formato valido: minimo 3 caracteres"
                                        required />
                                 <label asp-for="RazonSocial"></label>
                             </div>
@@ -76,7 +80,9 @@
                                 <input asp-for="CorreoElectronico"
                                        type="email"
                                        class="form-control med-input"
-                                       placeholder="Correo Electronico" />
+                                       placeholder="Correo Electronico"
+                                       maxlength="45"
+                                       title="Formato valido: ejemplo@correo.com" />
                                 <label asp-for="CorreoElectronico"></label>
                             </div>
                         </div>
