@@ -22,11 +22,11 @@ namespace ProyectoArqSoft.Pages
         public string Nit { get; set; } = string.Empty;
 
         [BindProperty]
-        [Display(Name = "Razon Social")]
+        [Display(Name = "Razón Social")]
         public string RazonSocial { get; set; } = string.Empty;
 
         [BindProperty]
-        [Display(Name = "Correo Electronico")]
+        [Display(Name = "Correo Electrónico")]
         public string CorreoElectronico { get; set; } = string.Empty;
 
         public ClienteEditModel(IClienteService clienteService)
