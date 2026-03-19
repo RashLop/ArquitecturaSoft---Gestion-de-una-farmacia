@@ -1,80 +1,64 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Pages.Base;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Pages.Base;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
     public class BioquimicoModel : BasePageModel
     {
-        private readonly string _connectionString;
-        public DataTable BioquimicoDataTable { get; set; } = new DataTable();
+        private readonly IBioquimicoService _bioquimicoService;
+        private readonly IValidacion<string> _busquedaValidator;
 
-        public BioquimicoModel(IConfiguration configuration)
+        // El constructor recibe las dependencias configuradas en Program.cs
+        public BioquimicoModel(IBioquimicoService bioquimicoService, IValidacion<string> busquedaValidator)
         {
-            _connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            _bioquimicoService = bioquimicoService;
+            _busquedaValidator = busquedaValidator;
         }
 
-        public void OnGet(string? filtro, string? mensaje, string? error)
-        {
-            CargarParametros(filtro, mensaje, error);
+        // Propiedad que se llena para mostrar los datos en la tabla del .cshtml
+        public DataTable dtBioquimicos { get; set; } = new DataTable();
 
-            Validacion v = BioquimicoValidacion.ValidarCriterioBusqueda(Estado.FiltroActual);
-            if (!v.EsValido)
+        // Captura el valor del input name="filtro" de la URL
+        [BindProperty(SupportsGet = true)]
+        public string? Filtro { get; set; }
+
+        public void OnGet()
+        {
+            // 1. Validar el filtro antes de procesar la búsqueda
+            var validacion = _busquedaValidator.Validar(Filtro ?? "");
+
+            if (!validacion.EsValido)
             {
-                Estado.MensajeError = v.MensajeError;
+                // Si el filtro es inválido (ej: un punto "."), enviamos el error a la vista
+                TempData["Error"] = validacion.MensajeError;
+                dtBioquimicos = new DataTable(); // Aseguramos que la tabla esté vacía
                 return;
             }
 
-            CargarDatos(Estado.FiltroActual);
-
-            if (BioquimicoDataTable.Rows.Count == 0 && !string.IsNullOrEmpty(Estado.FiltroActual))
-            {
-                Estado.Mensaje = "No se encontraron bioquímicos";
-            }
+            // 2. Si es válido, llamamos al servicio para obtener los datos
+            dtBioquimicos = _bioquimicoService.ObtenerTodos(Filtro ?? "");
         }
 
         public IActionResult OnPostEliminar(int id)
         {
-            if (EjecutarBajaLogica(id) == 0)
-                return RedirectToPage(new { error = "Bioquímico no encontrado" });
+            // Delegamos la eliminación al servicio
+            var resultado = _bioquimicoService.Eliminar(id);
 
-            return RedirectToPage(new { mensaje = "Bioquímico eliminado correctamente" });
-        }
+            if (resultado.EsValido)
+            {
+                TempData["Mensaje"] = "Bioquímico eliminado correctamente.";
+            }
+            else
+            {
+                // Usamos .Error según tu clase Validacion
+                TempData["Error"] = resultado.MensajeError;
+            }
 
-        private void CargarParametros(string? filtro, string? mensaje, string? error)
-        {
-            Estado.FiltroActual = FiltroHelper.LimpiarFiltro(filtro);
-            Estado.Mensaje = mensaje ?? string.Empty;
-            Estado.MensajeError = error ?? string.Empty;
-        }
-
-        private void CargarDatos(string filtro)
-        {
-            using var connection = new MySqlConnection(_connectionString);
-            
-            string query = $@"SELECT idBioquimico, nombres, apellido_paterno, apellido_materno, 
-                                     ci, ci_extencion, telefono 
-                              FROM bioquimico 
-                              WHERE activo = 1 
-                              {FiltroSqlHelper.ConstruirCondicionLike(filtro, "nombres", "apellido_paterno", "apellido_materno", "ci", "telefono")}
-                              ORDER BY apellido_paterno, nombres";
-
-            using var command = new MySqlCommand(query, connection);
-            FiltroSqlHelper.AgregarParametrosLike(command, filtro);
-            new MySqlDataAdapter(command).Fill(BioquimicoDataTable);
-        }
-
-        private int EjecutarBajaLogica(int id)
-        {
-            using var connection = new MySqlConnection(_connectionString);
-            string query = "UPDATE bioquimico SET activo = 0 WHERE idBioquimico = @id AND activo = 1";
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@id", id);
-            connection.Open();
-            return command.ExecuteNonQuery();
+            return RedirectToPage();
         }
     }
 }

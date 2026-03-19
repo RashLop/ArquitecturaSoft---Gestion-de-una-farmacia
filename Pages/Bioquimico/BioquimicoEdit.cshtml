@@ -6,62 +6,47 @@
 
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7 col-md-10">
+        <div class="col-lg-8 col-md-10">
 
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
-                    <h2 class="mb-0">Actualizar Bioquímico</h2>
-                    <p class="text-muted mt-2 mb-0">Modifica los datos del bioquímico seleccionado</p>
+                    <h2 class="mb-0 text-success">📝 Actualizar Bioquímico</h2>
+                    <p class="text-muted mt-2 mb-0">Modifica los datos del profesional seleccionado</p>
                 </div>
 
-                <div class="med-card-body">
+                <div class="med-card-body p-4">
                     <form method="post" asp-page-handler="ActualizarBioquimico">
+                        
                         <input type="hidden" asp-for="IdBioquimico" />
 
-                        <!-- NOMBRES Y APELLIDOS -->
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Nombres"
-                                           class="form-control med-input"
-                                           placeholder="Nombres"
-                                           required />
-                                    <label asp-for="Nombres"></label>
-                                </div>
-                            </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Nombres" class="form-control med-input" placeholder="Nombres" required />
+                            <label asp-for="Nombres"></label>
+                        </div>
 
-                            <div class="col-md-4 mb-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoPaterno"
-                                           class="form-control med-input"
-                                           placeholder="Apellido Paterno"
-                                           required />
+                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Apellido Paterno" required />
                                     <label asp-for="ApellidoPaterno"></label>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoMaterno"
-                                           class="form-control med-input"
-                                           placeholder="Apellido Materno"
-                                           required />
+                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Apellido Materno" required />
                                     <label asp-for="ApellidoMaterno"></label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- CI Y EXTENSION -->
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="Ci"
-                                           class="form-control med-input"
-                                           placeholder="Ej: 1234567 o 1234567-1A"
-                                           required />
+                                    <input asp-for="Ci" class="form-control med-input" placeholder="Carnet de Identidad" required />
                                     <label asp-for="Ci"></label>
                                 </div>
-                                <div class="form-text">
+                                <div class="form-text ms-1">
                                     Ej: 1234567 o 1234567-1A
                                 </div>
                             </div>
@@ -69,7 +54,7 @@
                             <div class="col-md-4 mb-3">
                                 <div class="form-floating">
                                     <select asp-for="CiExtencion" class="form-select med-input" required>
-                                        <option value="" disabled>Seleccione extensión</option>
+                                        <option value="" disabled>Extensión</option>
                                         <option value="LP">LP</option>
                                         <option value="CB">CB</option>
                                         <option value="SC">SC</option>
@@ -85,37 +70,29 @@
                             </div>
                         </div>
 
-                        <!-- TELEFONO -->
                         <div class="form-floating mb-3">
-                            <input asp-for="Telefono"
-                                   class="form-control med-input"
-                                   placeholder="Teléfono"
-                                   required />
+                            <input asp-for="Telefono" class="form-control med-input" placeholder="Teléfono" />
                             <label asp-for="Telefono"></label>
                         </div>
 
-                        <!-- MENSAJES -->
-                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        @if (Model.Estado != null && !string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
-                            <div class="alert alert-danger med-alert" role="alert">
-                                @Model.Estado.MensajeError
+                            <div class="alert alert-danger med-alert shadow-sm" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i> @Model.Estado.MensajeError
                             </div>
                         }
 
-                        <!-- BOTONES -->
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a asp-page="/Bioquimico/Bioquimico" class="btn med-btn-secondary">
-                                Volver
+                        <div class="d-flex justify-content-end gap-2 mt-4 border-top pt-3">
+                            <a asp-page="Bioquimico" class="btn med-btn-secondary">
+                                Cancelar
                             </a>
-
-                            <button type="submit" class="btn med-btn-primary">
-                                Guardar cambios
+                            <button type="submit" class="btn med-btn-primary px-4">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar Registro
                             </button>
                         </div>
 
                     </form>
                 </div>
-
             </div>
 
         </div>
