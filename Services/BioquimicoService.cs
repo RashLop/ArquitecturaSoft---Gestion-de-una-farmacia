@@ -90,15 +90,13 @@ public Validacion Actualizar(Bioquimico bioquimico)
         }
 
         private void LimpiarDatos(Bioquimico b)
-{
-    
-    if (b.Nombres != null) b.Nombres = b.Nombres.Trim();
-    if (b.ApellidoPaterno != null) b.ApellidoPaterno = b.ApellidoPaterno.Trim();
-    if (b.ApellidoMaterno != null) b.ApellidoMaterno = b.ApellidoMaterno.Trim();
-    if (b.Ci != null) b.Ci = b.Ci.Trim();
-    
-    if (b.CiExtencion != null) 
-        b.CiExtencion = b.CiExtencion.Trim().ToUpper();
-}
+        {
+            b.Nombres = StringHelper.LimpiarTexto(b.Nombres);
+            b.ApellidoPaterno = StringHelper.LimpiarTexto(b.ApellidoPaterno);
+            b.ApellidoMaterno = StringHelper.LimpiarTexto(b.ApellidoMaterno);
+
+            b.Ci = StringHelper.LimpiarCI(b.Ci);
+            b.CiExtencion = StringHelper.LimpiarTextoMayus(b.CiExtencion);
+        }
     }
 }
