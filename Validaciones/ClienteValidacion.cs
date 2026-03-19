@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.Validaciones
@@ -17,10 +17,10 @@ namespace ProyectoArqSoft.Validaciones
                 return new Validacion(false, "El NIT no debe contener espacios.");
 
             if (!Regex.IsMatch(cliente.Nit, @"^\d+$"))
-                return new Validacion(false, "El NIT solo debe contener numeros. No se permiten letras ni caracteres especiales.");
+                return new Validacion(false, "El NIT solo debe contener numeros y el formato correcto (ej: 123456789).");
 
             if (cliente.Nit.Length < 5 || cliente.Nit.Length > 20)
-                return new Validacion(false, "El NIT debe tener entre 5 y 20 digitos.");
+                return new Validacion(false, "El NIT debe tener de 5 a 20 digitos y el formato correcto (ej: 123456789).");
 
             if (cliente.Nit.All(c => c == '0'))
                 return new Validacion(false, "El NIT no puede estar compuesto solo por ceros.");
