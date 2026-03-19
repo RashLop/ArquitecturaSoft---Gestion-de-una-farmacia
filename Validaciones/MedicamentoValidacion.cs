@@ -27,6 +27,8 @@ namespace ProyectoArqSoft.Validaciones
 
             if (medicamento.Stock < 0)
                 return new Validacion(false, "El stock no puede ser negativo.");
+            if(medicamento.Precio > 1000)
+                return new Validacion(false, "El precio no puede ser mayor a 1000.");
 
             return new Validacion(true, string.Empty);
         }
