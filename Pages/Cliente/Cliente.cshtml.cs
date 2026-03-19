@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
 using System.Data;
 
@@ -9,13 +9,13 @@ namespace ProyectoArqSoft.Pages
 {
     public class ClienteModel : BasePageModel
     {
-        private readonly IConfiguration configuration;
+        private readonly IClienteService clienteService;
 
         public DataTable ClienteDataTable { get; set; } = new DataTable();
 
-        public ClienteModel(IConfiguration configuration)
+        public ClienteModel(IClienteService clienteService)
         {
-            this.configuration = configuration;
+            this.clienteService = clienteService;
         }
 
         public void OnGet(string? filtro, string? mensaje, string? error)
@@ -33,7 +33,14 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarClienteLogicamente(int id)
         {
-            EliminarClienteLogicamente(id);
+            Validacion resultado = clienteService.Eliminar(id);
+
+            if (!resultado.EsValido)
+            {
+                Estado.MensajeError = resultado.MensajeError;
+                return Page();
+            }
+
             return RedirectToPage("Cliente", new { mensaje = "Cliente eliminado correctamente" });
         }
 
@@ -46,68 +53,7 @@ namespace ProyectoArqSoft.Pages
 
         private void CargarClientes(string filtro)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string query = ConstruirQuery(filtro);
-                MySqlCommand command = new MySqlCommand(query, connection);
-
-                FiltroSqlHelper.AgregarParametrosLike(command, filtro);
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
-                adapter.Fill(ClienteDataTable);
-            }
-        }
-
-        private string ConstruirQuery(string filtro)
-        {
-            string query = @"SELECT idCliente,
-                                    tipo_cliente,
-                                    nombre,
-                                    apellido_materno,
-                                    apellido_paterno,
-                                    ci_extencion,
-                                    ci,
-                                    fecha_de_nacimiento,
-                                    telefono
-                             FROM cliente
-                             WHERE estado = 1";
-
-            query += FiltroSqlHelper.ConstruirCondicionLike(
-                filtro,
-                "nombre",
-                "apellido_materno",
-                "apellido_paterno",
-                "tipo_cliente",
-                "ci",
-                "ci_extencion",
-                "telefono"
-            );
-
-            query += " ORDER BY nombre, apellido_paterno, apellido_materno";
-
-            return query;
-        }
-
-        private void EliminarClienteLogicamente(int id)
-        {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
-            string query = @"UPDATE cliente
-                             SET estado = 0,
-                                 ultima_actualizacion = NOW()
-                             WHERE idCliente = @id";
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id", id);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
+            ClienteDataTable = clienteService.ObtenerTodos(filtro);
         }
     }
 }

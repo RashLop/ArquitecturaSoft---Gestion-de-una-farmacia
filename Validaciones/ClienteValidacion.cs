@@ -1,77 +1,52 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.Validaciones
 {
     public class ClienteValidacion : IValidacion<Cliente>
     {
-        private static readonly string[] ExtensionesValidas = ["LP", "CB", "SC", "OR", "PT", "CH", "TJ", "BE", "PD"];
-
         public Validacion Validar(Cliente cliente)
         {
-            if (string.IsNullOrWhiteSpace(cliente.TipoCliente))
-                return new Validacion(false, "El tipo de cliente es obligatorio");
+            if (EsConsumidorFinal(cliente))
+                return new Validacion(true);
 
-            if (!EsTextoValido(cliente.Nombre, 3, 20))
-                return new Validacion(false, "El nombre debe tener entre 3 y 45 caracteres y solo letras");
+            if (string.IsNullOrWhiteSpace(cliente.Nit))
+                return new Validacion(false, "El NIT es obligatorio.");
 
-            if (!EsTextoValido(cliente.ApellidoMaterno, 3, 20))
-                return new Validacion(false, "El apellido materno debe tener entre 3 y 45 caracteres y solo letras");
+            if (cliente.Nit.Any(char.IsWhiteSpace))
+                return new Validacion(false, "El NIT no debe contener espacios.");
 
-            if (!EsTextoValido(cliente.ApellidoPaterno, 3, 20))
-                return new Validacion(false, "El apellido paterno debe tener entre 3 y 45 caracteres y solo letras");
+            if (!Regex.IsMatch(cliente.Nit, @"^\d+$"))
+                return new Validacion(false, "El NIT solo debe contener numeros. No se permiten letras ni caracteres especiales.");
 
-            if (string.IsNullOrWhiteSpace(cliente.Ci))
-                return new Validacion(false, "El numero de carnet es obligatorio");
+            if (cliente.Nit.Length < 5 || cliente.Nit.Length > 20)
+                return new Validacion(false, "El NIT debe tener entre 5 y 20 digitos.");
 
-            if (cliente.Ci.Contains(' '))
-                return new Validacion(false, "El numero de carnet no debe contener espacios");
+            if (cliente.Nit.All(c => c == '0'))
+                return new Validacion(false, "El NIT no puede estar compuesto solo por ceros.");
 
-            if (!Regex.IsMatch(cliente.Ci, @"^\d{5,10}(-\d+[A-Za-z])?$"))
-                return new Validacion(false, "El CI debe tener de 5 a 10 digitos y el complemento, si existe, debe seguir el formato 1234567-1A");
+            if (string.IsNullOrWhiteSpace(cliente.RazonSocial))
+                return new Validacion(false, "La razon social es obligatoria.");
 
-            if (string.IsNullOrWhiteSpace(cliente.CiExtencion))
-                return new Validacion(false, "La extension del CI es obligatoria");
+            if (cliente.RazonSocial.Length < 3 || cliente.RazonSocial.Length > 45)
+                return new Validacion(false, "La razon social debe tener entre 3 y 45 caracteres.");
 
-            if (!ExtensionesValidas.Contains(cliente.CiExtencion))
-                return new Validacion(false, "La extension del CI no es valida");
-
-            if (cliente.FechaDeNacimiento == default)
-                return new Validacion(false, "La fecha de nacimiento es obligatoria");
-
-            int edad = CalcularEdad(cliente.FechaDeNacimiento);
-            if (edad < 18 || edad > 90)
-                return new Validacion(false, "La fecha de nacimiento debe corresponder a una edad entre 18 y 90 anos");
-
-            if (!string.IsNullOrWhiteSpace(cliente.Telefono))
+            if (!string.IsNullOrWhiteSpace(cliente.CorreoElectronico))
             {
-                if (cliente.Telefono.Length != 8)
-                    return new Validacion(false, "El teléfono debe tener exactamente 8 dígitos");
+                if (cliente.CorreoElectronico.Length > 45)
+                    return new Validacion(false, "El correo electronico no puede superar los 45 caracteres.");
 
-                if (!Regex.IsMatch(cliente.Telefono, @"^[\d\s\+\-\(\)]+$"))
-                    return new Validacion(false, "El telefono contiene caracteres invalidos");
+                if (!Regex.IsMatch(cliente.CorreoElectronico, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                    return new Validacion(false, "El correo electronico no tiene un formato valido.");
             }
 
             return new Validacion(true);
         }
 
-        private static bool EsTextoValido(string valor, int minimo, int maximo)
+        private static bool EsConsumidorFinal(Cliente cliente)
         {
-            return !string.IsNullOrWhiteSpace(valor)
-                && valor.Length >= minimo
-                && valor.Length <= maximo
-                && Regex.IsMatch(valor, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
-        }
-
-        private static int CalcularEdad(DateTime fechaNacimiento)
-        {
-            DateTime hoy = DateTime.Today;
-            int edad = hoy.Year - fechaNacimiento.Year;
-
-            if (fechaNacimiento.Date > hoy.AddYears(-edad))
-                edad--;
-
-            return edad;
+            return cliente.Nit.Equals("CF", StringComparison.OrdinalIgnoreCase) &&
+                   cliente.RazonSocial.Equals("Consumidor Final", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

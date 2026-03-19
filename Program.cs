@@ -1,6 +1,6 @@
-
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 using BioquimicoEntidad = ProyectoArqSoft.Models.Bioquimico;
+using ClienteEntidad = ProyectoArqSoft.Models.Cliente;
 using ProyectoArqSoft.FactoryCreators;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Services;
@@ -21,6 +21,8 @@ builder.Services.AddScoped<MedicamentoRepositoryCreator>();
 builder.Services.AddScoped<MedicamentoRepository>();
 builder.Services.AddScoped<BioquimicoRepositoryCreator>();
 builder.Services.AddScoped<BioquimicoRepository>();
+builder.Services.AddScoped<ClienteRepositoryCreator>();
+builder.Services.AddScoped<ClienteRepository>();
 
 builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
 {
@@ -30,20 +32,23 @@ builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
 builder.Services.AddScoped<IValidacion<MedicamentoEntidad>, MedicamentoValidacion>();
 builder.Services.AddScoped<IMedicamentoService, MedicamentoService>();
 
-// --- CONFIGURACIÓN BIOQUÍMICO ---
+builder.Services.AddScoped<IRepository<ClienteEntidad>>(provider =>
+{
+    var creator = provider.GetRequiredService<ClienteRepositoryCreator>();
+    return creator.CreateRepo();
+});
+builder.Services.AddScoped<IValidacion<ClienteEntidad>, ClienteValidacion>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 
-// Registro del repositorio a través de su Factory (Creator)
+// --- CONFIGURACION BIOQUIMICO ---
 builder.Services.AddScoped<IRepository<BioquimicoEntidad>>(provider =>
 {
     var creator = provider.GetRequiredService<BioquimicoRepositoryCreator>();
     return creator.CreateRepo();
 });
 
-// Registro de la Validación (Si usas la interfaz IValidacion para Bioquímico)
 builder.Services.AddScoped<IValidacion<BioquimicoEntidad>, BioquimicoFormularioValidacion>();
 builder.Services.AddScoped<IValidacion<string>, BioquimicoBusquedaValidacion>();
-
-// Registro del Servicio
 builder.Services.AddScoped<IBioquimicoService, BioquimicoService>();
 
 var app = builder.Build();
@@ -52,7 +57,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
