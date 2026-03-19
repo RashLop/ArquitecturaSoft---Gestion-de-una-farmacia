@@ -64,7 +64,7 @@ namespace ProyectoArqSoft.Repositories
             return null;
         }
 
-        // Insertar un nuevo registro
+        
         public int Insert(Bioquimico entity)
         {
             using var connection = new MySqlConnection(_connectionString);
@@ -79,7 +79,7 @@ namespace ProyectoArqSoft.Repositories
             return command.ExecuteNonQuery();
         }
 
-        // Actualizar datos existentes
+       
         public int Update(Bioquimico entity)
         {
             using var connection = new MySqlConnection(_connectionString);
@@ -96,7 +96,7 @@ namespace ProyectoArqSoft.Repositories
             return command.ExecuteNonQuery();
         }
 
-        // Baja lógica (Eliminar)
+        
         public int Delete(Bioquimico entity)
         {
             using var connection = new MySqlConnection(_connectionString);
@@ -109,7 +109,7 @@ namespace ProyectoArqSoft.Repositories
             return command.ExecuteNonQuery();
         }
 
-        // Método privado para no repetir código de parámetros
+        
         private void MapearParametros(MySqlCommand command, Bioquimico b)
         {
             command.Parameters.AddWithValue("@nom", b.Nombres);
@@ -120,22 +120,23 @@ namespace ProyectoArqSoft.Repositories
             command.Parameters.AddWithValue("@tel", b.Telefono);
         }
 
-        // Necesitaremos este para las validaciones de duplicados más adelante
-        public DataTable GetByDocumento(string ci, string extension)
-        {
-            DataTable dt = new DataTable();
-            using var connection = new MySqlConnection(_connectionString);
-            string query = "SELECT idBioquimico FROM bioquimico WHERE ci = @ci AND ci_extencion = @ext AND activo = 1";
-            
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@ci", ci);
-            command.Parameters.AddWithValue("@ext", extension);
-            
-            new MySqlDataAdapter(command).Fill(dt);
-            return dt;
-        }
+        
+       public DataTable GetByDocumento(string ci, string extension)
+{
+    DataTable dt = new DataTable();
+    using var connection = new MySqlConnection(_connectionString);
+   
+    string query = "SELECT idBioquimico FROM bioquimico WHERE ci = @ci AND ci_extencion = @ext AND activo = 1";
+    
+    using var command = new MySqlCommand(query, connection);
+    command.Parameters.AddWithValue("@ci", ci);
+    command.Parameters.AddWithValue("@ext", extension);
+    
+    new MySqlDataAdapter(command).Fill(dt);
+    return dt;
+}
 
-        // Implementación requerida por IRepository si no pasas filtro
+        
         public DataTable GetAll() => GetAll(string.Empty);
     }
 }

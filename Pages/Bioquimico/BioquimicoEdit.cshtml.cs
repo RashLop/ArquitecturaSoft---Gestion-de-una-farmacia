@@ -45,7 +45,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
-            // El OnGet queda vacío porque usamos el handler de cargar
+            
         }
 
         public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
@@ -55,7 +55,7 @@ namespace ProyectoArqSoft.Pages
             if (bioquimico == null)
                 return RedirectToPage("Bioquimico");
 
-            // Mapeamos la entidad a las propiedades del Model
+            
             IdBioquimico = bioquimico.IdBioquimico;
             Nombres = bioquimico.Nombres;
             ApellidoPaterno = bioquimico.ApellidoPaterno;
@@ -67,31 +67,31 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-        public IActionResult OnPostActualizarBioquimico()
-        {
-            // Creamos el objeto con los datos del formulario
-            var bioquimicoEditado = new BioquimicoEntidad
-            {
-                IdBioquimico = IdBioquimico,
-                Nombres = Nombres,
-                ApellidoPaterno = ApellidoPaterno,
-                ApellidoMaterno = ApellidoMaterno,
-                Ci = Ci,
-                CiExtencion = CiExtencion,
-                Telefono = Telefono
-            };
+       public IActionResult OnPostActualizarBioquimico()
+{
+    
+    var bioquimicoEditado = new BioquimicoEntidad
+    {
+        IdBioquimico = IdBioquimico,
+        Nombres = Nombres,
+        ApellidoPaterno = ApellidoPaterno,
+        ApellidoMaterno = ApellidoMaterno,
+        Ci = Ci,
+        CiExtencion = CiExtencion,
+        Telefono = Telefono
+    };
 
-            // Delegamos la validación y actualización al servicio
-            Validacion resultado = _bioquimicoService.Actualizar(bioquimicoEditado);
+    var resultado = _bioquimicoService.Actualizar(bioquimicoEditado);
 
-            if (!resultado.EsValido)
-            {
-                Estado.MensajeError = resultado.MensajeError;
-                return Page();
-            }
+    if (!resultado.EsValido)
+    {
+        Estado.MensajeError = resultado.MensajeError;
+        return Page();
+    }
 
-            // Si todo sale bien, volvemos a la lista principal
-            return RedirectToPage("Bioquimico");
-        }
+    TempData["Mensaje"] = "Actualizado correctamente";
+    return RedirectToPage("Bioquimico");
+}
+
     }
 }

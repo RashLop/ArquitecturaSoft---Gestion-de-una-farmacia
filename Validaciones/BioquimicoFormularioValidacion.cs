@@ -3,7 +3,7 @@ using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.Validaciones
 {
-    // --- 1. VALIDACIÓN PARA EL FORMULARIO (CREAR/EDITAR) ---
+    
     public class BioquimicoFormularioValidacion : IValidacion<Bioquimico>
     {
         private static readonly string[] ExtensionesValidas = ["LP", "CB", "SC", "OR", "PT", "CH", "TJ", "BE", "PD"];
@@ -52,7 +52,7 @@ namespace ProyectoArqSoft.Validaciones
         }
     }
 
-    // --- 2. VALIDACIÓN PARA EL BUSCADOR (FILTRO) ---
+    
     public class BioquimicoBusquedasValidacion : IValidacion<string>
     {
         public Validacion Validar(string filtro)
@@ -60,7 +60,7 @@ namespace ProyectoArqSoft.Validaciones
             if (string.IsNullOrWhiteSpace(filtro)) 
                 return new Validacion(true);
 
-            // Letras, números o formato CI con complemento
+            
             string patronValido = @"^([a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+|\d+|\d+-\d[A-Z])$";
 
             if (!Regex.IsMatch(filtro.Trim(), patronValido))
