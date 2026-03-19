@@ -117,7 +117,7 @@ namespace ProyectoArqSoft.Services
 
         private void LimpiarCampos(Medicamento medicamento)
         {
-            medicamento.Nombre = StringHelper.QuitarEspacios(medicamento.Nombre);
+            medicamento.Nombre = StringHelper.LimpiarEspacios(medicamento.Nombre);
             medicamento.Presentacion = StringHelper.LimpiarEspacios(medicamento.Presentacion);
             medicamento.Clasificacion = StringHelper.LimpiarEspacios(medicamento.Clasificacion);
             medicamento.Concentracion = StringHelper.LimpiarEspacios(medicamento.Concentracion);
