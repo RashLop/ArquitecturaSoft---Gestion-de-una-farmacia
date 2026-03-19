@@ -31,7 +31,7 @@ namespace ProyectoArqSoft.Pages
         public string Ci { get; set; } = string.Empty;
 
         [BindProperty]
-        [Display(Name = "Extensión")]
+        [Display(Name = "Expedido")]
         public string CiExtencion { get; set; } = string.Empty;
 
         [BindProperty]
