@@ -12,17 +12,17 @@ namespace ProyectoArqSoft.Repositories
 
         public BioquimicoRepository(IConfiguration configuration)
         {
-            // Obtenemos la cadena de conexión centralizada
+            
             _connectionString = configuration.GetConnectionString("MySqlConnection")!;
         }
 
-        // Obtener todos los bioquímicos activos (usado para el listado)
+        
         public DataTable GetAll(string filtro)
         {
             DataTable dt = new DataTable();
             using var connection = new MySqlConnection(_connectionString);
             
-            // Reutilizamos tu lógica de construcción de filtros SQL
+            
             string query = $@"SELECT idBioquimico, nombres, apellido_paterno, apellido_materno, 
                                      ci, ci_extencion, telefono 
                               FROM bioquimico 
@@ -37,7 +37,7 @@ namespace ProyectoArqSoft.Repositories
             return dt;
         }
 
-        // Buscar un bioquímico específico por su ID
+        
         public Bioquimico? GetById(int id)
         {
             using var connection = new MySqlConnection(_connectionString);
