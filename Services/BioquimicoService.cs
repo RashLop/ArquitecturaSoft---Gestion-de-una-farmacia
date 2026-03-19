@@ -14,7 +14,6 @@ namespace ProyectoArqSoft.Services
         public BioquimicoService(IRepository<Bioquimico> repository)
         {
             _repository = repository;
-            // Usamos tu validador de formulario existente
             _validador = new BioquimicoFormularioValidacion();
             
         }
@@ -24,52 +23,65 @@ namespace ProyectoArqSoft.Services
         public Bioquimico? ObtenerPorId(int id) => _repository.GetById(id);
 
         public Validacion Crear(Bioquimico bioquimico)
+{
+    LimpiarDatos(bioquimico);
+
+    
+    var res = _validador.Validar(bioquimico);
+    if (!res.EsValido) return res;
+
+   
+    var repo = (Repositories.BioquimicoRepository)_repository; 
+    DataTable dtExiste = repo.GetByDocumento(bioquimico.Ci, bioquimico.CiExtencion);
+
+    if (dtExiste.Rows.Count > 0)
+    {
+        return new Validacion(false, "Ya existe un bioquímico registrado con ese número de carnet y extensión.");
+    }
+
+    
+    if (_repository.Insert(bioquimico) <= 0)
+        return new Validacion(false, "No se pudo completar el registro en la base de datos.");
+
+    return new Validacion(true);
+}
+
+public Validacion Actualizar(Bioquimico bioquimico)
+{
+    LimpiarDatos(bioquimico);
+
+    
+    var res = _validador.Validar(bioquimico);
+    if (!res.EsValido) return res;
+
+   
+    var repo = (ProyectoArqSoft.Repositories.BioquimicoRepository)_repository;
+    
+    
+    DataTable dtExiste = repo.GetByDocumento(bioquimico.Ci, bioquimico.CiExtencion);
+
+    if (dtExiste.Rows.Count > 0)
+    {
+        
+        int idEncontrado = Convert.ToInt32(dtExiste.Rows[0]["idBioquimico"]);
+
+        
+        if (idEncontrado != bioquimico.IdBioquimico)
         {
-            LimpiarDatos(bioquimico);
-
-            // 1. Validación de reglas de negocio (nombres vacíos, etc.)
-            var res = _validador.Validar(bioquimico);
-            if (!res.EsValido) return res;
-
-            // 2. Validación de duplicados usando tu método GetAll(filtro)
-            // Filtramos por CI exacto para ver si ya existe
-            var existe = _repository.GetAll(bioquimico.Ci);
-            if (existe.Rows.Count > 0)
-            {
-                // Verificación extra por si el filtro trajo similares pero no idénticos
-                foreach (DataRow row in existe.Rows)
-                {
-                    if (row["ci"].ToString() == bioquimico.Ci && 
-                        row["ci_extencion"].ToString() == bioquimico.CiExtencion)
-                    {
-                        return new Validacion(false, "Ya existe un bioquímico con ese CI y extensión.");
-                    }
-                }
-            }
-
-            // 3. Persistencia
-            if (_repository.Insert(bioquimico) <= 0)
-                return new Validacion(false, "No se pudo completar el registro en la base de datos.");
-
-            return new Validacion(true);
+            return new Validacion(false, "No se puede actualizar: El número de carnet ya pertenece a otro bioquímico.");
         }
+    }
 
-        public Validacion Actualizar(Bioquimico bioquimico)
-        {
-            LimpiarDatos(bioquimico);
+   
+    if (_repository.Update(bioquimico) <= 0)
+        return new Validacion(false, "No se realizaron cambios en el registro o error en la BD.");
 
-            var res = _validador.Validar(bioquimico);
-            if (!res.EsValido) return res;
-
-            if (_repository.Update(bioquimico) <= 0)
-                return new Validacion(false, "Error al actualizar los datos.");
-
-            return new Validacion(true);
-        }
+    return new Validacion(true);
+}
 
         public Validacion Eliminar(int id)
         {
-            // Creamos un objeto temporal con el ID para el borrado lógico
+            
             var entidad = new Bioquimico { IdBioquimico = id };
             if (_repository.Delete(entidad) <= 0)
                 return new Validacion(false, "No se pudo eliminar el registro.");
@@ -79,7 +91,7 @@ namespace ProyectoArqSoft.Services
 
         private void LimpiarDatos(Bioquimico b)
 {
-    // Solo hace el Trim/ToUpper si el campo NO es nulo
+    
     if (b.Nombres != null) b.Nombres = b.Nombres.Trim();
     if (b.ApellidoPaterno != null) b.ApellidoPaterno = b.ApellidoPaterno.Trim();
     if (b.ApellidoMaterno != null) b.ApellidoMaterno = b.ApellidoMaterno.Trim();

@@ -58,17 +58,17 @@ namespace ProyectoArqSoft.Pages
                 Telefono = Telefono
             };
 
-            // El servicio se encarga de la lógica y validación
+            
             Validacion resultado = _bioquimicoService.Crear(nuevoBioquimico);
 
             if (!resultado.EsValido)
             {
-                // Usamos Estado (de BasePageModel) para los errores
+                
                 Estado.MensajeError = resultado.MensajeError; 
                 return Page();
             }
 
-            // Si es válido, redirigimos al listado
+            
             return RedirectToPage("Bioquimico");
         }
     }
