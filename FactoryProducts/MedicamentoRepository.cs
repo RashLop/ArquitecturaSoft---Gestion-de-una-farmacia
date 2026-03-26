@@ -2,21 +2,21 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Models;
 using System.Data;
+using ProyectoArqSoft.Services;
 
 namespace ProyectoArqSoft.FactoryProducts
 {
     public class MedicamentoRepository : IRepository<Medicamento>
     {
-        private readonly IConfiguration configuration;
+        private readonly string connectionString;
 
-        public MedicamentoRepository(IConfiguration configuration)
+        public MedicamentoRepository()
         {
-            this.configuration = configuration;
+            connectionString = ConexionStringSingleton.Instancia.CadenaConexion;
         }
 
         public int Insert(Medicamento t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"INSERT INTO medicamento
                             (nombre, presentacion, clasificacion, concentracion, precio, stock)
                             VALUES
@@ -40,7 +40,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public int Update(Medicamento t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"UPDATE medicamento
                              SET nombre=@nombre,
                                  presentacion=@presentacion,
@@ -70,7 +69,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public int Delete(Medicamento t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"UPDATE medicamento
                              SET estado = 0,
                                  ultima_actualizacion = NOW()
@@ -94,7 +92,6 @@ namespace ProyectoArqSoft.FactoryProducts
         public DataTable GetAll(string filtro)
         {
             DataTable tabla = new DataTable();
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -114,7 +111,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public Medicamento? GetById(int id)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock
                              FROM medicamento
                              WHERE id_medicamento = @id_medicamento";
@@ -172,7 +168,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public int Count()
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = "SELECT COUNT(*) FROM medicamento WHERE estado = 1";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
