@@ -3,6 +3,7 @@ using ProyectoArqSoft.Models;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
 using System.Data;
+using ProyectoArqSoft.Services;
 
 namespace ProyectoArqSoft.Repositories
 {
@@ -10,18 +11,18 @@ namespace ProyectoArqSoft.Repositories
     {
         private readonly string _connectionString;
 
-        public BioquimicoRepository(IConfiguration configuration)
+        public BioquimicoRepository()
         {
             
-            _connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            _connectionString = ConexionStringSingleton.Instancia.CadenaConexion;
         }
 
         
         public DataTable GetAll(string filtro)
         {
             DataTable dt = new DataTable();
-            using var connection = new MySqlConnection(_connectionString);
             
+            using var connection = new MySqlConnection(_connectionString);
             
             string query = $@"SELECT idBioquimico, nombres, apellido_paterno, apellido_materno, 
                                      ci, ci_extencion, telefono 
@@ -121,20 +122,20 @@ namespace ProyectoArqSoft.Repositories
         }
 
         
-       public DataTable GetByDocumento(string ci, string extension)
-{
-    DataTable dt = new DataTable();
-    using var connection = new MySqlConnection(_connectionString);
-   
-    string query = "SELECT idBioquimico FROM bioquimico WHERE ci = @ci AND ci_extencion = @ext AND activo = 1";
-    
-    using var command = new MySqlCommand(query, connection);
-    command.Parameters.AddWithValue("@ci", ci);
-    command.Parameters.AddWithValue("@ext", extension);
-    
-    new MySqlDataAdapter(command).Fill(dt);
-    return dt;
-}
+        public DataTable GetByDocumento(string ci, string extension)
+        {
+            DataTable dt = new DataTable();
+            using var connection = new MySqlConnection(_connectionString);
+        
+            string query = "SELECT idBioquimico FROM bioquimico WHERE ci = @ci AND ci_extencion = @ext AND activo = 1";
+            
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@ci", ci);
+            command.Parameters.AddWithValue("@ext", extension);
+            
+            new MySqlDataAdapter(command).Fill(dt);
+            return dt;
+        }
 
         
         public DataTable GetAll() => GetAll(string.Empty);
