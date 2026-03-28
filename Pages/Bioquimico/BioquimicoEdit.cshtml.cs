@@ -45,7 +45,6 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
-            
         }
 
         public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
@@ -55,7 +54,6 @@ namespace ProyectoArqSoft.Pages
             if (bioquimico == null)
                 return RedirectToPage("Bioquimico");
 
-            
             IdBioquimico = bioquimico.IdBioquimico;
             Nombres = bioquimico.Nombres;
             ApellidoPaterno = bioquimico.ApellidoPaterno;
@@ -67,31 +65,29 @@ namespace ProyectoArqSoft.Pages
             return Page();
         }
 
-       public IActionResult OnPostActualizarBioquimico()
-{
-    
-    var bioquimicoEditado = new BioquimicoEntidad
-    {
-        IdBioquimico = IdBioquimico,
-        Nombres = Nombres,
-        ApellidoPaterno = ApellidoPaterno,
-        ApellidoMaterno = ApellidoMaterno,
-        Ci = Ci,
-        CiExtencion = CiExtencion,
-        Telefono = Telefono
-    };
+        public IActionResult OnPostActualizarBioquimico()
+        {
+            var bioquimicoEditado = new BioquimicoEntidad
+            {
+                IdBioquimico = IdBioquimico,
+                Nombres = Nombres,
+                ApellidoPaterno = ApellidoPaterno,
+                ApellidoMaterno = ApellidoMaterno,
+                Ci = Ci,
+                CiExtencion = CiExtencion,
+                Telefono = Telefono
+            };
 
-    var resultado = _bioquimicoService.Actualizar(bioquimicoEditado);
+            Validacion resultado = _bioquimicoService.Actualizar(bioquimicoEditado);
 
-    if (!resultado.EsValido)
-    {
-        Estado.MensajeError = resultado.MensajeError;
-        return Page();
-    }
+            if (resultado.IsFailure)
+            {
+                Estado.MensajeError = resultado.Error;
+                return Page();
+            }
 
-    TempData["Mensaje"] = "Actualizado correctamente";
-    return RedirectToPage("Bioquimico");
-}
-
+            TempData["Mensaje"] = "Actualizado correctamente";
+            return RedirectToPage("Bioquimico");
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Pages.Base;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages
@@ -11,57 +11,52 @@ namespace ProyectoArqSoft.Pages
     {
         private readonly IBioquimicoService _bioquimicoService;
         private readonly IValidacion<string> _busquedaValidator;
-       
-        
-        public BioquimicoModel(IBioquimicoService bioquimicoService, IValidacion<string> busquedaValidator)
+
+        public BioquimicoModel(
+            IBioquimicoService bioquimicoService,
+            IValidacion<string> busquedaValidator)
         {
             _bioquimicoService = bioquimicoService;
             _busquedaValidator = busquedaValidator;
         }
 
-        
-        public DataTable dtBioquimicos { get; set; } = new DataTable();
+        public DataTable dtBioquimicos { get; set; } = new();
 
-        
         [BindProperty(SupportsGet = true)]
         public string? Filtro { get; set; }
 
         public void OnGet()
-{
-    
-    var validacion = _busquedaValidator.Validar(Filtro ?? "");
+        {
+            string filtro = Filtro ?? string.Empty;
 
-    if (!validacion.EsValido)
-    {
-       
-        Estado.MensajeError = validacion.MensajeError; 
-        dtBioquimicos = new DataTable(); 
-        return;
-    }
+            var validacion = _busquedaValidator.Validar(filtro);
 
-    
-    dtBioquimicos = _bioquimicoService.ObtenerTodos(Filtro ?? "");
+            if (validacion.IsFailure)
+            {
+                Estado.MensajeError = validacion.Error;
+                dtBioquimicos = new DataTable();
+                return;
+            }
 
-   
-    if (dtBioquimicos.Rows.Count == 0 && !string.IsNullOrWhiteSpace(Filtro))
-    {
-        Estado.Mensaje = "No se encontraron resultados para: " + Filtro;
-    }
-}
+            dtBioquimicos = _bioquimicoService.ObtenerTodos(filtro);
+
+            if (dtBioquimicos.Rows.Count == 0 && !string.IsNullOrWhiteSpace(filtro))
+            {
+                Estado.Mensaje = $"No se encontraron resultados para: {filtro}";
+            }
+        }
 
         public IActionResult OnPostEliminar(int id)
         {
-           
             var resultado = _bioquimicoService.Eliminar(id);
 
-            if (resultado.EsValido)
+            if (resultado.IsSuccess)
             {
                 TempData["Mensaje"] = "Bioquímico eliminado correctamente.";
             }
             else
             {
-                
-                TempData["Error"] = resultado.MensajeError;
+                TempData["Error"] = resultado.Error;
             }
 
             return RedirectToPage();

@@ -23,9 +23,9 @@ namespace ProyectoArqSoft.Pages
             CargarParametros(filtro, mensaje, error);
 
             Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
-            Estado.MensajeError = resultado.MensajeError;
+            Estado.MensajeError = resultado.Error;
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
                 return;
 
             CargarClientes(Estado.FiltroActual);
@@ -35,9 +35,9 @@ namespace ProyectoArqSoft.Pages
         {
             Validacion resultado = clienteService.Eliminar(id);
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
             {
-                Estado.MensajeError = resultado.MensajeError;
+                Estado.MensajeError = resultado.Error;
                 return Page();
             }
 

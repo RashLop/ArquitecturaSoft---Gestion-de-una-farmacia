@@ -49,7 +49,7 @@ namespace ProyectoArqSoft.Pages
             MedicamentoEntidad? medicamento = medicamentoService.ObtenerPorId(id);
 
             if (medicamento == null)
-                return RedirectToPage("Medicamento");
+                return RedirectToPage("Medicamento", new { error = "Medicamento no encontrado" });
 
             IdMedicamento = medicamento.Id;
             Nombre = medicamento.Nombre;
@@ -73,13 +73,13 @@ namespace ProyectoArqSoft.Pages
                 Precio,
                 Stock);
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
             {
-                Estado.MensajeError = resultado.MensajeError;
+                Estado.MensajeError = resultado.Error;
                 return Page();
             }
 
-            return RedirectToPage("Medicamento");
+            return RedirectToPage("Medicamento", new { mensaje = "Medicamento actualizado correctamente" });
         }
     }
 }

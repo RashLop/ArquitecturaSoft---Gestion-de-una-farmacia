@@ -52,3 +52,9 @@ coverage/
 *.tmp
 
 *.cache
+
+# .NET
+.dotnet/
+
+# Configuración local de NuGet
+.sandbox-appdata/

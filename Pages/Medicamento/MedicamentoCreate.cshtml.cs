@@ -50,13 +50,13 @@ namespace ProyectoArqSoft.Pages
                 Precio,
                 Stock);
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
             {
-                Estado.MensajeError = resultado.MensajeError;
+                Estado.MensajeError = resultado.Error;
                 return Page();
             }
 
-            return RedirectToPage("Medicamento");
+            return RedirectToPage("Medicamento", new { mensaje = "Medicamento registrado correctamente" });
         }
     }
 }

@@ -42,9 +42,9 @@ namespace ProyectoArqSoft.Pages
                 RazonSocial,
                 CorreoElectronico);
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
             {
-                Estado.MensajeError = resultado.MensajeError;
+                Estado.MensajeError = resultado.Error;
                 return Page();
             }
 

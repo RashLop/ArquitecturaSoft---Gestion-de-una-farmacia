@@ -12,7 +12,6 @@ namespace ProyectoArqSoft.Pages
     {
         private readonly IBioquimicoService _bioquimicoService;
 
-        // Propiedades individuales vinculadas al formulario
         [BindProperty]
         public string Nombres { get; set; } = string.Empty;
 
@@ -47,7 +46,6 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearBioquimico()
         {
-            // Creamos el objeto para enviarlo al servicio
             var nuevoBioquimico = new BioquimicoEntidad
             {
                 Nombres = Nombres,
@@ -58,17 +56,14 @@ namespace ProyectoArqSoft.Pages
                 Telefono = Telefono
             };
 
-            
             Validacion resultado = _bioquimicoService.Crear(nuevoBioquimico);
 
-            if (!resultado.EsValido)
+            if (resultado.IsFailure)
             {
-                
-                Estado.MensajeError = resultado.MensajeError; 
+                Estado.MensajeError = resultado.Error;
                 return Page();
             }
 
-            
             return RedirectToPage("Bioquimico");
         }
     }
