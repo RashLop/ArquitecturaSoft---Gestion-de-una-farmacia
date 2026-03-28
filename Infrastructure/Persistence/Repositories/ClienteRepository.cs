@@ -2,21 +2,21 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Models;
 using System.Data;
+using ProyectoArqSoft.Services;
 
 namespace ProyectoArqSoft.FactoryProducts
 {
     public class ClienteRepository : IRepository<Cliente>
     {
-        private readonly IConfiguration configuration;
+        private readonly string connectionString;
 
-        public ClienteRepository(IConfiguration configuration)
+        public ClienteRepository()
         {
-            this.configuration = configuration;
+            connectionString = ConexionStringSingleton.Instancia.CadenaConexion;
         }
 
         public int Insert(Cliente t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"INSERT INTO cliente
                             (nit, razon_social, correo_electronico)
                             VALUES
@@ -39,7 +39,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public int Update(Cliente t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"UPDATE cliente
                              SET nit = @nit,
                                  razon_social = @razon_social,
@@ -65,7 +64,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public int Delete(Cliente t)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"DELETE FROM cliente
                              WHERE idCliente = @idCliente";
 
@@ -87,7 +85,6 @@ namespace ProyectoArqSoft.FactoryProducts
         public DataTable GetAll(string filtro)
         {
             DataTable tabla = new DataTable();
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -107,7 +104,6 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public Cliente? GetById(int id)
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
             string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico
                              FROM cliente
                              WHERE idCliente = @idCliente";
