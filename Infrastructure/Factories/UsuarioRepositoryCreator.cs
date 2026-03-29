@@ -2,15 +2,15 @@ using ProyectoArqSoft.FactoryCreators;
 using ProyectoArqSoft;
 using ProyectoArqSoft.Models;
 using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Repositories;
 
 
 namespace ProyectoArqSoft.FactoryCreators
 {
-    public class UsuarioRepositoryCreator : RepositoryCreator<Usuario>
+    public class UsuarioRepositoryCreator
     {
-        public override IRepository<Usuario> CreateRepo()
+        public IUsuarioRepository CreateRepo()
         {
-            
             return new UsuarioRepository();
         }
     }
