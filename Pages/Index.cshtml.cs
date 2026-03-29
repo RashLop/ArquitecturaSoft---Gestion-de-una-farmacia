@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.FactoryProducts;
 using System.Data;
 using ProyectoArqSoft.FactoryCreators;
+using ProyectoArqSoft.Repositories;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -19,22 +20,28 @@ namespace ProyectoArqSoft.Pages
 
         //estadisticas
         private readonly MedicamentoRepository _medicamentoRepository;
-        //private readonly ClienteRepository _clienteRepo;
-        //private readonly BioquimicoRepository _bioquimicoRepo;
+        private readonly ClienteRepository _clienteRepo;
+        private readonly BioquimicoRepository _bioquimicoRepo;
 
         public int TotalMedicamentos { get; set; }
+        public int TotalClientes { get; set; }
+        public int TotalBioquimicos { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, MedicamentoRepository medicamentoRepository)
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, MedicamentoRepository medicamentoRepository, ClienteRepository clienteRepo, BioquimicoRepository bioquimicoRepo)
         {
             _logger = logger;
             this.configuration = configuration;
             _medicamentoRepository = medicamentoRepository;
+            _clienteRepo  = clienteRepo;
+            _bioquimicoRepo = bioquimicoRepo;
         }
 
         public void OnGet()
         {
             Usuario = HttpContext.Session.GetString("Usuario");
             TotalMedicamentos = _medicamentoRepository.Count();
+            TotalClientes = _clienteRepo.Count();
+            TotalBioquimicos = _bioquimicoRepo.Count();
             CargarMedicamentosDestacados();
         }
 
