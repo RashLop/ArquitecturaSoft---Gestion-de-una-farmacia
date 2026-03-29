@@ -23,21 +23,16 @@ namespace ProyectoArqSoft.Repositories
                             VALUES
                             (@email, @user_name, @password_hash, @role, @must_change_password, @is_active, @bioquimico_id_bioquimico)";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@email", t.Email);
+            command.Parameters.AddWithValue("@user_name", t.UserName);
+            command.Parameters.AddWithValue("@password_hash", t.PasswordHash);
+            command.Parameters.AddWithValue("@role", t.Role);
+            command.Parameters.AddWithValue("@must_change_password", t.MustChangePassword);
+            command.Parameters.AddWithValue("@is_active", t.IsActive);
+            command.Parameters.AddWithValue("@bioquimico_id_bioquimico", t.BioquimicoIdBioquimico);
 
-                command.Parameters.AddWithValue("@email", t.Email);
-                command.Parameters.AddWithValue("@user_name", t.UserName);
-                command.Parameters.AddWithValue("@password_hash", t.PasswordHash);
-                command.Parameters.AddWithValue("@role", t.Role);
-                command.Parameters.AddWithValue("@must_change_password", t.MustChangePassword);
-                command.Parameters.AddWithValue("@is_active", t.IsActive);
-                command.Parameters.AddWithValue("@bioquimico_id_bioquimico", t.BioquimicoIdBioquimico);
-
-                connection.Open();
-                return command.ExecuteNonQuery();
-            }
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
 
         public int Update(Usuario t)
@@ -49,36 +44,26 @@ namespace ProyectoArqSoft.Repositories
                                  ultima_actualizacion = NOW()
                              WHERE id_usuario = @id_usuario";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+            command.Parameters.AddWithValue("@email", t.Email);
+            command.Parameters.AddWithValue("@user_name", t.UserName);
+            command.Parameters.AddWithValue("@role", t.Role);
 
-                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
-                command.Parameters.AddWithValue("@email", t.Email);
-                command.Parameters.AddWithValue("@user_name", t.UserName);
-                command.Parameters.AddWithValue("@role", t.Role);
-
-                connection.Open();
-                return command.ExecuteNonQuery();
-            }
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
 
         public int Delete(Usuario t)
         {
-            
             string query = @"UPDATE usuario
                              SET is_active = 0,
                                  ultima_actualizacion = NOW()
                              WHERE id_usuario = @id_usuario";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
-                connection.Open();
-                return command.ExecuteNonQuery();
-            }
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
 
         public Usuario? GetById(int id)
@@ -87,23 +72,10 @@ namespace ProyectoArqSoft.Repositories
                              FROM usuario
                              WHERE id_usuario = @id_usuario";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_usuario", id);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@id_usuario", id);
 
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return MapearUsuario(reader);
-                    }
-                }
-            }
-
-            return null;
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
 
         public Usuario? GetByEmail(string email)
@@ -113,23 +85,10 @@ namespace ProyectoArqSoft.Repositories
                              WHERE email = @email
                              LIMIT 1";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@email", email);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@email", email);
 
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return MapearUsuario(reader);
-                    }
-                }
-            }
-
-            return null;
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
 
         public Usuario? GetByUserName(string userName)
@@ -139,23 +98,10 @@ namespace ProyectoArqSoft.Repositories
                              WHERE user_name = @user_name
                              LIMIT 1";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@user_name", userName);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@user_name", userName);
 
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return MapearUsuario(reader);
-                    }
-                }
-            }
-
-            return null;
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
 
         public bool ExisteEmail(string email)
@@ -164,14 +110,11 @@ namespace ProyectoArqSoft.Repositories
                              FROM usuario
                              WHERE email = @email";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@email", email);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@email", email);
 
-                connection.Open();
-                return Convert.ToInt32(command.ExecuteScalar()) > 0;
-            }
+            var result = RepositoryDbHelper.ExecuteScalar(connectionString, command);
+            return Convert.ToInt32(result) > 0;
         }
 
         public bool ExisteUserName(string userName)
@@ -180,14 +123,11 @@ namespace ProyectoArqSoft.Repositories
                              FROM usuario
                              WHERE user_name = @user_name";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@user_name", userName);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@user_name", userName);
 
-                connection.Open();
-                return Convert.ToInt32(command.ExecuteScalar()) > 0;
-            }
+            var result = RepositoryDbHelper.ExecuteScalar(connectionString, command);
+            return Convert.ToInt32(result) > 0;
         }
 
         public Usuario? ValidarCredenciales(string emailOUserName, string passwordHash)
@@ -199,25 +139,11 @@ namespace ProyectoArqSoft.Repositories
                                AND is_active = 1
                              LIMIT 1";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@valor", emailOUserName);
+            command.Parameters.AddWithValue("@password_hash", passwordHash);
 
-                command.Parameters.AddWithValue("@valor", emailOUserName);
-                command.Parameters.AddWithValue("@password_hash", passwordHash);
-
-                connection.Open();
-
-                using (MySqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return MapearUsuario(reader);
-                    }
-                }
-            }
-
-            return null;
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
 
         public int CambiarPassword(int idUsuario, string nuevoPasswordHash, bool mustChangePassword)
@@ -228,23 +154,17 @@ namespace ProyectoArqSoft.Repositories
                                  ultima_actualizacion = NOW()
                              WHERE id_usuario = @id_usuario";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@id_usuario", idUsuario);
+            command.Parameters.AddWithValue("@password_hash", nuevoPasswordHash);
+            command.Parameters.AddWithValue("@must_change_password", mustChangePassword);
 
-                command.Parameters.AddWithValue("@id_usuario", idUsuario);
-                command.Parameters.AddWithValue("@password_hash", nuevoPasswordHash);
-                command.Parameters.AddWithValue("@must_change_password", mustChangePassword);
-
-                connection.Open();
-                return command.ExecuteNonQuery();
-            }
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
 
         public DataTable GetAll()
         {
             return GetAll(string.Empty);
-            
         }
 
         public DataTable GetAll(string filtro)
