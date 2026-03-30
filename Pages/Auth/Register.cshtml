@@ -1,0 +1,68 @@
+@page
+@model ProyectoArqSoft.Pages.Auth.RegisterModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro - Farmacia VitalCare</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+
+            <img src="~/images/vitalcare.png" class="logo" />
+            <h2>Crear Cuenta</h2>
+
+            <form method="post">
+
+                <input type="text"
+                       asp-for="Registro.Email"
+                       placeholder="Correo electrónico"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.UserName"
+                       placeholder="Nombre de usuario"
+                       required />
+
+                <input type="password"
+                       asp-for="Registro.Password"
+                       placeholder="Contraseña"
+                       required />
+
+                <input type="password"
+                       asp-for="Registro.ConfirmarPassword"
+                       placeholder="Confirmar contraseña"
+                       required />
+
+                <!-- ERROR -->
+                @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+                {
+                    <div style="color:red; margin-bottom:10px;">
+                        @Model.MensajeError
+                    </div>
+                }
+
+                <!-- OK -->
+                @if (!string.IsNullOrWhiteSpace(Model.MensajeOk))
+                {
+                    <div style="color:green; margin-bottom:10px;">
+                        @Model.MensajeOk
+                    </div>
+                }
+
+                <button type="submit">Registrar</button>
+
+                <div style="margin-top:10px;">
+                    <a asp-page="/Auth/Login">¿Ya tienes cuenta? Inicia sesión</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>
