@@ -9,7 +9,7 @@ namespace ProyectoArqSoft.Validaciones
         {
             return ValidarNombre(medicamento.Nombre)
                 ?? ValidarPresentacion(medicamento.Presentacion)
-                ?? ValidarClasificacion(medicamento.Clasificacion)
+                ?? ValidarIdClasificacion(medicamento.IdClasificacion)
                 ?? ValidarConcentracion(medicamento.Concentracion)
                 ?? ValidarPrecio(medicamento.Precio)
                 ?? ValidarStock(medicamento.Stock)
@@ -34,11 +34,12 @@ namespace ProyectoArqSoft.Validaciones
                 : null;
         }
 
-        private Validacion? ValidarClasificacion(string clasificacion)
+        private Validacion? ValidarIdClasificacion(int idClasificacion)
         {
-            return string.IsNullOrWhiteSpace(clasificacion)
-                ? Validacion.Fail("La clasificación es obligatoria.")
-                : null;
+            if (idClasificacion <= 0)
+                return Validacion.Fail("La clasificación es obligatoria.");
+
+            return null;
         }
 
         private Validacion? ValidarConcentracion(string concentracion)
