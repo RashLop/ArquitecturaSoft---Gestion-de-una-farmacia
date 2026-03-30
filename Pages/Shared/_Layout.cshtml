@@ -27,11 +27,19 @@
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#navbarVitalCare">
+                        data-bs-target="#navbarVitalCare"
+                        aria-controls="navbarVitalCare"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarVitalCare">
+
+                    @{
+                        var usuario = Context.Session.GetString("UserName");
+                        var role = Context.Session.GetString("Role");
+                    }
 
                     <ul class="navbar-nav ms-auto">
 
@@ -43,59 +51,68 @@
                             <a class="nav-link" asp-page="/Privacy">Privacidad</a>
                         </li>
 
-                        @{
-                            var usuario = Context.Session.GetString("Usuario");
-                        }
-
-                        @if (usuario != null)
+                        @if (!string.IsNullOrWhiteSpace(usuario))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="medicamentosDropdown" role="button">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   id="medicamentosDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
                                     Medicamentos
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" aria-labelledby="medicamentosDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Medicamento/Medicamento">
                                             Gestionar Medicamentos
                                         </a>
                                     </li>
-                                  
                                 </ul>
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="ventasDropdown" role="button">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   id="ventasDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
                                     Ventas
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" aria-labelledby="ventasDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Cliente/Cliente">
                                             Gestionar Clientes
                                         </a>
                                     </li>
-                                    
                                 </ul>
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="bioquimicosDropdown" role="button">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   id="bioquimicosDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
                                     Bioquímicos
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" aria-labelledby="bioquimicosDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
                                             Gestionar Bioquímicos
                                         </a>
                                     </li>
-                                    
                                 </ul>
                             </li>
 
-
+                            <li class="nav-item">
+                                <span class="nav-link text-light">Hola, @usuario</span>
+                            </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-warning"
-                                   asp-page="/Auth/Logout">
+                                <a class="nav-link text-warning" asp-page="/Auth/Logout">
                                     Cerrar Sesión
                                 </a>
                             </li>
@@ -103,9 +120,14 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link"
-                                   asp-page="/Auth/Login">
+                                <a class="nav-link" asp-page="/Auth/Login">
                                     Login
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Auth/Register">
+                                    Registro
                                 </a>
                             </li>
                         }
@@ -118,11 +140,8 @@
         </nav>
     </header>
 
-
     @RenderBody()
 
-
-    <!-- FOOTER -->
     <footer class="footer mt-5">
         <div class="container">
             <div class="row">
@@ -175,9 +194,8 @@
         </div>
     </footer>
 
-
     <script>
-        window.addEventListener("scroll", function(){
+        window.addEventListener("scroll", function () {
             let navbar = document.querySelector(".navbar");
             navbar.classList.toggle("scrolled", window.scrollY > 50);
         });

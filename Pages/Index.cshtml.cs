@@ -1,46 +1,41 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Repositories;
 using System.Data;
-using ProyectoArqSoft.FactoryCreators;
 
 namespace ProyectoArqSoft.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration configuration;
+        private readonly IConfiguration _configuration;
+        private readonly MedicamentoRepository _medicamentoRepository;
 
         public string? Usuario { get; set; }
-
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
-
-        //estadisticas
-        private readonly MedicamentoRepository _medicamentoRepository;
-        //private readonly ClienteRepository _clienteRepo;
-        //private readonly BioquimicoRepository _bioquimicoRepo;
-
         public int TotalMedicamentos { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, MedicamentoRepository medicamentoRepository)
+        public IndexModel(
+            ILogger<IndexModel> logger,
+            IConfiguration configuration,
+            MedicamentoRepository medicamentoRepository)
         {
             _logger = logger;
-            this.configuration = configuration;
+            _configuration = configuration;
             _medicamentoRepository = medicamentoRepository;
         }
 
         public void OnGet()
         {
-            Usuario = HttpContext.Session.GetString("Usuario");
+            Usuario = HttpContext.Session.GetString("UserName");
             TotalMedicamentos = _medicamentoRepository.Count();
             CargarMedicamentosDestacados();
         }
 
         private void CargarMedicamentosDestacados()
         {
-            string connectionString = configuration.GetConnectionString("MySqlConnection")!;
+            string connectionString = _configuration.GetConnectionString("MySqlConnection")!;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {

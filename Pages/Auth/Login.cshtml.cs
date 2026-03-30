@@ -19,6 +19,14 @@ namespace ProyectoArqSoft.Pages.Auth
 
         public string MensajeError { get; set; } = string.Empty;
 
+        public IActionResult OnGet()
+        {
+            if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
+                return RedirectToPage("/Index");
+
+            return Page();
+        }
+
         public IActionResult OnPost()
         {
             var validacion = _authService.IniciarSesion(LoginRequest, out UsuarioLoginResponseDto? respuesta);
@@ -31,7 +39,7 @@ namespace ProyectoArqSoft.Pages.Auth
 
             if (respuesta == null)
             {
-                MensajeError = "Error inesperado.";
+                MensajeError = "No se pudo iniciar sesión.";
                 return Page();
             }
 
@@ -39,6 +47,7 @@ namespace ProyectoArqSoft.Pages.Auth
             HttpContext.Session.SetInt32("IdUsuario", respuesta.IdUsuario);
             HttpContext.Session.SetString("UserName", respuesta.UserName);
             HttpContext.Session.SetString("Role", respuesta.Role);
+            HttpContext.Session.SetString("MustChangePassword", respuesta.MustChangePassword.ToString());
 
             return RedirectToPage("/Index");
         }

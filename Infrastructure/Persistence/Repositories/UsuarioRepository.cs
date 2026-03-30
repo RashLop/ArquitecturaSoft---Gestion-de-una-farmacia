@@ -19,9 +19,9 @@ namespace ProyectoArqSoft.Repositories
         public int Insert(Usuario t)
         {
             string query = @"INSERT INTO usuario
-                            (email, user_name, password_hash, role, must_change_password, is_active, bioquimico_id_bioquimico)
+                            (email, user_name, password_hash, role, must_change_password, is_active, bioquimico_idBioquimico)
                             VALUES
-                            (@email, @user_name, @password_hash, @role, @must_change_password, @is_active, @bioquimico_id_bioquimico)";
+                            (@email, @user_name, @password_hash, @role, @must_change_password, @is_active, @bioquimico_idBioquimico)";
 
             MySqlCommand command = new MySqlCommand(query);
             command.Parameters.AddWithValue("@email", t.Email);
@@ -30,7 +30,7 @@ namespace ProyectoArqSoft.Repositories
             command.Parameters.AddWithValue("@role", t.Role);
             command.Parameters.AddWithValue("@must_change_password", t.MustChangePassword);
             command.Parameters.AddWithValue("@is_active", t.IsActive);
-            command.Parameters.AddWithValue("@bioquimico_id_bioquimico", t.BioquimicoIdBioquimico);
+            command.Parameters.AddWithValue("@bioquimico_idBioquimico", t.BioquimicoIdBioquimico);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
@@ -42,10 +42,10 @@ namespace ProyectoArqSoft.Repositories
                                  user_name = @user_name,
                                  role = @role,
                                  ultima_actualizacion = NOW()
-                             WHERE id_usuario = @id_usuario";
+                             WHERE idUsuario = @idUsuario";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
             command.Parameters.AddWithValue("@email", t.Email);
             command.Parameters.AddWithValue("@user_name", t.UserName);
             command.Parameters.AddWithValue("@role", t.Role);
@@ -58,10 +58,10 @@ namespace ProyectoArqSoft.Repositories
             string query = @"UPDATE usuario
                              SET is_active = 0,
                                  ultima_actualizacion = NOW()
-                             WHERE id_usuario = @id_usuario";
+                             WHERE idUsuario = @idUsuario";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
@@ -70,10 +70,10 @@ namespace ProyectoArqSoft.Repositories
         {
             string query = @"SELECT *
                              FROM usuario
-                             WHERE id_usuario = @id_usuario";
+                             WHERE idUsuario = @idUsuario";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@id_usuario", id);
+            command.Parameters.AddWithValue("@idUsuario", id);
 
             return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
@@ -136,10 +136,10 @@ namespace ProyectoArqSoft.Repositories
                              SET password_hash = @password_hash,
                                  must_change_password = @must_change_password,
                                  ultima_actualizacion = NOW()
-                             WHERE id_usuario = @id_usuario";
+                             WHERE idUsuario = @idUsuario";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@id_usuario", idUsuario);
+            command.Parameters.AddWithValue("@idUsuario", idUsuario);
             command.Parameters.AddWithValue("@password_hash", nuevoPasswordHash);
             command.Parameters.AddWithValue("@must_change_password", mustChangePassword);
 
@@ -173,7 +173,7 @@ namespace ProyectoArqSoft.Repositories
 
         private string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT id_usuario,
+            string query = @"SELECT idUsuario,
                                     email,
                                     user_name,
                                     role
@@ -196,7 +196,7 @@ namespace ProyectoArqSoft.Repositories
         {
             return new Usuario
             {
-                IdUsuario = reader.GetInt32("id_usuario"),
+                IdUsuario = reader.GetInt32("idUsuario"),
                 Email = reader.GetString("email"),
                 UserName = reader.GetString("user_name"),
                 PasswordHash = reader.GetString("password_hash"),
@@ -207,9 +207,9 @@ namespace ProyectoArqSoft.Repositories
                 UltimaActualizacion = reader.IsDBNull(reader.GetOrdinal("ultima_actualizacion"))
                     ? (DateTime?)null
                     : reader.GetDateTime("ultima_actualizacion"),
-                BioquimicoIdBioquimico = reader.IsDBNull(reader.GetOrdinal("bioquimico_id_bioquimico"))
+                BioquimicoIdBioquimico = reader.IsDBNull(reader.GetOrdinal("bioquimico_idBioquimico"))
                     ? (int?)null
-                    : reader.GetInt32("bioquimico_id_bioquimico")
+                    : reader.GetInt32("bioquimico_idBioquimico")
             };
         }
     }
