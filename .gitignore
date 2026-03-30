@@ -58,3 +58,5 @@ coverage/
 
 # Configuración local de NuGet
 .sandbox-appdata/
+
+.env
