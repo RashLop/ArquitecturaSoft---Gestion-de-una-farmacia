@@ -7,7 +7,7 @@ namespace ProyectoArqSoft.Services
     public interface IUsuarioService
     {
         Validacion CrearUsuario(UsuarioRegistroDto dto, string role);
-        Validacion ActualizarUsuario(int idUsuario, string email, string userName, string role);
+        Validacion ActualizarUsuario(UsuarioActualizacionDto dto);
         Validacion EliminarUsuario(int idUsuario);
 
         UsuarioDto? ObtenerUsuarioPorId(int idUsuario);

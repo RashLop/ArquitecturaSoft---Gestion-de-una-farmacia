@@ -61,15 +61,8 @@ namespace ProyectoArqSoft.Services
             return Validacion.Ok();
         }
 
-        public Validacion ActualizarUsuario(int idUsuario, string email, string userName, string role)
+        public Validacion ActualizarUsuario(UsuarioActualizacionDto dto)
         {
-            UsuarioActualizacionDto dto = new UsuarioActualizacionDto
-            {
-                IdUsuario = idUsuario,
-                Email = email,
-                UserName = userName,
-                Role = role
-            };
 
             Validacion validacionEntrada = _actualizacionValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
@@ -79,7 +72,7 @@ namespace ProyectoArqSoft.Services
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
-            Usuario? usuarioActual = _repository.GetById(idUsuario);
+            Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
             if (usuarioActual == null)
                 return Validacion.Fail("El usuario no existe.");
 
