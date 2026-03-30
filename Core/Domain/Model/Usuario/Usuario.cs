@@ -12,7 +12,7 @@ public class Usuario
         public sbyte IsActive { get; set; } = 1;
         public DateTime FechaRegistro { get; set; }
         public DateTime? UltimaActualizacion { get; set; }
-        public int BioquimicoIdBioquimico { get; set; }
+        public int? BioquimicoIdBioquimico { get; set; }
         // Propiedad de navegación opcional
         public Bioquimico? Bioquimico { get; set; }
 

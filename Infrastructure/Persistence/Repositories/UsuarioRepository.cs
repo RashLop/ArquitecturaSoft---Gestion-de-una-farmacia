@@ -130,22 +130,6 @@ namespace ProyectoArqSoft.Repositories
             return Convert.ToInt32(result) > 0;
         }
 
-        public Usuario? ValidarCredenciales(string emailOUserName, string passwordHash)
-        {
-            string query = @"SELECT *
-                             FROM usuario
-                             WHERE (email = @valor OR user_name = @valor)
-                               AND password_hash = @password_hash
-                               AND is_active = 1
-                             LIMIT 1";
-
-            MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@valor", emailOUserName);
-            command.Parameters.AddWithValue("@password_hash", passwordHash);
-
-            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
-        }
-
         public int CambiarPassword(int idUsuario, string nuevoPasswordHash, bool mustChangePassword)
         {
             string query = @"UPDATE usuario
@@ -223,7 +207,9 @@ namespace ProyectoArqSoft.Repositories
                 UltimaActualizacion = reader.IsDBNull(reader.GetOrdinal("ultima_actualizacion"))
                     ? (DateTime?)null
                     : reader.GetDateTime("ultima_actualizacion"),
-                BioquimicoIdBioquimico = reader.GetInt32("bioquimico_id_bioquimico")
+                BioquimicoIdBioquimico = reader.IsDBNull(reader.GetOrdinal("bioquimico_id_bioquimico"))
+                    ? (int?)null
+                    : reader.GetInt32("bioquimico_id_bioquimico")
             };
         }
     }
