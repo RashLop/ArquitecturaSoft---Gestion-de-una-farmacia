@@ -1,5 +1,5 @@
 ﻿@page
-@model LoginModel
+@model ProyectoArqSoft.Pages.Auth.LoginModel
 @{
     Layout = null;
 }
@@ -17,8 +17,24 @@
             <h2>Farmacia VitalCare</h2>
 
             <form method="post">
-                <input type="text" asp-for="Usuario" placeholder="Usuario" required />
-                <input type="password" asp-for="Password" placeholder="Contraseña" required />
+
+                <input type="text"
+                       asp-for="LoginRequest.EmailOUserName"
+                       placeholder="Usuario o Email"
+                       required />
+
+                <input type="password"
+                       asp-for="LoginRequest.Password"
+                       placeholder="Contraseña"
+                       required />
+
+                @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+                {
+                    <div style="color:red; margin-bottom:10px;">
+                        @Model.MensajeError
+                    </div>
+                }
+
                 <button type="submit">Ingresar</button>
             </form>
         </div>
