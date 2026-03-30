@@ -23,7 +23,7 @@ namespace ProyectoArqSoft.Pages
 
         [BindProperty]
         [Display(Name = "Clasificación")]
-        public string Clasificacion { get; set; } = string.Empty;
+        public int IdClasificacion { get; set; }
 
         [BindProperty]
         [Display(Name = "Concentración")]
@@ -54,7 +54,7 @@ namespace ProyectoArqSoft.Pages
             IdMedicamento = medicamento.Id;
             Nombre = medicamento.Nombre;
             Presentacion = medicamento.Presentacion;
-            Clasificacion = medicamento.Clasificacion;
+            IdClasificacion = medicamento.IdClasificacion;
             Concentracion = medicamento.Concentracion;
             Precio = medicamento.Precio;
             Stock = medicamento.Stock;
@@ -68,7 +68,7 @@ namespace ProyectoArqSoft.Pages
                 IdMedicamento,
                 Nombre,
                 Presentacion,
-                Clasificacion,
+                IdClasificacion,
                 Concentracion,
                 Precio,
                 Stock);

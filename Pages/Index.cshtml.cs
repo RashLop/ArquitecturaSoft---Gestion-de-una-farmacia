@@ -41,15 +41,17 @@ namespace ProyectoArqSoft.Pages
             {
                 connection.Open();
 
-                string query = @"SELECT nombre,
-                                        presentacion,
-                                        clasificacion,
-                                        concentracion,
-                                        precio
-                                 FROM medicamento
-                                 WHERE estado = 1
-                                 ORDER BY RAND()
-                                 LIMIT 3";
+                string query = @"SELECT m.nombre,
+                                        m.presentacion,
+                                        c.nombre AS clasificacion,
+                                        m.concentracion,
+                                        m.precio
+                                FROM medicamento m
+                                INNER JOIN clasificacion c 
+                                    ON m.id_clasificacion = c.id_clasificacion
+                                WHERE m.estado = 1
+                                ORDER BY RAND()
+                                LIMIT 3";
 
                 MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
                 adapter.Fill(MedicamentoDataTable);

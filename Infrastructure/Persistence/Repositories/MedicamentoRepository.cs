@@ -18,9 +18,9 @@ namespace ProyectoArqSoft.FactoryProducts
         public int Insert(Medicamento t)
         {
             string query = @"INSERT INTO medicamento
-                            (nombre, presentacion, clasificacion, concentracion, precio, stock)
+                            (nombre, presentacion, id_clasificacion, concentracion, precio, stock)
                             VALUES
-                            (@nombre, @presentacion, @clasificacion, @concentracion, @precio, @stock)";
+                            (@nombre, @presentacion, @id_clasificacion, @concentracion, @precio, @stock)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -28,7 +28,7 @@ namespace ProyectoArqSoft.FactoryProducts
 
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@presentacion", t.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", t.Clasificacion);
+                command.Parameters.AddWithValue("@id_clasificacion", t.IdClasificacion);
                 command.Parameters.AddWithValue("@concentracion", t.Concentracion);
                 command.Parameters.AddWithValue("@precio", t.Precio);
                 command.Parameters.AddWithValue("@stock", t.Stock);
@@ -43,7 +43,7 @@ namespace ProyectoArqSoft.FactoryProducts
             string query = @"UPDATE medicamento
                              SET nombre=@nombre,
                                  presentacion=@presentacion,
-                                 clasificacion=@clasificacion,
+                                 id_clasificacion=@id_clasificacion,
                                  concentracion=@concentracion,
                                  precio=@precio,
                                  stock=@stock,
@@ -57,7 +57,7 @@ namespace ProyectoArqSoft.FactoryProducts
                 command.Parameters.AddWithValue("@id_medicamento", t.Id);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@presentacion", t.Presentacion);
-                command.Parameters.AddWithValue("@clasificacion", t.Clasificacion);
+                command.Parameters.AddWithValue("@id_clasificacion", t.IdClasificacion);
                 command.Parameters.AddWithValue("@concentracion", t.Concentracion);
                 command.Parameters.AddWithValue("@precio", t.Precio);
                 command.Parameters.AddWithValue("@stock", t.Stock);
@@ -111,7 +111,7 @@ namespace ProyectoArqSoft.FactoryProducts
 
         public Medicamento? GetById(int id)
         {
-            string query = @"SELECT id_medicamento, nombre, presentacion, clasificacion, concentracion, precio, stock
+            string query = @"SELECT id_medicamento, nombre, presentacion, id_clasificacion, concentracion, precio, stock
                              FROM medicamento
                              WHERE id_medicamento = @id_medicamento";
 
@@ -131,7 +131,7 @@ namespace ProyectoArqSoft.FactoryProducts
                             Id = Convert.ToInt32(reader["id_medicamento"]),
                             Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString()),
                             Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString()),
-                            Clasificacion = StringHelper.LimpiarEspacios(reader["clasificacion"].ToString()),
+                            IdClasificacion = Convert.ToInt32(reader["id_clasificacion"]),
                             Concentracion = StringHelper.LimpiarEspacios(reader["concentracion"].ToString()),
                             Precio = Convert.ToDecimal(reader["precio"]),
                             Stock = Convert.ToInt32(reader["stock"])
@@ -145,23 +145,25 @@ namespace ProyectoArqSoft.FactoryProducts
 
         private string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT id_medicamento,
-                                    nombre,
-                                    presentacion,
-                                    clasificacion,
-                                    concentracion,
-                                    precio
-                             FROM medicamento
-                             WHERE estado = 1";
+            string query = @"SELECT m.id_medicamento,
+                                    m.nombre,
+                                    m.presentacion,
+                                    c.nombre AS clasificacion,
+                                    m.concentracion,
+                                    m.precio
+                            FROM medicamento m
+                            INNER JOIN clasificacion c 
+                                ON m.id_clasificacion = c.id_clasificacion
+                            WHERE m.estado = 1";
 
             query += FiltroSqlHelper.ConstruirCondicionLike(
                 filtro,
-                "nombre",
-                "presentacion",
-                "clasificacion"
+                "m.nombre",
+                "m.presentacion",
+                "c.nombre"
             );
 
-            query += " ORDER BY nombre";
+            query += " ORDER BY m.nombre";
 
             return query;
         }

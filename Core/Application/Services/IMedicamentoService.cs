@@ -13,7 +13,7 @@ namespace ProyectoArqSoft.Services
         Validacion Crear(
             string nombre,
             string presentacion,
-            string clasificacion,
+            int idClasificacion,
             string concentracion,
             decimal precio,
             int stock);
@@ -22,7 +22,7 @@ namespace ProyectoArqSoft.Services
             int id,
             string nombre,
             string presentacion,
-            string clasificacion,
+            int idClasificacion,
             string concentracion,
             decimal precio,
             int stock);

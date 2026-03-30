@@ -19,7 +19,7 @@ namespace ProyectoArqSoft.Pages
 
         [BindProperty]
         [Display(Name = "Clasificación")]
-        public string Clasificacion { get; set; } = string.Empty;
+        public int IdClasificacion { get; set; }
 
         [BindProperty]
         [Display(Name = "Concentración")]
@@ -45,7 +45,7 @@ namespace ProyectoArqSoft.Pages
             Validacion resultado = medicamentoService.Crear(
                 Nombre,
                 Presentacion,
-                Clasificacion,
+                IdClasificacion,
                 Concentracion,
                 Precio,
                 Stock);

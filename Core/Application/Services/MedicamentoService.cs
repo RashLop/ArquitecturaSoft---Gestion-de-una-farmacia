@@ -37,7 +37,7 @@ namespace ProyectoArqSoft.Services
         public Validacion Crear(
             string nombre,
             string presentacion,
-            string clasificacion,
+            int idClasificacion,
             string concentracion,
             decimal precio,
             int stock)
@@ -46,7 +46,7 @@ namespace ProyectoArqSoft.Services
                 0,
                 nombre,
                 presentacion,
-                clasificacion,
+                idClasificacion,
                 concentracion,
                 precio,
                 stock);
@@ -65,7 +65,7 @@ namespace ProyectoArqSoft.Services
             int id,
             string nombre,
             string presentacion,
-            string clasificacion,
+            int idClasificacion,
             string concentracion,
             decimal precio,
             int stock)
@@ -74,7 +74,7 @@ namespace ProyectoArqSoft.Services
                 id,
                 nombre,
                 presentacion,
-                clasificacion,
+                idClasificacion,
                 concentracion,
                 precio,
                 stock);
@@ -106,7 +106,7 @@ namespace ProyectoArqSoft.Services
             int id,
             string nombre,
             string presentacion,
-            string clasificacion,
+            int idClasificacion,
             string concentracion,
             decimal precio,
             int stock)
@@ -116,7 +116,7 @@ namespace ProyectoArqSoft.Services
                 Id = id,
                 Nombre = nombre,
                 Presentacion = presentacion,
-                Clasificacion = clasificacion,
+                IdClasificacion = idClasificacion,
                 Concentracion = concentracion,
                 Precio = precio,
                 Stock = stock
@@ -131,7 +131,6 @@ namespace ProyectoArqSoft.Services
         {
             medicamento.Nombre = StringHelper.LimpiarEspacios(medicamento.Nombre);
             medicamento.Presentacion = StringHelper.LimpiarEspacios(medicamento.Presentacion);
-            medicamento.Clasificacion = StringHelper.LimpiarEspacios(medicamento.Clasificacion);
             medicamento.Concentracion = StringHelper.LimpiarEspacios(medicamento.Concentracion);
         }
     }
