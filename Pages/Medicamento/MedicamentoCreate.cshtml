@@ -41,17 +41,17 @@
 
                         <!-- CLASIFICACION -->
                         <div class="form-floating mb-3">
-                            <select asp-for="Clasificacion" class="form-select med-input" required>
-                                <option value="" selected disabled>Seleccione una clasificación</option>
-                                <option value="Analgésico">Analgésico</option>
-                                <option value="Antialérgico">Antialérgico</option>
-                                <option value="Antibiótico">Antibiótico</option>
-                                <option value="Antiinflamatorio">Antiinflamatorio</option>
-                                <option value="Antipirético">Antipirético</option>
-                                <option value="Antiséptico">Antiséptico</option>
-                                <option value="Vitaminas">Vitaminas</option>
+                            <select asp-for="IdClasificacion" class="form-select med-input" required>
+                                <option value="0" selected disabled>Seleccione una clasificación</option>
+                                <option value="1">Analgésico</option>
+                                <option value="2">Antialérgico</option>
+                                <option value="3">Antibiótico</option>
+                                <option value="4">Antiinflamatorio</option>
+                                <option value="5">Antipirético</option>
+                                <option value="6">Antiséptico</option>
+                                <option value="7">Vitaminas</option>
                             </select>
-                            <label asp-for="Clasificacion"></label>
+                            <label asp-for="IdClasificacion"></label>
                         </div>
 
                         <!-- CONCENTRACION -->
