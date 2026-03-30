@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Repositories;
 using System.Data;
+using ProyectoArqSoft.Services;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -11,7 +12,7 @@ namespace ProyectoArqSoft.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IConfiguration _configuration;
         private readonly MedicamentoRepository _medicamentoRepository;
-
+        private readonly string _connectionString;
         public string? Usuario { get; set; }
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
         public int TotalMedicamentos { get; set; }
@@ -24,6 +25,7 @@ namespace ProyectoArqSoft.Pages
             _logger = logger;
             _configuration = configuration;
             _medicamentoRepository = medicamentoRepository;
+            _connectionString = ConexionStringSingleton.Instancia.CadenaConexion;
         }
 
         public void OnGet()
@@ -35,9 +37,7 @@ namespace ProyectoArqSoft.Pages
 
         private void CargarMedicamentosDestacados()
         {
-            string connectionString = _configuration.GetConnectionString("MySqlConnection")!;
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            using (MySqlConnection connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
