@@ -10,8 +10,11 @@ namespace ProyectoArqSoft.Pages.Auth
             HttpContext.Session.Clear();
             return RedirectToPage("/Index");
         }
+
+        public IActionResult OnPost()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToPage("/Index");
+        }
     }
 }
-
-
-

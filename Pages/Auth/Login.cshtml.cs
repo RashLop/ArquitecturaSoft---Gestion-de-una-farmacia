@@ -1,30 +1,55 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
+using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Services;
 
-public class LoginModel : PageModel
+namespace ProyectoArqSoft.Pages.Auth
 {
-    [BindProperty]
-    [Required]
-    public string Usuario { get; set; } = string.Empty;
-
-    [BindProperty]
-    [Required]
-    public string Password { get; set; } = string.Empty;
-
-    public IActionResult OnPost()
+    public class LoginModel : PageModel
     {
-        if (!ModelState.IsValid)
-            return Page();
+        private readonly IAuthService _authService;
 
-        if (Usuario == "admin" && Password == "1234")
+        public LoginModel(IAuthService authService)
         {
-            HttpContext.Session.SetString("Usuario", Usuario);
-            return RedirectToPage("/Index");
+            _authService = authService;
         }
 
-        ModelState.AddModelError(string.Empty, "Credenciales incorrectas");
-        return Page();
+        [BindProperty]
+        public UsuarioLoginRequestDto LoginRequest { get; set; } = new();
+
+        public string MensajeError { get; set; } = string.Empty;
+
+        public IActionResult OnGet()
+        {
+            if (!string.IsNullOrWhiteSpace(HttpContext.Session.GetString("Token")))
+                return RedirectToPage("/Index");
+
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            var validacion = _authService.IniciarSesion(LoginRequest, out UsuarioLoginResponseDto? respuesta);
+
+            if (!validacion.IsSuccess)
+            {
+                MensajeError = validacion.Error;
+                return Page();
+            }
+
+            if (respuesta == null)
+            {
+                MensajeError = "No se pudo iniciar sesión.";
+                return Page();
+            }
+
+            HttpContext.Session.SetString("Token", respuesta.Token);
+            HttpContext.Session.SetInt32("IdUsuario", respuesta.IdUsuario);
+            HttpContext.Session.SetString("UserName", respuesta.UserName);
+            HttpContext.Session.SetString("Role", respuesta.Role);
+            HttpContext.Session.SetString("MustChangePassword", respuesta.MustChangePassword.ToString());
+
+            return RedirectToPage("/Index");
+        }
     }
 }
