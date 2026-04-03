@@ -20,26 +20,50 @@
             <form method="post">
 
                 <input type="text"
+                       asp-for="Registro.Nombres"
+                       placeholder="Nombres"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.ApellidoPaterno"
+                       placeholder="Apellido paterno"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.ApellidoMaterno"
+                       placeholder="Apellido materno"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.Ci"
+                       placeholder="Carnet de identidad"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.CiExtencion"
+                       placeholder="Extensión (ej: CB, LP, SC)"
+                       required />
+
+                <input type="text"
+                       asp-for="Registro.Telefono"
+                       placeholder="Teléfono"
+                       required />
+
+                <input type="email"
                        asp-for="Registro.Email"
                        placeholder="Correo electrónico"
                        required />
 
                 <input type="text"
                        asp-for="Registro.UserName"
-                       placeholder="Nombre de usuario"
-                       required />
+                       placeholder="Nombre de usuario generado"
+                       readonly />
 
                 <input type="password"
                        asp-for="Registro.Password"
-                       placeholder="Contraseña"
-                       required />
+                       placeholder="Contraseña generada"
+                       readonly />
 
-                <input type="password"
-                       asp-for="Registro.ConfirmarPassword"
-                       placeholder="Confirmar contraseña"
-                       required />
-
-                <!-- ERROR -->
                 @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
                 {
                     <div style="color:red; margin-bottom:10px;">
@@ -47,7 +71,6 @@
                     </div>
                 }
 
-                <!-- OK -->
                 @if (!string.IsNullOrWhiteSpace(Model.MensajeOk))
                 {
                     <div style="color:green; margin-bottom:10px;">

@@ -48,7 +48,6 @@ namespace ProyectoArqSoft.Services
 
             return Validacion.Ok();
         }
-
         public UsuarioToken? ValidarToken(string tokenPlano, string tipoToken)
         {
             tokenPlano = tokenPlano?.Trim() ?? string.Empty;
@@ -62,7 +61,15 @@ namespace ProyectoArqSoft.Services
 
             string tokenHash = TokenHelper.GenerarTokenHash(tokenPlano);
 
-            return _repository.GetTokenActivo(tokenHash, tipoToken);
+            UsuarioToken? token = _repository.GetTokenActivo(tokenHash, tipoToken);
+
+            if (token == null)
+                return null;
+
+            if (token.FechaExpiracion <= DateTime.UtcNow)
+                return null;
+
+            return token;
         }
 
         public Validacion MarcarComoUsado(int idUsuarioToken)

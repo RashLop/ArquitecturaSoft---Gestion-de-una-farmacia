@@ -34,7 +34,7 @@ namespace ProyectoArqSoft.Helpers
             if (minutosExpiracion <= 0)
                 throw new ArgumentException("Los minutos de expiración deben ser mayores a cero.", nameof(minutosExpiracion));
 
-            return DateTime.Now.AddMinutes(minutosExpiracion);
+            return DateTime.UtcNow.AddMinutes(minutosExpiracion);
         }
     }
 }

@@ -19,5 +19,8 @@ namespace ProyectoArqSoft.Services
 
         bool ExisteEmail(string email);
         bool ExisteUserName(string userName);
+
+        Validacion ValidarActivacionCuenta(string token);
+        Validacion ActivarCuenta(string token, string nuevaPassword);
     }
 }

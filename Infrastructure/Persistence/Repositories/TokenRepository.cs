@@ -77,7 +77,6 @@ namespace ProyectoArqSoft.Repositories
                                AND tipo_token = @tipo_token
                                AND revocado = 0
                                AND usado = 0
-                               AND fecha_expiracion > NOW()
                              LIMIT 1";
 
             MySqlCommand command = new MySqlCommand(query);

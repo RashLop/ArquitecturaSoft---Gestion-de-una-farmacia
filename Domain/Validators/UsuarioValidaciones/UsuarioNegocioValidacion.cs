@@ -17,9 +17,6 @@ namespace ProyectoArqSoft.Validaciones
             if (_repository.ExisteEmail(dto.Email))
                 return Validacion.Fail("El correo electrónico ya está registrado.");
 
-            if (_repository.ExisteUserName(dto.UserName))
-                return Validacion.Fail("El nombre de usuario ya está en uso.");
-
             return Validacion.Ok();
         }
 

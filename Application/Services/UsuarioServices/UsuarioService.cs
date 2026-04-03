@@ -46,14 +46,9 @@ namespace ProyectoArqSoft.Services
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
-            string userNameGenerado = CredencialesHelper.GenerarUserName(
-                dto.Nombres,
-                dto.ApellidoPaterno
-            );
-
-            string passwordTemporal = CredencialesHelper.GenerarPasswordTemporal();
+            string userNameGenerado = dto.UserName.Trim();
+            string passwordTemporal = dto.Password;
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
-
             Usuario usuario = new Usuario
             {
                 Nombres = dto.Nombres.Trim(),
@@ -90,7 +85,8 @@ namespace ProyectoArqSoft.Services
             if (!validacionToken.IsSuccess)
                 return validacionToken;
 
-            string enlaceActivacion = $"https://localhost:5001/activar-cuenta?token={tokenPlano}";
+            string tokenSeguro = Uri.EscapeDataString(tokenPlano);
+            string enlaceActivacion = $"http://localhost:5081/Auth/ActivarCuenta?token={tokenSeguro}";
 
             Validacion validacionCorreo = _emailService.EnviarCorreoActivacionCuenta(
                 usuarioRegistrado.Email,
@@ -233,5 +229,63 @@ namespace ProyectoArqSoft.Services
                 Role = usuario.Role
             };
         }
+
+        public Validacion ValidarActivacionCuenta(string token)
+        {
+            token = token?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(token))
+                return Validacion.Fail("Token inválido.");
+
+            UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
+                token,
+                TipoTokenConstantes.ActivacionCuenta
+            );
+
+            if (tokenValido == null)
+                return Validacion.Fail("El token no es válido, ya fue usado o expiró.");
+
+            return Validacion.Ok();
+        }
+
+        public Validacion ActivarCuenta(string token, string nuevaPassword)
+        {
+            token = token?.Trim() ?? string.Empty;
+            nuevaPassword = nuevaPassword?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(token))
+                return Validacion.Fail("Token inválido.");
+
+            if (string.IsNullOrWhiteSpace(nuevaPassword))
+                return Validacion.Fail("La nueva contraseña es obligatoria.");
+
+            UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
+                token,
+                TipoTokenConstantes.ActivacionCuenta
+            );
+
+            if (tokenValido == null)
+                return Validacion.Fail("El token no es válido, ya fue usado o expiró.");
+
+            string nuevoPasswordHash = PasswordHelper.Hash(nuevaPassword);
+
+            int filasPassword = _repository.CambiarPassword(
+                tokenValido.UsuarioIdUsuario,
+                nuevoPasswordHash,
+                false
+            );
+
+            if (filasPassword <= 0)
+                return Validacion.Fail("No se pudo actualizar la contraseña del usuario.");
+
+            Validacion validacionToken = _usuarioTokenService.MarcarComoUsado(tokenValido.IdUsuarioToken);
+            if (!validacionToken.IsSuccess)
+                return validacionToken;
+
+            Console.WriteLine("TOKEN RECIBIDO: [" + token + "]");
+            Console.WriteLine("HASH CALCULADO: [" + TokenHelper.GenerarTokenHash(token) + "]");
+
+            return Validacion.Ok();
+        }
     }
+    
 }

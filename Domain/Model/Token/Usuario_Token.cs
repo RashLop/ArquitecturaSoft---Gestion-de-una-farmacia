@@ -8,7 +8,7 @@ namespace ProyectoArqSoft.Models
         public int UsuarioIdUsuario { get; set; }
         public string TokenHash { get; set; } = string.Empty;
         public string TipoToken { get; set; } = string.Empty;
-        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
         public DateTime FechaExpiracion { get; set; }
         public sbyte Revocado { get; set; } = 0;
         public sbyte Usado { get; set; } = 0;
