@@ -60,5 +60,7 @@ namespace ProyectoArqSoft.Helpers
 
             return Regex.Replace(texto.Trim(), @"\s+", "").ToUpper();
         }
+
+        
     }
 }
