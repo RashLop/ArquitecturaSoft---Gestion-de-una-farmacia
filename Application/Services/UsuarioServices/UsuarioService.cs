@@ -1,10 +1,9 @@
 using System.Data;
 using ProyectoArqSoft.DTO;
-using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Models;
 using ProyectoArqSoft.Validaciones;
-
+using ProyectoArqSoft.FactoryProducts;
 namespace ProyectoArqSoft.Services
 {
     public class UsuarioService : IUsuarioService
@@ -44,13 +43,18 @@ namespace ProyectoArqSoft.Services
 
             Usuario usuario = new Usuario
             {
+                Nombres = dto.Nombres.Trim(),
+                ApellidoPaterno = dto.ApellidoPaterno.Trim(),
+                ApellidoMaterno = dto.ApellidoMaterno.Trim(),
+                Ci = dto.Ci.Trim(),
+                CiExtencion = dto.CiExtencion.Trim().ToUpper(),
+                Telefono = dto.Telefono.Trim(),
                 Email = dto.Email.Trim(),
                 UserName = dto.UserName.Trim(),
                 PasswordHash = passwordHash,
                 Role = role,
-                MustChangePassword = 0,
-                IsActive = 1,
-                BioquimicoIdBioquimico = null
+                Activo = 1,
+                MustChangePassword = 0
             };
 
             int filasAfectadas = _repository.Insert(usuario);
@@ -63,7 +67,6 @@ namespace ProyectoArqSoft.Services
 
         public Validacion ActualizarUsuario(UsuarioActualizacionDto dto)
         {
-
             Validacion validacionEntrada = _actualizacionValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
@@ -76,9 +79,15 @@ namespace ProyectoArqSoft.Services
             if (usuarioActual == null)
                 return Validacion.Fail("El usuario no existe.");
 
+            usuarioActual.Nombres = dto.Nombres.Trim();
+            usuarioActual.ApellidoPaterno = dto.ApellidoPaterno.Trim();
+            usuarioActual.ApellidoMaterno = dto.ApellidoMaterno.Trim();
+            usuarioActual.Telefono = dto.Telefono.Trim();
             usuarioActual.Email = dto.Email.Trim();
             usuarioActual.UserName = dto.UserName.Trim();
             usuarioActual.Role = dto.Role.Trim();
+            usuarioActual.Activo = dto.Activo;
+            usuarioActual.MustChangePassword = dto.MustChangePassword;
 
             int filasAfectadas = _repository.Update(usuarioActual);
 
