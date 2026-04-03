@@ -1,38 +1,43 @@
-namespace ProyectoArqSoft.Models ;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-
-public class Usuario
+namespace ProyectoArqSoft.Models
+{
+    public class Usuario
     {
         public int IdUsuario { get; set; }
+        public string Nombres { get; set; } = string.Empty;
+        public string ApellidoMaterno { get; set; } = string.Empty;
+        public string ApellidoPaterno { get; set; } = string.Empty;
+        public string Ci { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public sbyte Activo { get; set; } = 1;
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public DateTime? UltimaActualizacion { get; set; }
+        public string CiExtencion { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
         public sbyte MustChangePassword { get; set; } = 1;
-        public sbyte IsActive { get; set; } = 1;
-        public DateTime FechaRegistro { get; set; }
-        public DateTime? UltimaActualizacion { get; set; }
-        public int? BioquimicoIdBioquimico { get; set; }
-        // Propiedad de navegación opcional
-        public Bioquimico? Bioquimico { get; set; }
-
         public Usuario() { }
 
-        public Usuario(
-            string email,
-            string userName,
-            string passwordHash,
-            string role,
-            sbyte mustChangePassword,
-            sbyte isActive,
-            int bioquimicoIdBioquimico)
+        public Usuario(string nombres, string apellidoPaterno, string apellidoMaterno, 
+        string ci, string ciExtencion, string email, string userName, string passwordHash, string role)
         {
+            Nombres = nombres;
+            ApellidoPaterno = apellidoPaterno;
+            ApellidoMaterno = apellidoMaterno;
+            Ci = ci;
+            CiExtencion = ciExtencion;
             Email = email;
             UserName = userName;
             PasswordHash = passwordHash;
             Role = role;
-            MustChangePassword = mustChangePassword;
-            IsActive = isActive;
-            BioquimicoIdBioquimico = bioquimicoIdBioquimico;
+            Activo = 1;
+            MustChangePassword = 1;
+            FechaRegistro = DateTime.Now;
         }
     }
+}
