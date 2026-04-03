@@ -1,0 +1,221 @@
+using System.Data;
+using MySql.Data.MySqlClient;
+using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Services;
+
+namespace ProyectoArqSoft.Repositories
+{
+    public class UsuarioTokenRepository : IUsuarioTokenRepository
+    {
+        private readonly string connectionString;
+
+        public UsuarioTokenRepository()
+        {
+            connectionString = ConexionStringSingleton.Instancia.CadenaConexion;
+        }
+
+        public int Insert(UsuarioToken t)
+        {
+            string query = @"INSERT INTO usuario_token
+                            (
+                                usuario_idUsuario,
+                                token_hash,
+                                tipo_token,
+                                fecha_expiracion,
+                                revocado,
+                                usado
+                            )
+                            VALUES
+                            (
+                                @usuario_idUsuario,
+                                @token_hash,
+                                @tipo_token,
+                                @fecha_expiracion,
+                                @revocado,
+                                @usado
+                            )";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@usuario_idUsuario", t.UsuarioIdUsuario);
+            command.Parameters.AddWithValue("@token_hash", t.TokenHash);
+            command.Parameters.AddWithValue("@tipo_token", t.TipoToken);
+            command.Parameters.AddWithValue("@fecha_expiracion", t.FechaExpiracion);
+            command.Parameters.AddWithValue("@revocado", t.Revocado);
+            command.Parameters.AddWithValue("@usado", t.Usado);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public int Update(UsuarioToken t)
+        {
+            string query = @"UPDATE usuario_token
+                             SET usuario_idUsuario = @usuario_idUsuario,
+                                 token_hash = @token_hash,
+                                 tipo_token = @tipo_token,
+                                 fecha_expiracion = @fecha_expiracion,
+                                 revocado = @revocado,
+                                 usado = @usado
+                             WHERE idusuario_token = @idusuario_token";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@idusuario_token", t.IdUsuarioToken);
+            command.Parameters.AddWithValue("@usuario_idUsuario", t.UsuarioIdUsuario);
+            command.Parameters.AddWithValue("@token_hash", t.TokenHash);
+            command.Parameters.AddWithValue("@tipo_token", t.TipoToken);
+            command.Parameters.AddWithValue("@fecha_expiracion", t.FechaExpiracion);
+            command.Parameters.AddWithValue("@revocado", t.Revocado);
+            command.Parameters.AddWithValue("@usado", t.Usado);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public int Delete(UsuarioToken t)
+        {
+            string query = @"UPDATE usuario_token
+                             SET revocado = 1
+                             WHERE idusuario_token = @idusuario_token";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@idusuario_token", t.IdUsuarioToken);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public UsuarioToken? GetById(int id)
+        {
+            string query = @"SELECT *
+                             FROM usuario_token
+                             WHERE idusuario_token = @idusuario_token";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@idusuario_token", id);
+
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuarioToken);
+        }
+
+        public UsuarioToken? GetByTokenHash(string tokenHash)
+        {
+            string query = @"SELECT *
+                             FROM usuario_token
+                             WHERE token_hash = @token_hash
+                             LIMIT 1";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@token_hash", tokenHash);
+
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuarioToken);
+        }
+
+        public UsuarioToken? GetTokenActivo(string tokenHash, string tipoToken)
+        {
+            string query = @"SELECT *
+                             FROM usuario_token
+                             WHERE token_hash = @token_hash
+                               AND tipo_token = @tipo_token
+                               AND revocado = 0
+                               AND usado = 0
+                               AND fecha_expiracion > NOW()
+                             LIMIT 1";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@token_hash", tokenHash);
+            command.Parameters.AddWithValue("@tipo_token", tipoToken);
+
+            return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuarioToken);
+        }
+
+        public int MarcarComoUsado(int idUsuarioToken)
+        {
+            string query = @"UPDATE usuario_token
+                             SET usado = 1
+                             WHERE idusuario_token = @idusuario_token";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@idusuario_token", idUsuarioToken);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public int RevocarTokensActivos(int idUsuario, string tipoToken)
+        {
+            string query = @"UPDATE usuario_token
+                             SET revocado = 1
+                             WHERE usuario_idUsuario = @usuario_idUsuario
+                               AND tipo_token = @tipo_token
+                               AND revocado = 0
+                               AND usado = 0";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@usuario_idUsuario", idUsuario);
+            command.Parameters.AddWithValue("@tipo_token", tipoToken);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public DataTable GetAll()
+        {
+            return GetAll(string.Empty);
+        }
+
+        public DataTable GetAll(string filtro)
+        {
+            DataTable tabla = new DataTable();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = ConstruirQuery(filtro);
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                FiltroSqlHelper.AgregarParametrosLike(command, filtro);
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                adapter.Fill(tabla);
+            }
+
+            return tabla;
+        }
+
+        private string ConstruirQuery(string filtro)
+        {
+            string query = @"SELECT idusuario_token,
+                                    usuario_idUsuario,
+                                    token_hash,
+                                    tipo_token,
+                                    fecha_creacion,
+                                    fecha_expiracion,
+                                    revocado,
+                                    usado
+                             FROM usuario_token
+                             WHERE 1 = 1";
+
+            query += FiltroSqlHelper.ConstruirCondicionLike(
+                filtro,
+                "tipo_token",
+                "token_hash"
+            );
+
+            query += " ORDER BY fecha_creacion DESC";
+
+            return query;
+        }
+
+        private UsuarioToken MapearUsuarioToken(MySqlDataReader reader)
+        {
+            return new UsuarioToken
+            {
+                IdUsuarioToken = reader.GetInt32("idusuario_token"),
+                UsuarioIdUsuario = reader.GetInt32("usuario_idUsuario"),
+                TokenHash = reader.GetString("token_hash"),
+                TipoToken = reader.GetString("tipo_token"),
+                FechaCreacion = reader.GetDateTime("fecha_creacion"),
+                FechaExpiracion = reader.GetDateTime("fecha_expiracion"),
+                Revocado = reader.GetSByte("revocado"),
+                Usado = reader.GetSByte("usado")
+            };
+        }
+    }
+}
