@@ -4,6 +4,7 @@ using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Models;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.FactoryProducts;
+
 namespace ProyectoArqSoft.Services
 {
     public class UsuarioService : IUsuarioService
@@ -12,17 +13,23 @@ namespace ProyectoArqSoft.Services
         private readonly IValidacion<UsuarioRegistroDto> _registroValidador;
         private readonly IValidacion<UsuarioActualizacionDto> _actualizacionValidador;
         private readonly UsuarioNegocioValidacion _negocioValidador;
+        private readonly IUsuarioTokenService _usuarioTokenService;
+        private readonly IEmailService _emailService;
 
         public UsuarioService(
             IUsuarioRepository repository,
             IValidacion<UsuarioRegistroDto> registroValidador,
             IValidacion<UsuarioActualizacionDto> actualizacionValidador,
-            UsuarioNegocioValidacion negocioValidador)
+            UsuarioNegocioValidacion negocioValidador,
+            IUsuarioTokenService usuarioTokenService,
+            IEmailService emailService)
         {
             _repository = repository;
             _registroValidador = registroValidador;
             _actualizacionValidador = actualizacionValidador;
             _negocioValidador = negocioValidador;
+            _usuarioTokenService = usuarioTokenService;
+            _emailService = emailService;
         }
 
         public Validacion CrearUsuario(UsuarioRegistroDto dto, string role)
@@ -39,7 +46,13 @@ namespace ProyectoArqSoft.Services
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
-            string passwordHash = PasswordHelper.Hash(dto.Password);
+            string userNameGenerado = CredencialesHelper.GenerarUserName(
+                dto.Nombres,
+                dto.ApellidoPaterno
+            );
+
+            string passwordTemporal = CredencialesHelper.GenerarPasswordTemporal();
+            string passwordHash = PasswordHelper.Hash(passwordTemporal);
 
             Usuario usuario = new Usuario
             {
@@ -50,17 +63,45 @@ namespace ProyectoArqSoft.Services
                 CiExtencion = dto.CiExtencion.Trim().ToUpper(),
                 Telefono = dto.Telefono.Trim(),
                 Email = dto.Email.Trim(),
-                UserName = dto.UserName.Trim(),
+                UserName = userNameGenerado,
                 PasswordHash = passwordHash,
                 Role = role,
                 Activo = 1,
-                MustChangePassword = 0
+                MustChangePassword = 1
             };
 
             int filasAfectadas = _repository.Insert(usuario);
 
             if (filasAfectadas <= 0)
                 return Validacion.Fail("No se pudo registrar el usuario.");
+
+            Usuario? usuarioRegistrado = _repository.GetByEmail(usuario.Email);
+            if (usuarioRegistrado == null)
+                return Validacion.Fail("El usuario fue registrado, pero no se pudo recuperar su información.");
+
+            UsuarioTokenGeneracionDto tokenDto = new UsuarioTokenGeneracionDto
+            {
+                IdUsuario = usuarioRegistrado.IdUsuario,
+                TipoToken = TipoTokenConstantes.ActivacionCuenta,
+                MinutosExpiracion = 60
+            };
+
+            Validacion validacionToken = _usuarioTokenService.GenerarToken(tokenDto, out string tokenPlano);
+            if (!validacionToken.IsSuccess)
+                return validacionToken;
+
+            string enlaceActivacion = $"https://localhost:5001/activar-cuenta?token={tokenPlano}";
+
+            Validacion validacionCorreo = _emailService.EnviarCorreoActivacionCuenta(
+                usuarioRegistrado.Email,
+                usuarioRegistrado.Nombres,
+                usuarioRegistrado.UserName,
+                passwordTemporal,
+                enlaceActivacion
+            );
+
+            if (!validacionCorreo.IsSuccess)
+                return validacionCorreo;
 
             return Validacion.Ok();
         }
