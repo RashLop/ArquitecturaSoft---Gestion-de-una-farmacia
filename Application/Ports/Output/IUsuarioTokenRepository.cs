@@ -2,9 +2,9 @@ using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.FactoryProducts
 {
-    public interface IUsuarioTokenRepository : IRepository<UsuarioToken>
+    public interface IUsuarioTokenRepository
     {
-        UsuarioToken? GetByTokenHash(string tokenHash);
+        int Insert(UsuarioToken token);
         UsuarioToken? GetTokenActivo(string tokenHash, string tipoToken);
         int MarcarComoUsado(int idUsuarioToken);
         int RevocarTokensActivos(int idUsuario, string tipoToken);
