@@ -3,7 +3,6 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
-using BioquimicoEntidad = ProyectoArqSoft.Models.Bioquimico;
 using ClienteEntidad = ProyectoArqSoft.Models.Cliente;
 using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.FactoryCreators;
@@ -16,7 +15,6 @@ Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
@@ -26,12 +24,14 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<MedicamentoRepositoryCreator>();
 builder.Services.AddScoped<MedicamentoRepository>();
-builder.Services.AddScoped<BioquimicoRepositoryCreator>();
-builder.Services.AddScoped<BioquimicoRepository>();
 builder.Services.AddScoped<ClienteRepositoryCreator>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<UsuarioRepositoryCreator>();
 builder.Services.AddScoped<UsuarioRepository>();
+
+// Si tienes creator de token:
+builder.Services.AddScoped<UsuarioTokenRepositoryCreator>();
+builder.Services.AddScoped<UsuarioTokenRepository>();
 
 builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
 {
@@ -49,14 +49,6 @@ builder.Services.AddScoped<IRepository<ClienteEntidad>>(provider =>
 builder.Services.AddScoped<IValidacion<ClienteEntidad>, ClienteValidacion>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 
-builder.Services.AddScoped<IRepository<BioquimicoEntidad>>(provider =>
-{
-    var creator = provider.GetRequiredService<BioquimicoRepositoryCreator>();
-    return creator.CreateRepo();
-});
-builder.Services.AddScoped<IValidacion<BioquimicoEntidad>, BioquimicoFormularioValidacion>();
-builder.Services.AddScoped<IValidacion<string>, BioquimicoBusquedaValidacion>();
-builder.Services.AddScoped<IBioquimicoService, BioquimicoService>();
 
 builder.Services.AddScoped<IUsuarioRepository>(provider =>
 {
@@ -64,12 +56,24 @@ builder.Services.AddScoped<IUsuarioRepository>(provider =>
     return creator.CreateRepo();
 });
 
+builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
+{
+    var creator = provider.GetRequiredService<UsuarioTokenRepositoryCreator>();
+    return creator.CreateRepo();
+});
+
+// Si NO tienes creator de token, usa esta en vez del bloque de arriba:
+// builder.Services.AddScoped<IUsuarioTokenRepository, UsuarioTokenRepository>();
+
 builder.Services.AddScoped<IValidacion<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
 builder.Services.AddScoped<IValidacion<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
 builder.Services.AddScoped<IValidacion<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
+builder.Services.AddScoped<IValidacion<UsuarioTokenGeneracionDto>, UsuarioTokenGeneracionValidacion>();
 
 builder.Services.AddScoped<UsuarioNegocioValidacion>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioTokenService, UsuarioTokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

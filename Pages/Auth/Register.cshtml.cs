@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
 
@@ -27,22 +28,30 @@ namespace ProyectoArqSoft.Pages.Auth
         }
 
         public IActionResult OnPost()
-        {
-            string role = "user";
+{
+    string role = "user";
 
-            Validacion resultado = _usuarioService.CrearUsuario(Registro, role);
+    Registro.UserName = CredencialesHelper.GenerarUserName(
+        Registro.Nombres,
+        Registro.ApellidoPaterno
+    );
 
-            if (!resultado.IsSuccess)
-            {
-                MensajeError = resultado.Error;
-                return Page();
-            }
+    Registro.Password = CredencialesHelper.GenerarPasswordTemporal();
 
-            MensajeOk = "Usuario registrado correctamente.";
+    ModelState.Remove("Registro.UserName");
+    ModelState.Remove("Registro.Password");
 
-            Registro = new UsuarioRegistroDto();
+    Validacion resultado = _usuarioService.CrearUsuario(Registro, role);
 
-            return Page();
-        }
+    if (!resultado.IsSuccess)
+    {
+        MensajeError = resultado.Error;
+        return Page();
+    }
+
+    MensajeOk = "Usuario registrado correctamente. Revisa las credenciales generadas y tu correo electrónico.";
+    return Page();
+}
+        
     }
 }
