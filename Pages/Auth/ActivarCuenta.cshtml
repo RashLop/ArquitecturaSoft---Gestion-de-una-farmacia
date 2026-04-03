@@ -1,0 +1,60 @@
+@page
+@model ProyectoArqSoft.Pages.Auth.ActivarCuentaModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Activar Cuenta - Farmacia VitalCare</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+
+            <img src="~/images/vitalcare.png" class="logo" />
+            <h2>Activación de cuenta</h2>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+            {
+                <div style="margin-bottom: 15px; color: @(Model.EsError ? "red" : "green");">
+                    @Model.Mensaje
+                </div>
+            }
+
+            @if (Model.MostrarFormulario)
+            {
+                <form method="post">
+                    <input type="hidden" asp-for="Token" />
+
+                    <input type="password"
+                           asp-for="NuevaPassword"
+                           placeholder="Nueva contraseña"
+                           required />
+
+                    <input type="password"
+                           asp-for="ConfirmarPassword"
+                           placeholder="Confirmar contraseña"
+                           required />
+
+                    <button type="submit">Activar cuenta</button>
+
+                    <div style="margin-top:10px;">
+                        <a asp-page="/Auth/Login">Volver al inicio de sesión</a>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div style="margin-top:10px;">
+                    <a asp-page="/Auth/Login">Ir al inicio de sesión</a>
+                </div>
+            }
+
+        </div>
+    </div>
+</body>
+</html>
