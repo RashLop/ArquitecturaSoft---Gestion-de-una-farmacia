@@ -37,7 +37,7 @@ namespace ProyectoArqSoft.Services
             if (usuario == null)
                 return Validacion.Fail("Las credenciales son incorrectas.");
 
-            if (usuario.IsActive == 0)
+            if (usuario.Activo == 0)
                 return Validacion.Fail("El usuario se encuentra inactivo.");
 
             bool passwordValido = PasswordHelper.Verify(password, usuario.PasswordHash);
