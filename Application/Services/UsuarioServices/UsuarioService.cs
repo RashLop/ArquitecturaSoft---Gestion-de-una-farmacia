@@ -48,9 +48,7 @@ namespace ProyectoArqSoft.Services
                 UserName = dto.UserName.Trim(),
                 PasswordHash = passwordHash,
                 Role = role,
-                MustChangePassword = 0,
-                IsActive = 1,
-                BioquimicoIdBioquimico = null
+                MustChangePassword = true
             };
 
             int filasAfectadas = _repository.Insert(usuario);
