@@ -1,12 +1,15 @@
+using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Services
 {
     public interface IUsuarioTokenService
     {
-        string GenerarToken(int idUsuario, string tipoToken, int minutosExpiracion);
+        Validacion GenerarToken(UsuarioTokenGeneracionDto dto, out string tokenPlano);
         UsuarioToken? ValidarToken(string tokenPlano, string tipoToken);
-        int MarcarComoUsado(int idUsuarioToken);
-        int RevocarTokensActivos(int idUsuario, string tipoToken);
+        Validacion MarcarComoUsado(int idUsuarioToken);
+        Validacion RevocarTokensActivos(int idUsuario, string tipoToken);
+        Validacion EliminarTokensObsoletos(int dias);
     }
 }
