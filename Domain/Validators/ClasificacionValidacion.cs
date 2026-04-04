@@ -12,6 +12,7 @@ namespace ProyectoArqSoft.Validaciones
         public Result Validar(Clasificacion clasificacion)
         {
             return ValidarNombre(clasificacion.Nombre)
+                ?? ValidarOrigen(clasificacion.Origen)
                 ?? Result.Ok();
         }
 
@@ -31,6 +32,23 @@ namespace ProyectoArqSoft.Validaciones
 
             if (Regex.IsMatch(nombre, @"^(.)\1+$"))
                 return Result.Fail("El nombre no puede estar compuesto por un único carácter repetido.");
+
+            return null;
+        }
+
+        private Result? ValidarOrigen(string origen)
+        {
+            if (string.IsNullOrWhiteSpace(origen))
+                return Result.Fail("El origen es obligatorio.");
+
+            origen = origen.Trim();
+
+            if (origen.Length < 3 || origen.Length > 45)
+                return Result.Fail("El origen debe tener entre 3 y 45 caracteres.");
+
+            string patron = @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$";
+            if (!Regex.IsMatch(origen, patron))
+                return Result.Fail("El origen contiene caracteres inválidos.");
 
             return null;
         }
