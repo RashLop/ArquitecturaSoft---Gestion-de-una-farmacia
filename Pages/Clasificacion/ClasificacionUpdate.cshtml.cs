@@ -23,6 +23,10 @@ namespace ProyectoArqSoft.Pages
         [Display(Name = "Nombre")]
         public string Nombre { get; set; } = string.Empty;
 
+        [BindProperty]
+        [Display(Name = "Origen")]
+        public string Origen { get; set; } = string.Empty;
+
         public ClasificacionUpdateModel(IClasificacionService clasificacionService)
         {
             this.clasificacionService = clasificacionService;
@@ -41,13 +45,14 @@ namespace ProyectoArqSoft.Pages
 
             IdClasificacion = clasificacion.Id;
             Nombre = clasificacion.Nombre;
+            Origen = clasificacion.Origen;
 
             return Page();
         }
 
         public IActionResult OnPostActualizarClasificacion()
         {
-            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre);
+            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre, Origen);
 
             if (resultado.IsFailure)
             {
