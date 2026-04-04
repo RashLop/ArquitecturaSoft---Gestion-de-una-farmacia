@@ -12,43 +12,43 @@ namespace ProyectoArqSoft.Validaciones
             _repository = repository;
         }
 
-        public Validacion ValidarRegistro(UsuarioRegistroDto dto)
+        public Result ValidarRegistro(UsuarioRegistroDto dto)
         {
             if (_repository.ExisteEmail(dto.Email))
-                return Validacion.Fail("El correo electrónico ya está registrado.");
+                return Result.Fail("El correo electrónico ya está registrado.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         // 🔹 Validación para actualización
-        public Validacion ValidarActualizacion(UsuarioActualizacionDto dto)
+        public Result ValidarActualizacion(UsuarioActualizacionDto dto)
         {
             var usuarioActual = _repository.GetById(dto.IdUsuario);
 
             if (usuarioActual == null)
-                return Validacion.Fail("El usuario no existe.");
+                return Result.Fail("El usuario no existe.");
 
             var usuarioConMismoEmail = _repository.GetByEmail(dto.Email);
             if (usuarioConMismoEmail != null && usuarioConMismoEmail.IdUsuario != dto.IdUsuario)
-                return Validacion.Fail("El correo electrónico ya está registrado.");
+                return Result.Fail("El correo electrónico ya está registrado.");
 
             var usuarioConMismoUserName = _repository.GetByUserName(dto.UserName);
             if (usuarioConMismoUserName != null && usuarioConMismoUserName.IdUsuario != dto.IdUsuario)
-                return Validacion.Fail("El nombre de usuario ya está en uso.");
+                return Result.Fail("El nombre de usuario ya está en uso.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion ValidarEliminacion(int idUsuario)
+        public Result ValidarEliminacion(int idUsuario)
         {
             if (idUsuario <= 0)
-                return Validacion.Fail("El identificador del usuario no es válido.");
+                return Result.Fail("El identificador del usuario no es válido.");
 
             var usuario = _repository.GetById(idUsuario);
             if (usuario == null)
-                return Validacion.Fail("El usuario no existe.");
+                return Result.Fail("El usuario no existe.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
     }
 }

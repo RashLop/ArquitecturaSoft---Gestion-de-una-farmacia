@@ -40,7 +40,7 @@ namespace ProyectoArqSoft.Pages.Auth
                 return Page();
             }
 
-            Validacion resultado = _usuarioService.ValidarActivacionCuenta(Token);
+            Result resultado = _usuarioService.ValidarActivacionCuenta(Token);
 
             if (!resultado.IsSuccess)
             {
@@ -86,7 +86,7 @@ namespace ProyectoArqSoft.Pages.Auth
                 return Page();
             }
 
-            Validacion resultado = _usuarioService.ActivarCuenta(Token, NuevaPassword);
+            Result resultado = _usuarioService.ActivarCuenta(Token, NuevaPassword);
 
             if (!resultado.IsSuccess)
             {

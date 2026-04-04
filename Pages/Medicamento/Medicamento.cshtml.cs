@@ -22,7 +22,7 @@ namespace ProyectoArqSoft.Pages
         {
             CargarParametros(filtro, mensaje, error);
 
-            Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
             if (resultado.IsFailure)
@@ -33,7 +33,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarMedicamentoLogicamente(int id)
         {
-            Validacion resultado = medicamentoService.EliminarLogicamente(id);
+            Result resultado = medicamentoService.EliminarLogicamente(id);
 
             if (resultado.IsFailure)
             {

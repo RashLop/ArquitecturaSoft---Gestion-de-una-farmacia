@@ -4,7 +4,7 @@ namespace ProyectoArqSoft.Services
 {
     public interface IEmailService
     {
-        Validacion EnviarCorreoActivacionCuenta(
+        Result EnviarCorreoActivacionCuenta(
             string emailDestino,
             string nombres,
             string userName,

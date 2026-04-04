@@ -42,7 +42,7 @@ builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
     var creator = provider.GetRequiredService<MedicamentoRepositoryCreator>();
     return creator.CreateRepo();
 });
-builder.Services.AddScoped<IValidacion<MedicamentoEntidad>, MedicamentoValidacion>();
+builder.Services.AddScoped<IResult<MedicamentoEntidad>, MedicamentoValidacion>();
 builder.Services.AddScoped<IMedicamentoService, MedicamentoService>();
 
 builder.Services.AddScoped<IRepository<ClienteEntidad>>(provider =>
@@ -50,7 +50,7 @@ builder.Services.AddScoped<IRepository<ClienteEntidad>>(provider =>
     var creator = provider.GetRequiredService<ClienteRepositoryCreator>();
     return creator.CreateRepo();
 });
-builder.Services.AddScoped<IValidacion<ClienteEntidad>, ClienteValidacion>();
+builder.Services.AddScoped<IResult<ClienteEntidad>, ClienteValidacion>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 
 
@@ -69,17 +69,17 @@ builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
 // Si NO tienes creator de token, usa esta en vez del bloque de arriba:
 // builder.Services.AddScoped<IUsuarioTokenRepository, UsuarioTokenRepository>();
 
-builder.Services.AddScoped<IValidacion<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
-builder.Services.AddScoped<IValidacion<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
-builder.Services.AddScoped<IValidacion<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
-builder.Services.AddScoped<IValidacion<UsuarioTokenGeneracionDto>, UsuarioTokenGeneracionValidacion>();
+builder.Services.AddScoped<IResult<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
+builder.Services.AddScoped<IResult<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
+builder.Services.AddScoped<IResult<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
+builder.Services.AddScoped<IResult<UsuarioTokenGeneracionDto>, UsuarioTokenGeneracionValidacion>();
 
 builder.Services.AddScoped<IRepository<ClasificacionEntidad>>(provider =>
 {
     var creator = provider.GetRequiredService<ClasificacionRepositoryCreator>();
     return creator.CreateRepo();
 });
-builder.Services.AddScoped<IValidacion<ClasificacionEntidad>, ClasificacionValidacion>();
+builder.Services.AddScoped<IResult<ClasificacionEntidad>, ClasificacionValidacion>();
 builder.Services.AddScoped<IClasificacionService, ClasificacionService>();
 builder.Services.AddScoped<IClasificacionRepository, ClasificacionRepository>();
 

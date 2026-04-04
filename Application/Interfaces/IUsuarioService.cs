@@ -6,9 +6,9 @@ namespace ProyectoArqSoft.Services
 {
     public interface IUsuarioService
     {
-        Validacion CrearUsuario(UsuarioRegistroDto dto, string role);
-        Validacion ActualizarUsuario(UsuarioActualizacionDto dto);
-        Validacion EliminarUsuario(int idUsuario);
+        Result CrearUsuario(UsuarioRegistroDto dto, string role);
+        Result ActualizarUsuario(UsuarioActualizacionDto dto);
+        Result EliminarUsuario(int idUsuario);
 
         UsuarioDto? ObtenerUsuarioPorId(int idUsuario);
         UsuarioDto? ObtenerUsuarioPorEmail(string email);
@@ -20,7 +20,7 @@ namespace ProyectoArqSoft.Services
         bool ExisteEmail(string email);
         bool ExisteUserName(string userName);
 
-        Validacion ValidarActivacionCuenta(string token);
-        Validacion ActivarCuenta(string token, string nuevaPassword);
+        Result ValidarActivacionCuenta(string token);
+        Result ActivarCuenta(string token, string nuevaPassword);
     }
 }

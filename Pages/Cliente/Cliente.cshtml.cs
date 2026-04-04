@@ -22,7 +22,7 @@ namespace ProyectoArqSoft.Pages
         {
             CargarParametros(filtro, mensaje, error);
 
-            Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
             if (resultado.IsFailure)
@@ -33,7 +33,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarClienteLogicamente(int id)
         {
-            Validacion resultado = clienteService.Eliminar(id);
+            Result resultado = clienteService.Eliminar(id);
 
             if (resultado.IsFailure)
             {

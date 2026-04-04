@@ -9,23 +9,23 @@ namespace ProyectoArqSoft.Helpers
             return StringHelper.LimpiarEspacios(filtro);
         }
 
-        public static Validacion ValidarFiltro(string filtro, int minimoCaracteres = 3, int maximoCaracteres = 20)
+        public static Result ValidarFiltro(string filtro, int minimoCaracteres = 3, int maximoCaracteres = 20)
         {
             if (string.IsNullOrWhiteSpace(filtro))
-                return Validacion.Ok();
+                return Result.Ok();
 
             filtro = LimpiarFiltro(filtro);
 
             if (filtro.Length < minimoCaracteres)
-                return Validacion.Fail($"El criterio debe tener al menos {minimoCaracteres} caracteres.");
+                return Result.Fail($"El criterio debe tener al menos {minimoCaracteres} caracteres.");
 
             if (filtro.Length > maximoCaracteres)
-                return Validacion.Fail($"El criterio no puede tener más de {maximoCaracteres} caracteres.");
+                return Result.Fail($"El criterio no puede tener más de {maximoCaracteres} caracteres.");
 
             if (!filtro.All(c => char.IsLetterOrDigit(c) || c == ' ' || c == '-'))
-                return Validacion.Fail("Criterio inválido.");
+                return Result.Fail("Criterio inválido.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         public static string[] ObtenerPartes(string filtro)

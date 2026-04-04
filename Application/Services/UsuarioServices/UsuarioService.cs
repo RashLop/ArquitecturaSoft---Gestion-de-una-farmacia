@@ -10,16 +10,16 @@ namespace ProyectoArqSoft.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _repository;
-        private readonly IValidacion<UsuarioRegistroDto> _registroValidador;
-        private readonly IValidacion<UsuarioActualizacionDto> _actualizacionValidador;
+        private readonly IResult<UsuarioRegistroDto> _registroValidador;
+        private readonly IResult<UsuarioActualizacionDto> _actualizacionValidador;
         private readonly UsuarioNegocioValidacion _negocioValidador;
         private readonly IUsuarioTokenService _usuarioTokenService;
         private readonly IEmailService _emailService;
 
         public UsuarioService(
             IUsuarioRepository repository,
-            IValidacion<UsuarioRegistroDto> registroValidador,
-            IValidacion<UsuarioActualizacionDto> actualizacionValidador,
+            IResult<UsuarioRegistroDto> registroValidador,
+            IResult<UsuarioActualizacionDto> actualizacionValidador,
             UsuarioNegocioValidacion negocioValidador,
             IUsuarioTokenService usuarioTokenService,
             IEmailService emailService)
@@ -32,17 +32,17 @@ namespace ProyectoArqSoft.Services
             _emailService = emailService;
         }
 
-        public Validacion CrearUsuario(UsuarioRegistroDto dto, string role)
+        public Result CrearUsuario(UsuarioRegistroDto dto, string role)
         {
-            Validacion validacionEntrada = _registroValidador.Validar(dto);
+            Result validacionEntrada = _registroValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
 
             role = role?.Trim() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(role))
-                return Validacion.Fail("El rol es obligatorio.");
+                return Result.Fail("El rol es obligatorio.");
 
-            Validacion validacionNegocio = _negocioValidador.ValidarRegistro(dto);
+            Result validacionNegocio = _negocioValidador.ValidarRegistro(dto);
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
@@ -68,11 +68,11 @@ namespace ProyectoArqSoft.Services
             int filasAfectadas = _repository.Insert(usuario);
 
             if (filasAfectadas <= 0)
-                return Validacion.Fail("No se pudo registrar el usuario.");
+                return Result.Fail("No se pudo registrar el usuario.");
 
             Usuario? usuarioRegistrado = _repository.GetByEmail(usuario.Email);
             if (usuarioRegistrado == null)
-                return Validacion.Fail("El usuario fue registrado, pero no se pudo recuperar su información.");
+                return Result.Fail("El usuario fue registrado, pero no se pudo recuperar su información.");
 
             UsuarioTokenGeneracionDto tokenDto = new UsuarioTokenGeneracionDto
             {
@@ -81,14 +81,14 @@ namespace ProyectoArqSoft.Services
                 MinutosExpiracion = 60
             };
 
-            Validacion validacionToken = _usuarioTokenService.GenerarToken(tokenDto, out string tokenPlano);
+            Result validacionToken = _usuarioTokenService.GenerarToken(tokenDto, out string tokenPlano);
             if (!validacionToken.IsSuccess)
                 return validacionToken;
 
             string tokenSeguro = Uri.EscapeDataString(tokenPlano);
             string enlaceActivacion = $"http://localhost:5081/Auth/ActivarCuenta?token={tokenSeguro}";
 
-            Validacion validacionCorreo = _emailService.EnviarCorreoActivacionCuenta(
+            Result validacionCorreo = _emailService.EnviarCorreoActivacionCuenta(
                 usuarioRegistrado.Email,
                 usuarioRegistrado.Nombres,
                 usuarioRegistrado.UserName,
@@ -99,22 +99,22 @@ namespace ProyectoArqSoft.Services
             if (!validacionCorreo.IsSuccess)
                 return validacionCorreo;
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion ActualizarUsuario(UsuarioActualizacionDto dto)
+        public Result ActualizarUsuario(UsuarioActualizacionDto dto)
         {
-            Validacion validacionEntrada = _actualizacionValidador.Validar(dto);
+            Result validacionEntrada = _actualizacionValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
 
-            Validacion validacionNegocio = _negocioValidador.ValidarActualizacion(dto);
+            Result validacionNegocio = _negocioValidador.ValidarActualizacion(dto);
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
             Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
             if (usuarioActual == null)
-                return Validacion.Fail("El usuario no existe.");
+                return Result.Fail("El usuario no existe.");
 
             usuarioActual.Nombres = dto.Nombres.Trim();
             usuarioActual.ApellidoPaterno = dto.ApellidoPaterno.Trim();
@@ -129,27 +129,27 @@ namespace ProyectoArqSoft.Services
             int filasAfectadas = _repository.Update(usuarioActual);
 
             if (filasAfectadas <= 0)
-                return Validacion.Fail("No se pudo actualizar el usuario.");
+                return Result.Fail("No se pudo actualizar el usuario.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion EliminarUsuario(int idUsuario)
+        public Result EliminarUsuario(int idUsuario)
         {
-            Validacion validacionNegocio = _negocioValidador.ValidarEliminacion(idUsuario);
+            Result validacionNegocio = _negocioValidador.ValidarEliminacion(idUsuario);
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
             Usuario? usuario = _repository.GetById(idUsuario);
             if (usuario == null)
-                return Validacion.Fail("El usuario no existe.");
+                return Result.Fail("El usuario no existe.");
 
             int filasAfectadas = _repository.Delete(usuario);
 
             if (filasAfectadas <= 0)
-                return Validacion.Fail("No se pudo eliminar el usuario.");
+                return Result.Fail("No se pudo eliminar el usuario.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         public UsuarioDto? ObtenerUsuarioPorId(int idUsuario)
@@ -230,12 +230,12 @@ namespace ProyectoArqSoft.Services
             };
         }
 
-        public Validacion ValidarActivacionCuenta(string token)
+        public Result ValidarActivacionCuenta(string token)
         {
             token = token?.Trim() ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(token))
-                return Validacion.Fail("Token inválido.");
+                return Result.Fail("Token inválido.");
 
             UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
                 token,
@@ -243,20 +243,20 @@ namespace ProyectoArqSoft.Services
             );
 
             if (tokenValido == null)
-                return Validacion.Fail("El token no es válido, ya fue usado o expiró.");
+                return Result.Fail("El token no es válido, ya fue usado o expiró.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion ActivarCuenta(string token, string nuevaPassword)
+        public Result ActivarCuenta(string token, string nuevaPassword)
         {
             token = token?.Trim() ?? string.Empty;
             nuevaPassword = nuevaPassword?.Trim() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(token))
-                return Validacion.Fail("Token inválido.");
+                return Result.Fail("Token inválido.");
 
             if (string.IsNullOrWhiteSpace(nuevaPassword))
-                return Validacion.Fail("La nueva contraseña es obligatoria.");
+                return Result.Fail("La nueva contraseña es obligatoria.");
 
             UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
                 token,
@@ -264,7 +264,7 @@ namespace ProyectoArqSoft.Services
             );
 
             if (tokenValido == null)
-                return Validacion.Fail("El token no es válido, ya fue usado o expiró.");
+                return Result.Fail("El token no es válido, ya fue usado o expiró.");
 
             string nuevoPasswordHash = PasswordHelper.Hash(nuevaPassword);
 
@@ -275,16 +275,16 @@ namespace ProyectoArqSoft.Services
             );
 
             if (filasPassword <= 0)
-                return Validacion.Fail("No se pudo actualizar la contraseña del usuario.");
+                return Result.Fail("No se pudo actualizar la contraseña del usuario.");
 
-            Validacion validacionToken = _usuarioTokenService.MarcarComoUsado(tokenValido.IdUsuarioToken);
+            Result validacionToken = _usuarioTokenService.MarcarComoUsado(tokenValido.IdUsuarioToken);
             if (!validacionToken.IsSuccess)
                 return validacionToken;
 
             Console.WriteLine("TOKEN RECIBIDO: [" + token + "]");
             Console.WriteLine("HASH CALCULADO: [" + TokenHelper.GenerarTokenHash(token) + "]");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
     }
     
