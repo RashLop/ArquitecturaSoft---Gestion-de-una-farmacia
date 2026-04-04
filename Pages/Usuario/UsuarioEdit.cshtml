@@ -1,0 +1,52 @@
+﻿@page
+@model ProyectoArqSoft.Pages.Usuarios.UsuarioUpdateModel
+
+<div class="container py-5 medicamento-form-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="med-card shadow-sm">
+                <div class="med-card-header text-center">
+                    <h2 class="mb-0 text-warning text-dark fw-bold">Editar Usuario</h2>
+                    <p class="text-muted mt-2">Actualización de perfil: @Model.UserName</p>
+                </div>
+                <div class="med-card-body">
+                    <form method="post" asp-page-handler="ActualizarUsuario">
+                        <input type="hidden" asp-for="IdUsuario" />
+                        <input type="hidden" asp-for="UserName" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control med-input" required />
+                            <label asp-for="Email"></label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="Role" class="form-select med-input">
+                                <option value="Bioquimico">Bioquímico</option>
+                                <option value="Admin">Administrador</option>
+                            </select>
+                            <label asp-for="Role">Rol del Sistema</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="Activo" class="form-select med-input">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                            <label asp-for="Activo">Estado de Cuenta</label>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger med-alert">@Model.Estado.MensajeError</div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="Usuario" class="btn med-btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-warning px-4">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
