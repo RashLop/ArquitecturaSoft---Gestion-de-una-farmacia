@@ -48,6 +48,7 @@
             <thead class="table-success">
                 <tr>
                     <th>Nombre</th>
+                    <th>Origen</th>
                     <th style="width:170px">Acciones</th>
                 </tr>
             </thead>
@@ -57,7 +58,7 @@
                 {
                     <tr>
                         <td class="fw-semibold">@row["nombre"]</td>
-
+                        <td>@row["origen"]</td>
                         <td>
                             <form method="post"
                                   asp-page="ClasificacionUpdate"
