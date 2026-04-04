@@ -6,18 +6,19 @@ namespace ProyectoArqSoft.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-
         public short Estado { get; set; } = 1;
         public DateTime FechaRegistro { get; set; }
         public DateTime? UltimaActualizacion { get; set; }
+        public string Origen { get; set; } = string.Empty;
 
         public Clasificacion()
         {
         }
 
-        public Clasificacion(string nombre)
+        public Clasificacion(string nombre, string origen)
         {   
             Nombre = nombre;
+            Origen = origen;
         }
     }
 }
