@@ -1,0 +1,45 @@
+@page
+@model ProyectoArqSoft.Pages.ClasificacionCreateModel
+@{
+}
+
+<div class="container py-5 medicamento-form-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="med-card shadow-sm">
+                <div class="med-card-header text-center">
+                    <h2 class="mb-0">Nueva Clasificación</h2>
+                    <p class="text-muted mt-2 mb-0">Completa los datos para registrar una clasificación</p>
+                </div>
+
+                <div class="med-card-body">
+                    <form method="post" asp-page-handler="CrearClasificacion">
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Nombre"
+                                   class="form-control med-input"
+                                   placeholder="Nombre"
+                                   required />
+                            <label asp-for="Nombre"></label>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger med-alert" role="alert">
+                                @Model.Estado.MensajeError
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="Clasificacion" class="btn med-btn-secondary">Volver</a>
+                            <button type="submit" class="btn med-btn-primary">Guardar</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

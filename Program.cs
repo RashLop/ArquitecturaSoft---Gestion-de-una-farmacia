@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
 using ClienteEntidad = ProyectoArqSoft.Models.Cliente;
+//using ClasificacionEntidad = ProyectoArqSoft.Domain.Model.Clasificacion;
+using ClasificacionEntidad = ProyectoArqSoft.Models.Clasificacion;
 using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.FactoryCreators;
 using ProyectoArqSoft.FactoryProducts;
@@ -28,6 +30,8 @@ builder.Services.AddScoped<ClienteRepositoryCreator>();
 builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<UsuarioRepositoryCreator>();
 builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<ClasificacionRepositoryCreator>();
+builder.Services.AddScoped<ClasificacionRepository>();
 
 // Si tienes creator de token:
 builder.Services.AddScoped<UsuarioTokenRepositoryCreator>();
@@ -69,6 +73,15 @@ builder.Services.AddScoped<IValidacion<UsuarioRegistroDto>, UsuarioRegistroValid
 builder.Services.AddScoped<IValidacion<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
 builder.Services.AddScoped<IValidacion<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
 builder.Services.AddScoped<IValidacion<UsuarioTokenGeneracionDto>, UsuarioTokenGeneracionValidacion>();
+
+builder.Services.AddScoped<IRepository<ClasificacionEntidad>>(provider =>
+{
+    var creator = provider.GetRequiredService<ClasificacionRepositoryCreator>();
+    return creator.CreateRepo();
+});
+builder.Services.AddScoped<IValidacion<ClasificacionEntidad>, ClasificacionValidacion>();
+builder.Services.AddScoped<IClasificacionService, ClasificacionService>();
+builder.Services.AddScoped<IClasificacionRepository, ClasificacionRepository>();
 
 builder.Services.AddScoped<UsuarioNegocioValidacion>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
