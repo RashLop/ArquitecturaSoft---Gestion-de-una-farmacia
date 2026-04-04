@@ -10,19 +10,19 @@ namespace ProyectoArqSoft.Services
         DataTable ObtenerTodos(string filtro);
         Cliente? ObtenerPorId(int id);
 
-        Validacion Crear(
+        Result Crear(
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
             string? correoElectronico);
 
-        Validacion Actualizar(
+        Result Actualizar(
             int id,
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
             string? correoElectronico);
 
-        Validacion Eliminar(int id);
+        Result Eliminar(int id);
     }
 }

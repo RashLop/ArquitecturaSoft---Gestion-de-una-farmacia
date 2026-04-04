@@ -9,11 +9,11 @@ namespace ProyectoArqSoft.Services
     public class MedicamentoService : IMedicamentoService
     {
         private readonly IRepository<Medicamento> _repository;
-        private readonly IValidacion<Medicamento> _validador;
+        private readonly IResult<Medicamento> _validador;
 
         public MedicamentoService(
             IRepository<Medicamento> repository,
-            IValidacion<Medicamento> validador)
+            IResult<Medicamento> validador)
         {
             _repository = repository;
             _validador = validador;
@@ -34,7 +34,7 @@ namespace ProyectoArqSoft.Services
             return _repository.GetById(id);
         }
 
-        public Validacion Crear(
+        public Result Crear(
             string nombre,
             string presentacion,
             int idClasificacion,
@@ -56,12 +56,12 @@ namespace ProyectoArqSoft.Services
                 return validacion;
 
             if (_repository.Insert(medicamento) <= 0)
-                return Validacion.Fail("No se pudo registrar el medicamento.");
+                return Result.Fail("No se pudo registrar el medicamento.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion Actualizar(
+        public Result Actualizar(
             int id,
             string nombre,
             string presentacion,
@@ -84,12 +84,12 @@ namespace ProyectoArqSoft.Services
                 return validacion;
 
             if (_repository.Update(medicamento) <= 0)
-                return Validacion.Fail("No se pudo actualizar el medicamento.");
+                return Result.Fail("No se pudo actualizar el medicamento.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion EliminarLogicamente(int id)
+        public Result EliminarLogicamente(int id)
         {
             Medicamento medicamento = new Medicamento
             {
@@ -97,9 +97,9 @@ namespace ProyectoArqSoft.Services
             };
 
             if (_repository.Delete(medicamento) <= 0)
-                return Validacion.Fail("No se pudo eliminar el medicamento.");
+                return Result.Fail("No se pudo eliminar el medicamento.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         private Medicamento ConstruirMedicamento(

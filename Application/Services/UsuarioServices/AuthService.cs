@@ -9,12 +9,12 @@ namespace ProyectoArqSoft.Services
     public class AuthService : IAuthService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IValidacion<UsuarioLoginRequestDto> _loginValidador;
+        private readonly IResult<UsuarioLoginRequestDto> _loginValidador;
         private readonly ITokenService _tokenService;
 
         public AuthService(
             IUsuarioRepository usuarioRepository,
-            IValidacion<UsuarioLoginRequestDto> loginValidador,
+            IResult<UsuarioLoginRequestDto> loginValidador,
             ITokenService tokenService)
         {
             _usuarioRepository = usuarioRepository;
@@ -22,11 +22,11 @@ namespace ProyectoArqSoft.Services
             _tokenService = tokenService;
         }
 
-        public Validacion IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta)
+        public Result IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta)
         {
             respuesta = null;
 
-            Validacion validacionEntrada = _loginValidador.Validar(dto);
+            Result validacionEntrada = _loginValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
 
@@ -35,14 +35,14 @@ namespace ProyectoArqSoft.Services
 
             Usuario? usuario = BuscarPorEmailOUserName(emailOUserName);
             if (usuario == null)
-                return Validacion.Fail("Las credenciales son incorrectas.");
+                return Result.Fail("Las credenciales son incorrectas.");
 
             if (usuario.Activo == 0)
-                return Validacion.Fail("El usuario se encuentra inactivo.");
+                return Result.Fail("El usuario se encuentra inactivo.");
 
             bool passwordValido = PasswordHelper.Verify(password, usuario.PasswordHash);
             if (!passwordValido)
-                return Validacion.Fail("Las credenciales son incorrectas.");
+                return Result.Fail("Las credenciales son incorrectas.");
 
             string token = _tokenService.GenerarToken(usuario, out int expiraEn);
 
@@ -56,7 +56,7 @@ namespace ProyectoArqSoft.Services
                 ExpiraEn = expiraEn
             };
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         private Usuario? BuscarPorEmailOUserName(string emailOUserName)

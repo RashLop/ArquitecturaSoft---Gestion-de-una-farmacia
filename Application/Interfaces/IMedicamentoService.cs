@@ -10,7 +10,7 @@ namespace ProyectoArqSoft.Services
         DataTable ObtenerTodos(string filtro);
         Medicamento? ObtenerPorId(int id);
 
-        Validacion Crear(
+        Result Crear(
             string nombre,
             string presentacion,
             int idClasificacion,
@@ -18,7 +18,7 @@ namespace ProyectoArqSoft.Services
             decimal precio,
             int stock);
 
-        Validacion Actualizar(
+        Result Actualizar(
             int id,
             string nombre,
             string presentacion,
@@ -27,6 +27,6 @@ namespace ProyectoArqSoft.Services
             decimal precio,
             int stock);
 
-        Validacion EliminarLogicamente(int id);
+        Result EliminarLogicamente(int id);
     }
 }

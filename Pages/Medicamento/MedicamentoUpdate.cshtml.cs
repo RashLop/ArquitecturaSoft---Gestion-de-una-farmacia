@@ -64,7 +64,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarMedicamento()
         {
-            Validacion resultado = medicamentoService.Actualizar(
+            Result resultado = medicamentoService.Actualizar(
                 IdMedicamento,
                 Nombre,
                 Presentacion,

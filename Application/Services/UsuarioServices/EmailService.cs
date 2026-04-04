@@ -17,7 +17,7 @@ namespace ProyectoArqSoft.Services
                 .Get<SmtpSettings>() ?? new SmtpSettings();
         }
 
-        public Validacion EnviarCorreoActivacionCuenta(
+        public Result EnviarCorreoActivacionCuenta(
             string emailDestino,
             string nombres,
             string userName,
@@ -31,16 +31,16 @@ namespace ProyectoArqSoft.Services
             enlaceActivacion = enlaceActivacion?.Trim() ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(emailDestino))
-                return Validacion.Fail("El correo destino es obligatorio.");
+                return Result.Fail("El correo destino es obligatorio.");
 
             if (string.IsNullOrWhiteSpace(userName))
-                return Validacion.Fail("El nombre de usuario es obligatorio para el correo.");
+                return Result.Fail("El nombre de usuario es obligatorio para el correo.");
 
             if (string.IsNullOrWhiteSpace(passwordTemporal))
-                return Validacion.Fail("La contraseña temporal es obligatoria para el correo.");
+                return Result.Fail("La contraseña temporal es obligatoria para el correo.");
 
             if (string.IsNullOrWhiteSpace(enlaceActivacion))
-                return Validacion.Fail("El enlace de activación es obligatorio.");
+                return Result.Fail("El enlace de activación es obligatorio.");
 
             try
             {
@@ -71,11 +71,11 @@ namespace ProyectoArqSoft.Services
 
                 client.Send(message);
 
-                return Validacion.Ok();
+                return Result.Ok();
             }
             catch (Exception ex)
             {
-                return Validacion.Fail($"No se pudo enviar el correo electrónico. Detalle: {ex.Message}");
+                return Result.Fail($"No se pudo enviar el correo electrónico. Detalle: {ex.Message}");
             }
         }
 

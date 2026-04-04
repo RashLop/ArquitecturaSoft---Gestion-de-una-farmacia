@@ -3,9 +3,9 @@ using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.Validaciones
 {
-    public class MedicamentoValidacion : IValidacion<Medicamento>
+    public class MedicamentoValidacion : IResult<Medicamento>
     {
-        public Validacion Validar(Medicamento medicamento)
+        public Result Validar(Medicamento medicamento)
         {
             return ValidarNombre(medicamento.Nombre)
                 ?? ValidarPresentacion(medicamento.Presentacion)
@@ -13,64 +13,64 @@ namespace ProyectoArqSoft.Validaciones
                 ?? ValidarConcentracion(medicamento.Concentracion)
                 ?? ValidarPrecio(medicamento.Precio)
                 ?? ValidarStock(medicamento.Stock)
-                ?? Validacion.Ok();
+                ?? Result.Ok();
         }
 
-        private Validacion? ValidarNombre(string nombre)
+        private Result? ValidarNombre(string nombre)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                return Validacion.Fail("El nombre es obligatorio.");
+                return Result.Fail("El nombre es obligatorio.");
 
             if (!EsNombreValido(nombre))
-                return Validacion.Fail("El nombre contiene caracteres inválidos o no tiene un formato correcto.");
+                return Result.Fail("El nombre contiene caracteres inválidos o no tiene un formato correcto.");
 
             return null;
         }
 
-        private Validacion? ValidarPresentacion(string presentacion)
+        private Result? ValidarPresentacion(string presentacion)
         {
             return string.IsNullOrWhiteSpace(presentacion)
-                ? Validacion.Fail("La presentación es obligatoria.")
+                ? Result.Fail("La presentación es obligatoria.")
                 : null;
         }
 
-        private Validacion? ValidarIdClasificacion(int idClasificacion)
+        private Result? ValidarIdClasificacion(int idClasificacion)
         {
             if (idClasificacion <= 0)
-                return Validacion.Fail("La clasificación es obligatoria.");
+                return Result.Fail("La clasificación es obligatoria.");
 
             return null;
         }
 
-        private Validacion? ValidarConcentracion(string concentracion)
+        private Result? ValidarConcentracion(string concentracion)
         {
             if (string.IsNullOrWhiteSpace(concentracion))
-                return Validacion.Fail("La concentración es obligatoria.");
+                return Result.Fail("La concentración es obligatoria.");
 
             if (!EsConcentracionValida(concentracion))
-                return Validacion.Fail("La concentración no tiene un formato válido. Ejemplos: 500 mg, 250 mg/5ml, 0.9 %.");
+                return Result.Fail("La concentración no tiene un formato válido. Ejemplos: 500 mg, 250 mg/5ml, 0.9 %.");
 
             return null;
         }
 
-        private Validacion? ValidarPrecio(decimal precio)
+        private Result? ValidarPrecio(decimal precio)
         {
             if (precio <= 0)
-                return Validacion.Fail("El precio debe ser mayor a 0 Bs.");
+                return Result.Fail("El precio debe ser mayor a 0 Bs.");
 
             if (precio > 1000)
-                return Validacion.Fail("El precio no puede ser mayor a 1000 Bs.");
+                return Result.Fail("El precio no puede ser mayor a 1000 Bs.");
 
             return null;
         }
 
-        private Validacion? ValidarStock(int stock)
+        private Result? ValidarStock(int stock)
         {
             if (stock < 0)
-                return Validacion.Fail("El stock no puede ser negativo.");
+                return Result.Fail("El stock no puede ser negativo.");
 
             if (stock > 100000)
-                return Validacion.Fail("El stock no puede ser mayor a 100000 items.");
+                return Result.Fail("El stock no puede ser mayor a 100000 items.");
 
             return null;
         }

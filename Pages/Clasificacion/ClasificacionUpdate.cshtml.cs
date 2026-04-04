@@ -47,7 +47,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarClasificacion()
         {
-            Validacion resultado = clasificacionService.Actualizar(IdClasificacion, Nombre);
+            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre);
 
             if (resultado.IsFailure)
             {

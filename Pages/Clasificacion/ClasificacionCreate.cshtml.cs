@@ -27,7 +27,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearClasificacion()
         {
-            Validacion resultado = clasificacionService.Crear(Nombre);
+            Result resultado = clasificacionService.Crear(Nombre);
 
             if (resultado.IsFailure)
             {
