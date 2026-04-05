@@ -38,10 +38,6 @@ namespace ProyectoArqSoft.Services
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
 
-            role = role?.Trim() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(role))
-                return Result.Fail("El rol es obligatorio.");
-
             Result validacionNegocio = _negocioValidador.ValidarRegistro(dto);
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
