@@ -1,0 +1,53 @@
+﻿@page
+@model ProyectoArqSoft.Pages.Usuarios.UsuarioCreateModel
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="med-card shadow border-0">
+                <div class="med-card-header text-center bg-success text-white py-3">
+                    <h2 class="mb-0 fw-bold">Registro de Colaborador</h2>
+                </div>
+                <div class="med-card-body p-4">
+                    <form method="post" asp-page-handler="CrearUsuario" class="row g-3">
+                        <div class="col-md-12 form-floating mb-3">
+                            <input asp-for="nombres" class="form-control med-input" placeholder="Nombre" required />
+                            <label class="ms-2">Nombres</label>
+                        </div>
+                        <div class="col-md-6 form-floating"><input asp-for="apPaterno" class="form-control med-input" placeholder="ApPaterno" required /><label class="ms-2">Apellido Paterno</label></div>
+                        <div class="col-md-6 form-floating"><input asp-for="apMaterno" class="form-control med-input" placeholder="ApMaterno" required /><label class="ms-2">Apellido Materno</label></div>
+                        <div class="col-md-4 form-floating"><input asp-for="ci" class="form-control med-input" placeholder="CI" required /><label class="ms-2">C.I.</label></div>
+                        <div class="col-md-4 form-floating">
+                            <select asp-for="ciExtencion" class="form-select med-input">
+                                <option value="CB">CBBA</option>
+                                <option value="LP">LA PAZ</option>
+                                <option value="SC">SANTA CRUZ</option>
+                            </select>
+                            <label class="ms-2">Extensión</label>
+                        </div>
+                        <div class="col-md-4 form-floating"><input asp-for="telefono" class="form-control med-input" placeholder="Telf" required /><label class="ms-2">Teléfono</label></div>
+                        <div class="col-md-12 form-floating"><input asp-for="email" type="email" class="form-control med-input" placeholder="Email" required /><label class="ms-2">Email</label></div>
+                        <div class="col-md-6 form-floating"><input asp-for="user_name" class="form-control med-input" placeholder="User" required /><label class="ms-2">Username</label></div>
+                        <div class="col-md-6 form-floating">
+                            <select asp-for="role" class="form-select med-input">
+                                <option value="Bioquimico">Bioquímico</option>
+                                <option value="Admin">Administrador</option>
+                            </select>
+                            <label class="ms-2">Asignar Rol</label>
+                        </div>
+                        <div class="col-md-12 form-floating"><input asp-for="pass" type="password" class="form-control med-input" placeholder="Pass" required /><label class="ms-2">Password Temporal</label></div>
+
+                        @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger">@Model.Estado.MensajeError</div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="Usuario" class="btn btn-secondary">Volver</a>
+                            <button type="submit" class="btn btn-success px-5 fw-bold">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -46,26 +46,10 @@ namespace ProyectoArqSoft.Validaciones
 
         private Result? ValidarUserName(string userName)
         {
-            if (string.IsNullOrWhiteSpace(userName))
-                return Result.Fail("El nombre de usuario es obligatorio.");
-
-            if (userName.Length < 3 || userName.Length > 30)
-                return Result.Fail("El nombre de usuario debe tener entre 3 y 30 caracteres.");
-
-            if (!Regex.IsMatch(userName, @"^[a-zA-Z0-9_]+$"))
-                return Result.Fail("El nombre de usuario solo puede contener letras, números y guion bajo.");
-
-            return null;
-        }
-
-        private Result? ValidarRole(string role)
-        {
-            if (string.IsNullOrWhiteSpace(role))
-                return Result.Fail("El rol es obligatorio.");
-
-            if (role.Length > 20)
-                return Result.Fail("El rol no puede tener más de 20 caracteres.");
-
+            if (string.IsNullOrWhiteSpace(userName)) return Validacion.Fail("Username obligatorio.");
+            // CAMBIO: Se agregó el punto "." a la expresión regular
+            if (!Regex.IsMatch(userName, @"^[a-zA-Z0-9._]+$"))
+                return Validacion.Fail("El username solo permite letras, números, puntos y guion bajo.");
             return null;
         }
     }
