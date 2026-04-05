@@ -4,12 +4,15 @@ using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;
 using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
     public class MedicamentoUpdateModel : BasePageModel
     {
         private readonly IMedicamentoService medicamentoService;
+        private readonly IClasificacionService clasificacionService;
+        public DataTable ClasificacionDataTable { get; set; } = new DataTable();
 
         [BindProperty]
         public int IdMedicamento { get; set; }
@@ -35,13 +38,15 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public int Stock { get; set; }
 
-        public MedicamentoUpdateModel(IMedicamentoService medicamentoService)
+        public MedicamentoUpdateModel(IMedicamentoService medicamentoService, IClasificacionService clasificacionService)
         {
             this.medicamentoService = medicamentoService;
+            this.clasificacionService = clasificacionService;
         }
 
         public void OnGet()
         {
+            CargarClasificaciones();
         }
 
         public IActionResult OnPostCargarMedicamentoParaEdicion(int id)
@@ -59,6 +64,7 @@ namespace ProyectoArqSoft.Pages
             Precio = medicamento.Precio;
             Stock = medicamento.Stock;
 
+            CargarClasificaciones();
             return Page();
         }
 
@@ -76,10 +82,17 @@ namespace ProyectoArqSoft.Pages
             if (resultado.IsFailure)
             {
                 Estado.MensajeError = resultado.Error;
+
+                CargarClasificaciones();
                 return Page();
             }
 
             return RedirectToPage("Medicamento", new { mensaje = "Medicamento actualizado correctamente" });
+        }
+
+        private void CargarClasificaciones()
+        {
+            ClasificacionDataTable = clasificacionService.ObtenerTodos();
         }
     }
 }

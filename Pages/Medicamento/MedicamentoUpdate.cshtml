@@ -41,15 +41,17 @@
 
                         <!-- CLASIFICACION -->
                         <div class="form-floating mb-3">
-                            <select asp-for="IdClasificacion" class="form-select med-input" required>
-                                <option value="1">Analgésico</option>
-                                <option value="2">Antialérgico</option>
-                                <option value="3">Antibiótico</option>
-                                <option value="4">Antiinflamatorio</option>
-                                <option value="5">Antipirético</option>
-                                <option value="6">Antiséptico</option>
-                                <option value="7">Vitaminas</option>
-                            </select>
+                            <div class="form-floating mb-3">
+                                <select asp-for="IdClasificacion" class="form-select med-input" required>
+                                    <option value="0" disabled>Seleccione una clasificación</option>
+
+                                    @foreach (System.Data.DataRow row in Model.ClasificacionDataTable.Rows)
+                                    {
+                                        <option value="@row["id_clasificacion"]">@row["nombre"]</option>
+                                    }
+                                </select>
+                                <label asp-for="IdClasificacion"></label>
+                            </div>
                             <label asp-for="IdClasificacion"></label>
                         </div>
 
