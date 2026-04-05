@@ -6,12 +6,13 @@ namespace ProyectoArqSoft.Helpers
 {
     public static class CredencialesHelper
     {
-        public static string GenerarUserName(string nombres, string apellidoPaterno)
+        public static string GenerarUserName(string nombres, string apellidoPaterno, string ci)
         {
             string nombre = ObtenerPrimerNombre(nombres);
             string apellido = apellidoPaterno;
+            string ciNormalizado = NormalizarCi(ci);
 
-            string baseUser = $"{nombre}.{apellido}".ToLower();
+            string baseUser = $"{nombre}.{apellido}.{ciNormalizado}".ToLower();
 
             baseUser = QuitarTildes(baseUser);
             baseUser = Regex.Replace(baseUser, @"[^a-z0-9\.]", "");
@@ -64,7 +65,22 @@ namespace ProyectoArqSoft.Helpers
 
         private static string ObtenerPrimerNombre(string nombres)
         {
-            return nombres.Split(' ')[0];
+            if (string.IsNullOrWhiteSpace(nombres))
+                return string.Empty;
+
+            return nombres.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
+        }
+
+        private static string NormalizarCi(string ci)
+        {
+            if (string.IsNullOrWhiteSpace(ci))
+                return string.Empty;
+
+            ci = ci.Trim().ToUpper();
+
+            // Quita guiones, espacios y cualquier cosa rara
+            // Deja solo letras y números
+            return Regex.Replace(ci, @"[^A-Z0-9]", "");
         }
 
         private static string QuitarTildes(string texto)

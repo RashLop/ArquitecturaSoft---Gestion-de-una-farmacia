@@ -29,11 +29,12 @@ namespace ProyectoArqSoft.Pages.Auth
 
         public IActionResult OnPost()
 {
-    string role = "user";
+    string role = "Bioquimico";
 
     Registro.UserName = CredencialesHelper.GenerarUserName(
         Registro.Nombres,
-        Registro.ApellidoPaterno
+        Registro.ApellidoPaterno, 
+        Registro.Ci
     );
 
     Registro.Password = CredencialesHelper.GenerarPasswordTemporal();

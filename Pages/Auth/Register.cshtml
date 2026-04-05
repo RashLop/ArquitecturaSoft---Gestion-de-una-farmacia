@@ -5,86 +5,194 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro - Farmacia VitalCare</title>
-    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="~/css/register.css" />
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
+    <header class="topbar">
+        <div class="topbar-container">
+            <a asp-page="/Index" class="brand-link">
+                <img src="~/images/vitalcare.png" alt="VitalCare" class="brand-logo" />
+                <span class="brand-name">VitalCare</span>
+            </a>
 
-            <img src="~/images/vitalcare.png" class="logo" />
-            <h2>Crear Cuenta</h2>
+            <nav class="topbar-nav">
+                <a asp-page="/Index">Inicio</a>
+                <a asp-page="/Auth/Login">Login</a>
+            </nav>
+        </div>
+    </header>
 
-            <form method="post">
+    <main class="register-page">
+        <section class="register-hero">
+            <div class="hero-left">
+                <span class="hero-badge">CREAR CUENTA</span>
 
-                <input type="text"
-                       asp-for="Registro.Nombres"
-                       placeholder="Nombres"
-                       required />
+                <h1>Únete a<br />Farmacia VitalCare</h1>
 
-                <input type="text"
-                       asp-for="Registro.ApellidoPaterno"
-                       placeholder="Primer apellido"
-                       required />
+                <p>
+                    Registra un nuevo usuario dentro del sistema de gestión
+                    farmacéutica con una experiencia clara, moderna y profesional.
+                </p>
 
-                <input type="text"
-                       asp-for="Registro.ApellidoMaterno"
-                       placeholder="Segundo apellido" />
-
-                <input type="text"
-                       asp-for="Registro.Ci"
-                       placeholder="Carnet de identidad"
-                       required />
-
-                <input type="text"
-                       asp-for="Registro.CiExtencion"
-                       placeholder="Extensión (ej: CB, LP, SC)"
-                       required />
-
-                <input type="text"
-                       asp-for="Registro.Telefono"
-                       placeholder="Teléfono"
-                       required />
-
-                <input type="email"
-                       asp-for="Registro.Email"
-                       placeholder="Correo electrónico"
-                       required />
-
-                <input type="text"
-                       asp-for="Registro.UserName"
-                       placeholder="Nombre de usuario generado"
-                       readonly />
-
-                <input type="password"
-                       asp-for="Registro.Password"
-                       placeholder="Contraseña generada"
-                       readonly />
-
-                @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
-                {
-                    <div style="color:red; margin-bottom:10px;">
-                        @Model.MensajeError
-                    </div>
-                }
-
-                @if (!string.IsNullOrWhiteSpace(Model.MensajeOk))
-                {
-                    <div style="color:green; margin-bottom:10px;">
-                        @Model.MensajeOk
-                    </div>
-                }
-
-                <button type="submit">Registrar</button>
-
-                <div style="margin-top:10px;">
-                    <a asp-page="/Auth/Login">¿Ya tienes cuenta? Inicia sesión</a>
+                <div class="hero-note">
+                    El nombre de usuario y la contraseña se generan automáticamente
+                    al momento de registrar la cuenta.
                 </div>
 
-            </form>
-        </div>
-    </div>
+                <div class="hero-actions">
+                    <a asp-page="/Index" class="btn-outline-home">← Volver al inicio</a>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="register-card">
+                    <div class="card-header">
+                        <h2>Formulario de registro</h2>
+                        <p>Completa los datos solicitados</p>
+                    </div>
+
+                    <form method="post" class="register-form" id="registerForm">
+                        <div class="form-grid">
+
+                            <!-- NOMBRES -->
+                            <div class="form-group">
+                                <label asp-for="Registro.Nombres">Nombres</label>
+                                <input type="text"
+                                       asp-for="Registro.Nombres"
+                                       placeholder="Ej. Juan Carlos"
+                                       required />
+                            </div>
+
+                            <!-- PRIMER APELLIDO -->
+                            <div class="form-group">
+                                <label asp-for="Registro.ApellidoPaterno">Primer apellido</label>
+                                <input type="text"
+                                       asp-for="Registro.ApellidoPaterno"
+                                       placeholder="Ej. Pérez"
+                                       required />
+                            </div>
+
+                            <!-- SEGUNDO APELLIDO (OPCIONAL) -->
+                            <div class="form-group">
+                                <label asp-for="Registro.ApellidoMaterno">Segundo apellido (opcional)</label>
+                                <input type="text"
+                                       asp-for="Registro.ApellidoMaterno"
+                                       placeholder="Ej. Gutiérrez" />
+                            </div>
+
+                            <!-- CI -->
+                            <div class="form-group">
+                                <label for="CiBase">Carnet de identidad</label>
+                                <input type="text"
+                                       id="CiBase"
+                                       placeholder="Ej. 12345678"
+                                       required />
+                            </div>
+
+                            <!-- COMPLEMENTO -->
+                            <div class="form-group">
+                                <label for="CiComplemento">Complemento (opcional)</label>
+                                <input type="text"
+                                       id="CiComplemento"
+                                       placeholder="Ej. 1A"
+                                       maxlength="2" />
+                            </div>
+
+                            <!-- EXTENSION -->
+                            <div class="form-group">
+                                <label asp-for="Registro.CiExtencion">Expedido en</label>
+                                <select asp-for="Registro.CiExtencion" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="LP">La Paz</option>
+                                    <option value="CB">Cochabamba</option>
+                                    <option value="SC">Santa Cruz</option>
+                                    <option value="OR">Oruro</option>
+                                    <option value="PT">Potosí</option>
+                                    <option value="TJ">Tarija</option>
+                                    <option value="CH">Chuquisaca</option>
+                                    <option value="BE">Beni</option>
+                                    <option value="PD">Pando</option>
+                                </select>
+                            </div>
+
+                            <!-- TELEFONO -->
+                            <div class="form-group">
+                                <label asp-for="Registro.Telefono">Teléfono</label>
+                                <input type="text"
+                                       asp-for="Registro.Telefono"
+                                       placeholder="Ej. 71234567"
+                                       required />
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="form-group full-width">
+                                <label asp-for="Registro.Email">Correo electrónico</label>
+                                <input type="email"
+                                       asp-for="Registro.Email"
+                                       placeholder="Ej. usuario@correo.com"
+                                       required />
+                            </div>
+
+                            <!-- USERNAME -->
+                            <div class="form-group">
+                                <label asp-for="Registro.UserName">Nombre de usuario generado</label>
+                                <input type="text"
+                                       asp-for="Registro.UserName"
+                                       placeholder="Se generará automáticamente"
+                                       readonly
+                                       class="readonly-field" />
+                            </div>
+
+                            <!-- PASSWORD -->
+                            <div class="form-group">
+                                <label asp-for="Registro.Password">Contraseña generada</label>
+                                <input type="password"
+                                       asp-for="Registro.Password"
+                                       placeholder="Se generará automáticamente"
+                                       readonly
+                                       class="readonly-field" />
+                            </div>
+                        </div>
+
+                        <!-- CI COMPLETO -->
+                        <input type="hidden" asp-for="Registro.Ci" id="CiCompleto" />
+
+                        <!-- MENSAJES -->
+                        @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
+                        {
+                            <div class="alert alert-error">@Model.MensajeError</div>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(Model.MensajeOk))
+                        {
+                            <div class="alert alert-success">@Model.MensajeOk</div>
+                        }
+
+                        <button type="submit" class="btn-register">Registrar cuenta</button>
+
+                        <div class="login-link">
+                            ¿Ya tienes cuenta?
+                            <a asp-page="/Auth/Login">Inicia sesión</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function () {
+            const ciBase = document.getElementById("CiBase").value.trim();
+            const ciComplemento = document.getElementById("CiComplemento").value.trim().toUpperCase();
+            const ciCompleto = document.getElementById("CiCompleto");
+
+            ciCompleto.value = ciComplemento ? `${ciBase}-${ciComplemento}` : ciBase;
+        });
+    </script>
 </body>
 </html>
