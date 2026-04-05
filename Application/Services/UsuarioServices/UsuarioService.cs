@@ -4,6 +4,7 @@ using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Models;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Domain.DTOs;
 
 namespace ProyectoArqSoft.Services
 {
@@ -34,36 +35,16 @@ namespace ProyectoArqSoft.Services
 
         public Result CrearUsuario(UsuarioRegistroDto dto, string role)
         {
-            Result validacionEntrada = _registroValidador.Validar(dto);
-            if (!validacionEntrada.IsSuccess)
-                return validacionEntrada;
+            Result validacion = ValidarCreacion(dto);
+            if (!validacion.IsSuccess)
+                return validacion;
 
-            Result validacionNegocio = _negocioValidador.ValidarRegistro(dto);
-            if (!validacionNegocio.IsSuccess)
-                return validacionNegocio;
-
-            string userNameGenerado = dto.UserName?.Trim() ?? string.Empty;
-            string passwordTemporal = dto.Password?.Trim() ?? string.Empty;
+            string passwordTemporal = Limpiar(dto.Password);
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
 
-            Usuario usuario = new Usuario
-            {
-                Nombres = dto.Nombres?.Trim() ?? string.Empty,
-                ApellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty,
-                ApellidoMaterno = dto.ApellidoMaterno?.Trim(),
-                Ci = dto.Ci?.Trim() ?? string.Empty,
-                CiExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty,
-                Telefono = dto.Telefono?.Trim() ?? string.Empty,
-                Email = dto.Email?.Trim() ?? string.Empty,
-                UserName = userNameGenerado,
-                PasswordHash = passwordHash,
-                Role = role,
-                Activo = 1,
-                MustChangePassword = 1
-            };
+            Usuario usuario = ConstruirUsuarioNuevo(dto, role, passwordHash);
 
             int filasAfectadas = _repository.Insert(usuario);
-
             if (filasAfectadas <= 0)
                 return Result.Fail("No se pudo registrar el usuario.");
 
@@ -71,66 +52,31 @@ namespace ProyectoArqSoft.Services
             if (usuarioRegistrado == null)
                 return Result.Fail("El usuario fue registrado, pero no se pudo recuperar su información.");
 
-            UsuarioTokenGeneracionDto tokenDto = new UsuarioTokenGeneracionDto
-            {
-                IdUsuario = usuarioRegistrado.IdUsuario,
-                TipoToken = TipoTokenConstantes.ActivacionCuenta,
-                MinutosExpiracion = 60
-            };
-
-            Result validacionToken = _usuarioTokenService.GenerarToken(tokenDto, out string tokenPlano);
-            if (!validacionToken.IsSuccess)
-                return validacionToken;
-
-            string tokenSeguro = Uri.EscapeDataString(tokenPlano);
-            string enlaceActivacion = $"http://localhost:5081/Auth/ActivarCuenta?token={tokenSeguro}";
-
-            Result validacionCorreo = _emailService.EnviarCorreoActivacionCuenta(
+            return GenerarYEnviarActivacion(
+                usuarioRegistrado.IdUsuario,
                 usuarioRegistrado.Email,
                 usuarioRegistrado.Nombres,
                 usuarioRegistrado.UserName,
-                passwordTemporal,
-                enlaceActivacion
+                passwordTemporal
             );
-
-            if (!validacionCorreo.IsSuccess)
-                return validacionCorreo;
-
-            return Result.Ok();
         }
 
         public Result ActualizarUsuario(UsuarioActualizacionDto dto)
         {
-            Result validacionEntrada = _actualizacionValidador.Validar(dto);
-            if (!validacionEntrada.IsSuccess)
-                return validacionEntrada;
-
-            Result validacionNegocio = _negocioValidador.ValidarActualizacion(dto);
-            if (!validacionNegocio.IsSuccess)
-                return validacionNegocio;
+            Result validacion = ValidarActualizacion(dto);
+            if (!validacion.IsSuccess)
+                return validacion;
 
             Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
             if (usuarioActual == null)
                 return Result.Fail("El usuario no existe.");
 
-            usuarioActual.Nombres = dto.Nombres?.Trim() ?? string.Empty;
-            usuarioActual.ApellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty;
-            usuarioActual.ApellidoMaterno = dto.ApellidoMaterno?.Trim();
-            usuarioActual.Ci = dto.Ci?.Trim() ?? string.Empty;
-            usuarioActual.CiExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty;
-            usuarioActual.Telefono = dto.Telefono?.Trim() ?? string.Empty;
-            usuarioActual.Email = dto.Email?.Trim() ?? string.Empty;
-            usuarioActual.UserName = dto.UserName?.Trim() ?? string.Empty;
-            usuarioActual.Role = dto.Role?.Trim() ?? string.Empty;
-            usuarioActual.Activo = dto.Activo;
-            usuarioActual.MustChangePassword = dto.MustChangePassword;
+            AplicarActualizacion(usuarioActual, dto);
 
             int filasAfectadas = _repository.Update(usuarioActual);
-
-            if (filasAfectadas <= 0)
-                return Result.Fail("No se pudo actualizar el usuario.");
-
-            return Result.Ok();
+            return filasAfectadas > 0
+                ? Result.Ok()
+                : Result.Fail("No se pudo actualizar el usuario.");
         }
 
         public Result EliminarUsuario(int idUsuario)
@@ -144,11 +90,9 @@ namespace ProyectoArqSoft.Services
                 return Result.Fail("El usuario no existe.");
 
             int filasAfectadas = _repository.Delete(usuario);
-
-            if (filasAfectadas <= 0)
-                return Result.Fail("No se pudo eliminar el usuario.");
-
-            return Result.Ok();
+            return filasAfectadas > 0
+                ? Result.Ok()
+                : Result.Fail("No se pudo eliminar el usuario.");
         }
 
         public UsuarioDto? ObtenerUsuarioPorId(int idUsuario)
@@ -156,37 +100,25 @@ namespace ProyectoArqSoft.Services
             if (idUsuario <= 0)
                 return null;
 
-            Usuario? usuario = _repository.GetById(idUsuario);
-            if (usuario == null)
-                return null;
-
-            return MapearDto(usuario);
+            return ObtenerYMapear(() => _repository.GetById(idUsuario));
         }
 
         public UsuarioDto? ObtenerUsuarioPorEmail(string email)
         {
-            email = email?.Trim() ?? string.Empty;
+            email = Limpiar(email);
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
-            Usuario? usuario = _repository.GetByEmail(email);
-            if (usuario == null)
-                return null;
-
-            return MapearDto(usuario);
+            return ObtenerYMapear(() => _repository.GetByEmail(email));
         }
 
         public UsuarioDto? ObtenerUsuarioPorUserName(string userName)
         {
-            userName = userName?.Trim() ?? string.Empty;
+            userName = Limpiar(userName);
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
 
-            Usuario? usuario = _repository.GetByUserName(userName);
-            if (usuario == null)
-                return null;
-
-            return MapearDto(usuario);
+            return ObtenerYMapear(() => _repository.GetByUserName(userName));
         }
 
         public DataTable ObtenerTodos()
@@ -196,26 +128,156 @@ namespace ProyectoArqSoft.Services
 
         public DataTable ObtenerTodos(string filtro)
         {
-            filtro = filtro?.Trim() ?? string.Empty;
-            return _repository.GetAll(filtro);
+            return _repository.GetAll(Limpiar(filtro));
         }
 
         public bool ExisteEmail(string email)
         {
-            email = email?.Trim() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            return _repository.ExisteEmail(email);
+            email = Limpiar(email);
+            return !string.IsNullOrWhiteSpace(email) && _repository.ExisteEmail(email);
         }
 
         public bool ExisteUserName(string userName)
         {
-            userName = userName?.Trim() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(userName))
-                return false;
+            userName = Limpiar(userName);
+            return !string.IsNullOrWhiteSpace(userName) && _repository.ExisteUserName(userName);
+        }
 
-            return _repository.ExisteUserName(userName);
+        public Result ValidarActivacionCuenta(string token)
+        {
+            UsuarioToken? tokenValido = ObtenerTokenActivacionValido(token);
+            return tokenValido != null
+                ? Result.Ok()
+                : Result.Fail("El token no es válido, ya fue usado o expiró.");
+        }
+
+        public Result ActivarCuenta(string token, string nuevaPassword)
+        {
+            nuevaPassword = Limpiar(nuevaPassword);
+            if (string.IsNullOrWhiteSpace(nuevaPassword))
+                return Result.Fail("La nueva contraseña es obligatoria.");
+
+            UsuarioToken? tokenValido = ObtenerTokenActivacionValido(token);
+            if (tokenValido == null)
+                return Result.Fail("El token no es válido, ya fue usado o expiró.");
+
+            string nuevoPasswordHash = PasswordHelper.Hash(nuevaPassword);
+
+            int filasPassword = _repository.CambiarPassword(
+                tokenValido.UsuarioIdUsuario,
+                nuevoPasswordHash,
+                false
+            );
+
+            if (filasPassword <= 0)
+                return Result.Fail("No se pudo actualizar la contraseña del usuario.");
+
+            Result resultadoToken = _usuarioTokenService.MarcarComoUsado(tokenValido.IdUsuarioToken);
+            if (!resultadoToken.IsSuccess)
+                return resultadoToken;
+
+            return Result.Ok();
+        }
+
+        private Result ValidarCreacion(UsuarioRegistroDto dto)
+        {
+            Result validacionEntrada = _registroValidador.Validar(dto);
+            if (!validacionEntrada.IsSuccess)
+                return validacionEntrada;
+
+            return _negocioValidador.ValidarRegistro(dto);
+        }
+
+        private Result ValidarActualizacion(UsuarioActualizacionDto dto)
+        {
+            Result validacionEntrada = _actualizacionValidador.Validar(dto);
+            if (!validacionEntrada.IsSuccess)
+                return validacionEntrada;
+
+            return _negocioValidador.ValidarActualizacion(dto);
+        }
+
+        private Result GenerarYEnviarActivacion(
+            int idUsuario,
+            string email,
+            string nombres,
+            string userName,
+            string passwordTemporal)
+        {
+            UsuarioTokenGeneracionDto tokenDto = new UsuarioTokenGeneracionDto
+            {
+                IdUsuario = idUsuario,
+                TipoToken = TipoTokenConstantes.ActivacionCuenta,
+                MinutosExpiracion = 60
+            };
+
+            Result validacionToken = _usuarioTokenService.GenerarToken(tokenDto, out string tokenPlano);
+            if (!validacionToken.IsSuccess)
+                return validacionToken;
+
+            string tokenSeguro = Uri.EscapeDataString(tokenPlano);
+            string enlaceActivacion = $"http://localhost:5081/Auth/ActivarCuenta?token={tokenSeguro}";
+
+            return _emailService.EnviarCorreoActivacionCuenta(
+                email,
+                nombres,
+                userName,
+                passwordTemporal,
+                enlaceActivacion
+            );
+        }
+
+        private Usuario ConstruirUsuarioNuevo(UsuarioRegistroDto dto, string role, string passwordHash)
+        {
+            return new Usuario
+            {
+                Nombres = Limpiar(dto.Nombres),
+                ApellidoPaterno = Limpiar(dto.ApellidoPaterno),
+                ApellidoMaterno = dto.ApellidoMaterno?.Trim(),
+                Ci = Limpiar(dto.Ci),
+                CiExtencion = LimpiarMayus(dto.CiExtencion),
+                Telefono = Limpiar(dto.Telefono),
+                Email = Limpiar(dto.Email),
+                UserName = Limpiar(dto.UserName),
+                PasswordHash = passwordHash,
+                Role = Limpiar(role),
+                Activo = 1,
+                MustChangePassword = 1
+            };
+        }
+
+        private void AplicarActualizacion(Usuario usuario, UsuarioActualizacionDto dto)
+        {
+            usuario.Nombres = Limpiar(dto.Nombres);
+            usuario.ApellidoPaterno = Limpiar(dto.ApellidoPaterno);
+            usuario.ApellidoMaterno = dto.ApellidoMaterno?.Trim();
+            usuario.Ci = Limpiar(dto.Ci);
+            usuario.CiExtencion = LimpiarMayus(dto.CiExtencion);
+            usuario.Telefono = Limpiar(dto.Telefono);
+            usuario.Email = Limpiar(dto.Email);
+            usuario.UserName = Limpiar(dto.UserName);
+            usuario.Role = Limpiar(dto.Role);
+            usuario.Activo = dto.Activo;
+            usuario.MustChangePassword = dto.MustChangePassword;
+        }
+
+        private UsuarioDto? ObtenerYMapear(Func<Usuario?> obtenerUsuario)
+        {
+            Usuario? usuario = obtenerUsuario();
+            return usuario == null ? null : MapearDto(usuario);
+        }
+
+        private UsuarioToken? ObtenerTokenActivacionValido(string token)
+        {
+            token = Limpiar(token);
+
+            if (string.IsNullOrWhiteSpace(token))
+                return null;
+
+            return _usuarioTokenService.ValidarToken(
+                token,
+                TipoTokenConstantes.ActivacionCuenta
+            );
         }
 
         private UsuarioDto MapearDto(Usuario usuario)
@@ -237,62 +299,44 @@ namespace ProyectoArqSoft.Services
             };
         }
 
-        public Result ValidarActivacionCuenta(string token)
+        private static string Limpiar(string? valor)
         {
-            token = token?.Trim() ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(token))
-                return Result.Fail("Token inválido.");
-
-            UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
-                token,
-                TipoTokenConstantes.ActivacionCuenta
-            );
-
-            if (tokenValido == null)
-                return Result.Fail("El token no es válido, ya fue usado o expiró.");
-
-            return Result.Ok();
+            return valor?.Trim() ?? string.Empty;
         }
 
-        public Result ActivarCuenta(string token, string nuevaPassword)
+        private static string LimpiarMayus(string? valor)
         {
-            token = token?.Trim() ?? string.Empty;
-            nuevaPassword = nuevaPassword?.Trim() ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(token))
-                return Result.Fail("Token inválido.");
-
-            if (string.IsNullOrWhiteSpace(nuevaPassword))
-                return Result.Fail("La nueva contraseña es obligatoria.");
-
-            UsuarioToken? tokenValido = _usuarioTokenService.ValidarToken(
-                token,
-                TipoTokenConstantes.ActivacionCuenta
-            );
-
-            if (tokenValido == null)
-                return Result.Fail("El token no es válido, ya fue usado o expiró.");
-
-            string nuevoPasswordHash = PasswordHelper.Hash(nuevaPassword);
-
-            int filasPassword = _repository.CambiarPassword(
-                tokenValido.UsuarioIdUsuario,
-                nuevoPasswordHash,
-                false
-            );
-
-            if (filasPassword <= 0)
-                return Result.Fail("No se pudo actualizar la contraseña del usuario.");
-
-            Result validacionToken = _usuarioTokenService.MarcarComoUsado(tokenValido.IdUsuarioToken);
-            if (!validacionToken.IsSuccess)
-                return validacionToken;
-
-            Console.WriteLine("TOKEN RECIBIDO: [" + token + "]");
-            Console.WriteLine("HASH CALCULADO: [" + TokenHelper.GenerarTokenHash(token) + "]");
-
-            return Result.Ok();
+            return valor?.Trim().ToUpper() ?? string.Empty;
         }
+
+        public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto)
+        {
+            if (dto.IdUsuario <= 0)
+                return Result.Fail("El id del usuario no es válido.");
+
+            if (string.IsNullOrWhiteSpace(dto.Email))
+                return Result.Fail("El email es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(dto.UserName))
+                return Result.Fail("El nombre de usuario es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(dto.Role))
+                return Result.Fail("El rol es obligatorio.");
+
+            Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
+            if (usuarioActual == null)
+                return Result.Fail("El usuario no existe.");
+
+            usuarioActual.Email = dto.Email.Trim();
+            usuarioActual.UserName = dto.UserName.Trim();
+            usuarioActual.Role = dto.Role.Trim();
+            usuarioActual.Activo = dto.Activo;
+
+            int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual);
+
+            return filasAfectadas > 0
+                ? Result.Ok()
+                : Result.Fail("No se pudo actualizar el usuario.");
+                }
     }
 }

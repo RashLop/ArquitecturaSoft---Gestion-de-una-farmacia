@@ -275,5 +275,29 @@ namespace ProyectoArqSoft.Repositories
                 MustChangePassword = reader.GetSByte("must_change_password")
             };
         }
+
+        public int UpdateDatosEdicion(Usuario usuario)
+        {
+            string query = @"UPDATE usuario
+                            SET
+                                email = @email,
+                                user_name = @user_name,
+                                role = @role,
+                                activo = @activo
+                             WHERE idUsuario = @idUsuario";
+                            
+
+            using MySqlConnection connection = new MySqlConnection(connectionString);
+            connection.Open();
+
+            using MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@user_name", usuario.UserName);
+            command.Parameters.AddWithValue("@role", usuario.Role);
+            command.Parameters.AddWithValue("@activo", usuario.Activo);
+            command.Parameters.AddWithValue("@idUsuario", usuario.IdUsuario);
+
+            return command.ExecuteNonQuery();
+        }
     }
 }

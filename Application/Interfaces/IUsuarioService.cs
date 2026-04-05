@@ -1,4 +1,5 @@
 using System.Data;
+using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.Validaciones;
 
@@ -22,5 +23,7 @@ namespace ProyectoArqSoft.Services
 
         Result ValidarActivacionCuenta(string token);
         Result ActivarCuenta(string token, string nuevaPassword);
+
+        Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto);
     }
 }

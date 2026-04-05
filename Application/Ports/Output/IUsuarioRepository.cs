@@ -9,5 +9,7 @@ namespace ProyectoArqSoft.FactoryProducts
         bool ExisteEmail(string email);
         bool ExisteUserName(string userName);
         int CambiarPassword(int idUsuario, string nuevoPasswordHash, bool mustChangePassword);
+
+        int UpdateDatosEdicion(Usuario usuario);
     }
 }
