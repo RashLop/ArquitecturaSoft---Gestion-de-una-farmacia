@@ -42,7 +42,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearMedicamento()
         {
-            Validacion resultado = medicamentoService.Crear(
+            Result resultado = medicamentoService.Crear(
                 Nombre,
                 Presentacion,
                 IdClasificacion,

@@ -3,26 +3,48 @@ using ProyectoArqSoft.DTO;
 
 namespace ProyectoArqSoft.Validaciones
 {
-    public class UsuarioActualizacionValidacion : IValidacion<UsuarioActualizacionDto>
+    public class UsuarioActualizacionValidacion : IResult<UsuarioActualizacionDto>
     {
-        public Validacion Validar(UsuarioActualizacionDto dto)
+        public Result Validar(UsuarioActualizacionDto dto)
         {
-            if (dto == null) return Validacion.Fail("Datos nulos.");
+            if (dto == null)
+                return Result.Fail("Los datos del usuario no pueden ser nulos.");
+
+            string email = dto.Email?.Trim() ?? string.Empty;
+            string userName = dto.UserName?.Trim() ?? string.Empty;
+            string role = dto.Role?.Trim() ?? string.Empty;
 
             return
-                ValidarEmail(dto.Email) ??
-                ValidarUserName(dto.UserName) ??
-                Validacion.Ok();
+                ValidarId(dto.IdUsuario) ??
+                ValidarEmail(email) ??
+                ValidarUserName(userName) ??
+                ValidarRole(role) ??
+                Result.Ok();
         }
 
-        private Validacion? ValidarEmail(string email)
+        private Result? ValidarId(int id)
         {
-            if (string.IsNullOrWhiteSpace(email)) return Validacion.Fail("El email es obligatorio.");
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) return Validacion.Fail("Email no válido.");
+            if (id <= 0)
+                return Result.Fail("El identificador del usuario no es válido.");
+
             return null;
         }
 
-        private Validacion? ValidarUserName(string userName)
+        private Result? ValidarEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return Result.Fail("El correo electrónico es obligatorio.");
+
+            if (email.Length > 100)
+                return Result.Fail("El correo electrónico no puede tener más de 100 caracteres.");
+
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                return Result.Fail("El formato del correo electrónico no es válido.");
+
+            return null;
+        }
+
+        private Result? ValidarUserName(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName)) return Validacion.Fail("Username obligatorio.");
             // CAMBIO: Se agregó el punto "." a la expresión regular

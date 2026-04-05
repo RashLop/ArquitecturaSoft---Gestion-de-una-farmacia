@@ -14,8 +14,8 @@ namespace ProyectoArqSoft.Services
         DataTable ObtenerTodos(string filtro);
         Clasificacion? ObtenerPorId(int id);
 
-        Validacion Crear(string nombre);
-        Validacion Actualizar(int id, string nombre);
-        Validacion EliminarLogicamente(int id);
+        Result Crear(string nombre, string origen);
+        Result Actualizar(int id, string nombre, string origen);
+        Result EliminarLogicamente(int id);
     }
 }

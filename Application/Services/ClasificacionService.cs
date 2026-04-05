@@ -16,11 +16,11 @@ namespace ProyectoArqSoft.Services
     public class ClasificacionService : IClasificacionService
     {
         private readonly IClasificacionRepository _repository;
-        private readonly IValidacion<Clasificacion> _validador;
+        private readonly IResult<Clasificacion> _validador;
 
         public ClasificacionService(
             IClasificacionRepository repository,
-            IValidacion<Clasificacion> validador)
+            IResult<Clasificacion> validador)
         {
             _repository = repository;
             _validador = validador;
@@ -41,44 +41,44 @@ namespace ProyectoArqSoft.Services
             return _repository.GetById(id);
         }
 
-        public Validacion Crear(string nombre)
+        public Result Crear(string nombre, string origen)
         {
-            Clasificacion clasificacion = ConstruirClasificacion(0, nombre);
+            Clasificacion clasificacion = ConstruirClasificacion(0, nombre, origen);
 
-            Validacion validacion = _validador.Validar(clasificacion);
+            Result validacion = _validador.Validar(clasificacion);
             if (validacion.IsFailure)
                 return validacion;
             
             if (_repository.ExisteNombreActivo(clasificacion.Nombre))
-                return Validacion.Fail("Ya existe una clasificación activa con ese nombre.");
+                return Result.Fail("Ya existe una clasificación activa con ese nombre.");
 
             if (_repository.Insert(clasificacion) <= 0)
-                return Validacion.Fail("No se pudo registrar la clasificación.");
+                return Result.Fail("No se pudo registrar la clasificación.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion Actualizar(int id, string nombre)
+        public Result Actualizar(int id, string nombre, string origen)
         {
-            Clasificacion clasificacion = ConstruirClasificacion(id, nombre);
+            Clasificacion clasificacion = ConstruirClasificacion(id, nombre, origen);
 
-            Validacion validacion = _validador.Validar(clasificacion);
+            Result validacion = _validador.Validar(clasificacion);
             if (validacion.IsFailure)
                 return validacion;
 
             if (_repository.ExisteNombreActivoExcluyendoId(id, clasificacion.Nombre))
-                return Validacion.Fail("Ya existe otra clasificación activa con ese nombre.");
+                return Result.Fail("Ya existe otra clasificación activa con ese nombre.");
 
             if (_repository.Update(clasificacion) <= 0)
-                return Validacion.Fail("No se pudo actualizar la clasificación.");
+                return Result.Fail("No se pudo actualizar la clasificación.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion EliminarLogicamente(int id)
+        public Result EliminarLogicamente(int id)
         {
             if (_repository.TieneMedicamentosActivosAsociados(id))
-                return Validacion.Fail("No se puede eliminar la clasificación porque tiene medicamentos activos asociados.");
+                return Result.Fail("No se puede eliminar la clasificación porque tiene medicamentos activos asociados.");
 
             Clasificacion clasificacion = new Clasificacion
             {
@@ -86,17 +86,18 @@ namespace ProyectoArqSoft.Services
             };
 
             if (_repository.Delete(clasificacion) <= 0)
-                return Validacion.Fail("No se pudo eliminar la clasificación.");
+                return Result.Fail("No se pudo eliminar la clasificación.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        private Clasificacion ConstruirClasificacion(int id, string nombre)
+        private Clasificacion ConstruirClasificacion(int id, string nombre, string origen)
         {
             return new Clasificacion
             {
                 Id = id,
-                Nombre = StringHelper.LimpiarEspacios(nombre)
+                Nombre = StringHelper.LimpiarEspacios(nombre),
+                Origen = StringHelper.LimpiarEspacios(origen)
             };
         }
     }

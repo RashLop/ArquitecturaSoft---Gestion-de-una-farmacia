@@ -9,11 +9,11 @@ namespace ProyectoArqSoft.Services
     public class ClienteService : IClienteService
     {
         private readonly IRepository<Cliente> _repository;
-        private readonly IValidacion<Cliente> _validador;
+        private readonly IResult<Cliente> _validador;
 
         public ClienteService(
             IRepository<Cliente> repository,
-            IValidacion<Cliente> validador)
+            IResult<Cliente> validador)
         {
             _repository = repository;
             _validador = validador;
@@ -34,7 +34,7 @@ namespace ProyectoArqSoft.Services
             return _repository.GetById(id);
         }
 
-        public Validacion Crear(
+        public Result Crear(
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
@@ -51,12 +51,12 @@ namespace ProyectoArqSoft.Services
                 return validacionDuplicado;
 
             if (_repository.Insert(cliente) <= 0)
-                return Validacion.Fail("No se pudo registrar el cliente.");
+                return Result.Fail("No se pudo registrar el cliente.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion Actualizar(
+        public Result Actualizar(
             int id,
             bool esConsumidorFinal,
             string nit,
@@ -74,12 +74,12 @@ namespace ProyectoArqSoft.Services
                 return validacionDuplicado;
 
             if (_repository.Update(cliente) <= 0)
-                return Validacion.Fail("No se pudo actualizar el cliente.");
+                return Result.Fail("No se pudo actualizar el cliente.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion Eliminar(int id)
+        public Result Eliminar(int id)
         {
             Cliente cliente = new Cliente
             {
@@ -87,9 +87,9 @@ namespace ProyectoArqSoft.Services
             };
 
             if (_repository.Delete(cliente) <= 0)
-                return Validacion.Fail("No se pudo eliminar el cliente.");
+                return Result.Fail("No se pudo eliminar el cliente.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         private Cliente ConstruirCliente(
@@ -120,10 +120,10 @@ namespace ProyectoArqSoft.Services
             cliente.CorreoElectronico = StringHelper.QuitarEspacios(cliente.CorreoElectronico);
         }
 
-        private Validacion ValidarDuplicado(Cliente cliente)
+        private Result ValidarDuplicado(Cliente cliente)
         {
             if (cliente.Nit.Equals("CF", StringComparison.OrdinalIgnoreCase))
-                return Validacion.Ok();
+                return Result.Ok();
 
             DataTable clientes = _repository.GetAll(cliente.Nit);
 
@@ -135,11 +135,11 @@ namespace ProyectoArqSoft.Services
                 if (nit.Equals(cliente.Nit, StringComparison.OrdinalIgnoreCase) &&
                     idCliente != cliente.IdCliente)
                 {
-                    return Validacion.Fail("Ya existe un cliente con ese NIT.");
+                    return Result.Fail("Ya existe un cliente con ese NIT.");
                 }
             }
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
         private static void AplicarConsumidorFinal(Cliente cliente, bool esConsumidorFinal)

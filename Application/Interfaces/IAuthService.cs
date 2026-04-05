@@ -5,6 +5,6 @@ namespace ProyectoArqSoft.Services
 {
     public interface IAuthService
     {
-        Validacion IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta);
+        Result IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta);
     }
 }

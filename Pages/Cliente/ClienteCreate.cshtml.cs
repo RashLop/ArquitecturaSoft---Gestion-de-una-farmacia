@@ -36,7 +36,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearCliente()
         {
-            Validacion resultado = clienteService.Crear(
+            Result resultado = clienteService.Crear(
                 EsConsumidorFinal,
                 Nit,
                 RazonSocial,

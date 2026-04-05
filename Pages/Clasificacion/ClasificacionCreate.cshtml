@@ -24,6 +24,16 @@
                             <label asp-for="Nombre"></label>
                         </div>
 
+                        <div class="form-floating mb-3">
+                            <select asp-for="Origen" class="form-select med-input" required>
+                                <option value="" selected disabled>Seleccione un origen</option>
+                                <option value="Natural">Natural</option>
+                                <option value="Sintético">Sintético</option>
+                                <option value="Semisintético">Semisintético</option>
+                            </select>
+                            <label asp-for="Origen"></label>
+                        </div>
+
                         @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
                             <div class="alert alert-danger med-alert" role="alert">

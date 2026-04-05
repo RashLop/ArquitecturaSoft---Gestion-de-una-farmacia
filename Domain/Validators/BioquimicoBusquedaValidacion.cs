@@ -3,9 +3,9 @@ using ProyectoArqSoft.Helpers;
 
 namespace ProyectoArqSoft.Validaciones
 {
-    public class BioquimicoBusquedaValidacion : IValidacion<string>
+    public class BioquimicoBusquedaValidacion : IResult<string>
     {
-        public Validacion Validar(string filtro)
+        public Result Validar(string filtro)
         {
             var validacionGeneral = FiltroHelper.ValidarFiltro(filtro);
 
@@ -13,16 +13,16 @@ namespace ProyectoArqSoft.Validaciones
                 return validacionGeneral;
 
             if (string.IsNullOrWhiteSpace(filtro))
-                return Validacion.Ok();
+                return Result.Ok();
 
             filtro = FiltroHelper.LimpiarFiltro(filtro);
 
             string patronValido = @"^([a-zA-Z\s]+|\d+|\d+-\d[A-Z])$";
 
             if (!Regex.IsMatch(filtro, patronValido))
-                return Validacion.Fail("Criterio inválido.");
+                return Result.Fail("Criterio inválido.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
     }
 }

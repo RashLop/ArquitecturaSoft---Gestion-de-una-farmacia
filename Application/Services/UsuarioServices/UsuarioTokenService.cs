@@ -9,21 +9,21 @@ namespace ProyectoArqSoft.Services
     public class UsuarioTokenService : IUsuarioTokenService
     {
         private readonly IUsuarioTokenRepository _repository;
-        private readonly IValidacion<UsuarioTokenGeneracionDto> _generacionValidador;
+        private readonly IResult<UsuarioTokenGeneracionDto> _generacionValidador;
 
         public UsuarioTokenService(
             IUsuarioTokenRepository repository,
-            IValidacion<UsuarioTokenGeneracionDto> generacionValidador)
+            IResult<UsuarioTokenGeneracionDto> generacionValidador)
         {
             _repository = repository;
             _generacionValidador = generacionValidador;
         }
 
-        public Validacion GenerarToken(UsuarioTokenGeneracionDto dto, out string tokenPlano)
+        public Result GenerarToken(UsuarioTokenGeneracionDto dto, out string tokenPlano)
         {
             tokenPlano = string.Empty;
 
-            Validacion validacionEntrada = _generacionValidador.Validar(dto);
+            Result validacionEntrada = _generacionValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
                 return validacionEntrada;
 
@@ -43,10 +43,10 @@ namespace ProyectoArqSoft.Services
             if (filasAfectadas <= 0)
             {
                 tokenPlano = string.Empty;
-                return Validacion.Fail("No se pudo generar el token.");
+                return Result.Fail("No se pudo generar el token.");
             }
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
         public UsuarioToken? ValidarToken(string tokenPlano, string tipoToken)
         {
@@ -72,41 +72,41 @@ namespace ProyectoArqSoft.Services
             return token;
         }
 
-        public Validacion MarcarComoUsado(int idUsuarioToken)
+        public Result MarcarComoUsado(int idUsuarioToken)
         {
             if (idUsuarioToken <= 0)
-                return Validacion.Fail("El id del token debe ser mayor a cero.");
+                return Result.Fail("El id del token debe ser mayor a cero.");
 
             int filasAfectadas = _repository.MarcarComoUsado(idUsuarioToken);
 
             if (filasAfectadas <= 0)
-                return Validacion.Fail("No se pudo marcar el token como usado.");
+                return Result.Fail("No se pudo marcar el token como usado.");
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion RevocarTokensActivos(int idUsuario, string tipoToken)
+        public Result RevocarTokensActivos(int idUsuario, string tipoToken)
         {
             if (idUsuario <= 0)
-                return Validacion.Fail("El id del usuario debe ser mayor a cero.");
+                return Result.Fail("El id del usuario debe ser mayor a cero.");
 
             tipoToken = tipoToken?.Trim() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(tipoToken))
-                return Validacion.Fail("El tipo de token es obligatorio.");
+                return Result.Fail("El tipo de token es obligatorio.");
 
             _repository.RevocarTokensActivos(idUsuario, tipoToken);
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
 
-        public Validacion EliminarTokensObsoletos(int dias)
+        public Result EliminarTokensObsoletos(int dias)
         {
             if (dias <= 0)
-                return Validacion.Fail("La cantidad de días debe ser mayor a cero.");
+                return Result.Fail("La cantidad de días debe ser mayor a cero.");
 
             _repository.EliminarTokensObsoletos(dias);
 
-            return Validacion.Ok();
+            return Result.Ok();
         }
     }
 }

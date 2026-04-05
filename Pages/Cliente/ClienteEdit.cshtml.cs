@@ -58,7 +58,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarCliente()
         {
-            Validacion resultado = clienteService.Actualizar(
+            Result resultado = clienteService.Actualizar(
                 IdCliente,
                 EsConsumidorFinal,
                 Nit,
