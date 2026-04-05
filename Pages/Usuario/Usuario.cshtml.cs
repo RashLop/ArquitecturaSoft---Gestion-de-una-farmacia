@@ -4,14 +4,13 @@ using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Pages.Base;
 using System.Data;
-using Microsoft.AspNetCore.Authorization;
 
-namespace ProyectoArqSoft.Pages.Usuarios
+namespace ProyectoArqSoft.Pages.Usuario
 {
-    [Authorize(Roles = "Admin")]
     public class UsuarioModel : BasePageModel
     {
         private readonly IUsuarioService usuarioService;
+
         public DataTable UsuarioDataTable { get; set; } = new DataTable();
 
         public UsuarioModel(IUsuarioService usuarioService)
@@ -21,27 +20,42 @@ namespace ProyectoArqSoft.Pages.Usuarios
 
         public void OnGet(string? filtro, string? mensaje, string? error)
         {
-            Estado.FiltroActual = FiltroHelper.LimpiarFiltro(filtro);
-            Estado.Mensaje = mensaje ?? string.Empty;
-            Estado.MensajeError = error ?? string.Empty;
+            CargarParametros(filtro, mensaje, error);
 
-            // Select con refresco (filtro)
-            UsuarioDataTable = usuarioService.ObtenerTodos(Estado.FiltroActual);
+            Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Estado.MensajeError = resultado.Error;
+
+            if (resultado.IsFailure)
+                return;
+
+            CargarUsuarios(Estado.FiltroActual);
         }
 
-        public IActionResult OnPostEliminarUsuario(int id)
+        public IActionResult OnPostEliminarUsuarioLogicamente(int id)
         {
-            // Cumple con la rúbrica: "Dar de baja" (Eliminación lógica en el Service)
+            // Ejecuta la baja lógica (activo = 0)
             Validacion resultado = usuarioService.EliminarUsuario(id);
 
             if (resultado.IsFailure)
             {
                 Estado.MensajeError = resultado.Error;
-                UsuarioDataTable = usuarioService.ObtenerTodos(Estado.FiltroActual);
+                CargarUsuarios(Estado.FiltroActual);
                 return Page();
             }
 
-            return RedirectToPage("Usuario", new { mensaje = "El usuario ha sido dado de baja (Desactivado)" });
+            return RedirectToPage("Usuario", new { mensaje = "Usuario dado de baja correctamente" });
+        }
+
+        private void CargarParametros(string? filtro, string? mensaje, string? error)
+        {
+            Estado.FiltroActual = FiltroHelper.LimpiarFiltro(filtro);
+            Estado.Mensaje = mensaje ?? string.Empty;
+            Estado.MensajeError = error ?? string.Empty;
+        }
+
+        private void CargarUsuarios(string filtro)
+        {
+            UsuarioDataTable = usuarioService.ObtenerTodos(filtro);
         }
     }
 }

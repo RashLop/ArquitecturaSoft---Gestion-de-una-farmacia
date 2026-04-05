@@ -1,73 +1,121 @@
 ﻿@page
-@model ProyectoArqSoft.Pages.Usuarios.UsuarioModel
+@model ProyectoArqSoft.Pages.Usuario.UsuarioModel
 @{
-    ViewData["Title"] = "Personal - VitalCare";
 }
 
 <div class="container mt-5">
+
+    <!-- TITULO -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-success border-bottom border-3 pb-2">Gestión de Personal VitalCare</h2>
-        <a asp-page="UsuarioCreate" class="btn-main shadow-sm"> + Registrar Nuevo Colaborador </a>
+        <h2 class="fw-bold text-success">Personal VitalCare</h2>
+
+        <a asp-page="UsuarioCreate" class="btn-main">
+            + Nuevo Usuario
+        </a>
     </div>
 
-    @* Filtro de búsqueda *@
+    <!-- BUSCADOR -->
     <form method="get" class="mb-4">
-        <div class="card-module p-3 shadow-sm border-0">
+        <div class="card-module p-3">
             <div class="input-group">
-                <input type="text" name="filtro" class="form-control border-success"
-                       placeholder="Buscar por Username, CI o Nombre..." value="@Model.Estado.FiltroActual" />
-                <button type="submit" class="btn btn-success px-4">Buscar</button>
-                <a asp-page="Usuario" class="btn btn-secondary">Limpiar</a>
+                <input type="text"
+                       name="filtro"
+                       class="form-control"
+                       placeholder="Buscar por nombre, email o carnet..."
+                       value="@Model.Estado.FiltroActual" />
+
+                <button type="submit"
+                        class="btn btn-success btn-fixed">
+                    Buscar
+                </button>
+
+                <a asp-page="Usuario"
+                   class="btn btn-secondary btn-fixed">
+                    Limpiar
+                </a>
             </div>
         </div>
     </form>
 
+    <!-- MENSAJES -->
     @if (!string.IsNullOrEmpty(Model.Estado.Mensaje))
     {
-        <div class="alert alert-success shadow-sm border-0 border-start border-4 border-success">@Model.Estado.Mensaje</div>
+        <div class="alert alert-success shadow-sm">@Model.Estado.Mensaje</div>
     }
 
-    <div class="card-module shadow border-0">
+    @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
+    {
+        <div class="alert alert-danger shadow-sm">@Model.Estado.MensajeError</div>
+    }
+
+    <!-- TABLA -->
+    <div class="card-module">
         <table class="table table-hover align-middle">
-            <thead class="bg-success text-white">
+            <thead class="table-success">
                 <tr>
-                    <th>Username</th>
                     <th>Nombre Completo</th>
-                    <th>CI</th>
+                    <th>Email</th>
                     <th>Rol</th>
                     <th>Estado</th>
-                    <th class="text-center">Acciones</th>
+                    <th style="width:170px">Acciones</th>
                 </tr>
             </thead>
+
             <tbody>
                 @foreach (System.Data.DataRow row in Model.UsuarioDataTable.Rows)
                 {
+                    bool esActivo = Convert.ToInt32(row["activo"]) == 1;
                     <tr>
-                        <td class="fw-bold text-success">@row["UserName"]</td> @* Password oculto por seguridad *@
-                        <td>@row["Nombres"] @row["ApellidoPaterno"]</td>
-                        <td>@row["Ci"] - @row["CiExtencion"]</td>
-                        <td><span class="badge border border-success text-success px-3">@row["Role"]</span></td>
+                        <td class="fw-semibold">@row["nombres"] @row["apellido_paterno"]</td>
+
+                        <td>@row["email"]</td>
+
                         <td>
-                            @if (Convert.ToInt32(row["Activo"]) == 1)
+                            <span class="badge border border-success text-success px-3">
+                                @row["role"]
+                            </span>
+                        </td>
+
+                        <td>
+                            @if (esActivo)
                             {
                                 <span class="badge bg-success">ACTIVO</span>
                             }
                             else
                             {
-
                                 <span class="badge bg-danger">DE BAJA</span>
                             }
                         </td>
-                        <td class="text-center">
-                            <form method="post" asp-page="UsuarioUpdate" asp-page-handler="CargarUsuarioParaEdicion" class="d-inline">
-                                <input type="hidden" name="id" value="@row["IdUsuario"]" />
-                                <button type="submit" class="btn btn-warning btn-sm">Editar</button>
+
+                        <td>
+                            <!-- EDITAR -->
+                            <form method="post"
+                                  asp-page="UsuarioEdit"
+                                  asp-page-handler="CargarUsuarioParaEdicion"
+                                  style="display:inline;">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@row["idUsuario"]" />
+
+                                <button type="submit"
+                                        class="btn btn-warning btn-sm">
+                                    Editar
+                                </button>
                             </form>
-                            <button type="button" class="btn btn-danger btn-sm btnEliminar"
-                                    data-id="@row["IdUsuario"]" data-nombre="@row["UserName"]"
-                                    data-bs-toggle="modal" data-bs-target="#modalBaja">
-                                Dar de Baja
-                            </button>
+
+                            <!-- BOTON ELIMINAR (Solo si está activo) -->
+                            @if (esActivo)
+                            {
+                                <button type="button"
+                                        class="btn btn-danger btn-sm btnEliminar"
+                                        data-id="@row["idUsuario"]"
+                                        data-nombre="@row["user_name"]"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEliminarUsuario">
+                                    Baja
+                                </button>
+                            }
                         </td>
                     </tr>
                 }
@@ -76,22 +124,46 @@
     </div>
 </div>
 
-@* Modal para dar de baja lógica *@
-<div class="modal fade" id="modalBaja" tabindex="-1">
+<!-- MODAL CONFIRMAR ELIMINACION -->
+<div class="modal fade"
+     id="modalEliminarUsuario"
+     tabindex="-1"
+     aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Confirmar Desactivación</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Confirmar desactivación</h5>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                </button>
             </div>
-            <div class="modal-body p-4">
-                <p>¿Está seguro que desea dar de baja al usuario <b id="nomUser"></b>?</p>
-                <small class="text-muted">El registro no se borrará, pero el acceso será denegado.</small>
+
+            <div class="modal-body">
+                <p>¿Está seguro de que desea dar de baja al usuario?</p>
+                <p class="fw-bold" id="nombreUsuarioEliminar"></p>
+                <small class="text-muted">El usuario ya no podrá ingresar al sistema.</small>
             </div>
-            <div class="modal-footer border-0">
-                <form method="post" asp-page-handler="EliminarUsuario">
-                    <input type="hidden" id="idBaja" name="id" />
-                    <button type="submit" class="btn btn-danger px-4">Confirmar</button>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <form method="post"
+                      asp-page-handler="EliminarUsuarioLogicamente">
+
+                    <input type="hidden"
+                           id="idUsuarioEliminar"
+                           name="id" />
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Confirmar Baja
+                    </button>
                 </form>
             </div>
         </div>
@@ -100,11 +172,15 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const btns = document.querySelectorAll(".btnEliminar");
-        btns.forEach(b => {
-            b.addEventListener("click", function () {
-                document.getElementById("idBaja").value = this.getAttribute("data-id");
-                document.getElementById("nomUser").textContent = this.getAttribute("data-nombre");
+        const botonesEliminar = document.querySelectorAll(".btnEliminar");
+
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener("click", function () {
+                const id = this.getAttribute("data-id");
+                const nombre = this.getAttribute("data-nombre");
+
+                document.getElementById("idUsuarioEliminar").value = id;
+                document.getElementById("nombreUsuarioEliminar").textContent = "Username: " + nombre;
             });
         });
     });

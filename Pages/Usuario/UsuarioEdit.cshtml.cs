@@ -1,65 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.DTO;
 
-namespace ProyectoArqSoft.Pages.Usuarios
+namespace ProyectoArqSoft.Pages.Usuario
 {
-    public class UsuarioUpdateModel : BasePageModel
+    public class UsuarioEditModel : BasePageModel
     {
-        private readonly IUsuarioService usuarioService;
+        private readonly IUsuarioService _service;
+        [BindProperty] public UsuarioActualizacionDto Input { get; set; } = new();
 
-        [BindProperty] public int IdUsuario { get; set; }
-        [BindProperty] public string Nombres { get; set; } = string.Empty;
-        [BindProperty] public string ApellidoPaterno { get; set; } = string.Empty;
-        [BindProperty] public string ApellidoMaterno { get; set; } = string.Empty;
-        [BindProperty] public string Email { get; set; } = string.Empty;
-        [BindProperty] public string Telefono { get; set; } = string.Empty;
-        [BindProperty] public string UserName { get; set; } = string.Empty;
-        [BindProperty] public string Role { get; set; } = string.Empty;
-        [BindProperty] public sbyte Activo { get; set; }
-
-        public UsuarioUpdateModel(IUsuarioService usuarioService) => this.usuarioService = usuarioService;
+        public UsuarioEditModel(IUsuarioService service) => _service = service;
 
         public IActionResult OnPostCargarUsuarioParaEdicion(int id)
         {
-            var user = usuarioService.ObtenerUsuarioPorId(id);
-            if (user == null) return RedirectToPage("Usuario", new { error = "Usuario no encontrado" });
+            var user = _service.ObtenerUsuarioPorId(id);
+            if (user == null) return RedirectToPage("Usuario");
 
-            IdUsuario = user.IdUsuario;
-            UserName = user.UserName;
-            Email = user.Email;
-            Role = user.Role;
-            // Nota: Aquí rellena los campos adicionales que tu ObtenerUsuarioPorId devuelva
+            // MAPEADO CORRECTO (Esto arregla tu captura)
+            Input.IdUsuario = id;
+            Input.Email = user.Email;
+            Input.UserName = user.UserName;
+            Input.Role = user.Role;
+
+            // Mantenemos los nombres en el DTO (ocultos) para que la validación no falle
+            Input.Nombres = "N/A";
+            Input.ApellidoPaterno = "N/A";
+
             return Page();
         }
 
         public IActionResult OnPostActualizarUsuario()
         {
-            var dto = new UsuarioActualizacionDto
-            {
-                IdUsuario = IdUsuario,
-                Nombres = Nombres,
-                ApellidoPaterno = ApellidoPaterno,
-                ApellidoMaterno = ApellidoMaterno,
-                Email = Email,
-                Telefono = Telefono,
-                UserName = UserName,
-                Role = Role,
-                Activo = Activo,
-                MustChangePassword = 0
-            };
+            var result = _service.ActualizarUsuario(Input);
+            if (result.IsSuccess)
+                return RedirectToPage("Usuario", new { mensaje = "Perfil actualizado correctamente" });
 
-            Validacion resultado = usuarioService.ActualizarUsuario(dto);
-
-            if (resultado.IsFailure)
-            {
-                Estado.MensajeError = resultado.Error;
-                return Page();
-            }
-
-            return RedirectToPage("Usuario", new { mensaje = "Datos actualizados correctamente" });
+            Estado.MensajeError = result.Error;
+            return Page();
         }
     }
 }

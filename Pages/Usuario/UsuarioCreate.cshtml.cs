@@ -10,14 +10,16 @@ namespace ProyectoArqSoft.Pages.Usuarios
     {
         private readonly IUsuarioService usuarioService;
 
-        [BindProperty] public string Nombres { get; set; } = string.Empty;
-        [BindProperty] public string ApPaterno { get; set; } = string.Empty;
-        [BindProperty] public string ApMaterno { get; set; } = string.Empty;
-        [BindProperty] public string CI { get; set; } = string.Empty;
-        [BindProperty] public string CIExt { get; set; } = string.Empty;
-        [BindProperty] public string Email { get; set; } = string.Empty;
-        [BindProperty] public string User { get; set; } = string.Empty;
-        [BindProperty] public string Role { get; set; } = "Bioquimico";
+        [BindProperty] public string nombres { get; set; } = string.Empty;
+        [BindProperty] public string apPaterno { get; set; } = string.Empty;
+        [BindProperty] public string apMaterno { get; set; } = string.Empty;
+        [BindProperty] public string ci { get; set; } = string.Empty;
+        [BindProperty] public string ciExtencion { get; set; } = string.Empty;
+        [BindProperty] public string telefono { get; set; } = string.Empty;
+        [BindProperty] public string email { get; set; } = string.Empty;
+        [BindProperty] public string user_name { get; set; } = string.Empty;
+        [BindProperty] public string pass { get; set; } = string.Empty;
+        [BindProperty] public string role { get; set; } = "Bioquimico";
 
         public UsuarioCreateModel(IUsuarioService usuarioService) => this.usuarioService = usuarioService;
 
@@ -25,27 +27,24 @@ namespace ProyectoArqSoft.Pages.Usuarios
         {
             var dto = new UsuarioRegistroDto
             {
-                Nombres = Nombres,
-                ApellidoPaterno = ApPaterno,
-                ApellidoMaterno = ApMaterno,
-                Ci = CI,
-                CiExtencion = CIExt,
-                Email = Email,
-                UserName = User,
-                Password = "TemporalPassword123",
-                Telefono = "000000" // El service gestiona el hash y envío
+                Nombres = nombres,
+                ApellidoPaterno = apPaterno,
+                ApellidoMaterno = apMaterno,
+                Ci = ci,
+                CiExtencion = ciExtencion,
+                Telefono = telefono,
+                Email = email,
+                UserName = user_name,
+                Password = pass
             };
 
-            // Cumple rúbrica: Evita duplicidades y envía mail
-            Validacion resultado = usuarioService.CrearUsuario(dto, Role);
-
+            Validacion resultado = usuarioService.CrearUsuario(dto, role);
             if (resultado.IsFailure)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();
             }
-
-            return RedirectToPage("Usuario", new { mensaje = "Usuario registrado. Las credenciales fueron enviadas a su correo." });
+            return RedirectToPage("Usuario", new { mensaje = "Usuario registrado correctamente" });
         }
     }
 }

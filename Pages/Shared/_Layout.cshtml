@@ -37,8 +37,9 @@
                 <div class="collapse navbar-collapse" id="navbarVitalCare">
 
                     @{
+                        // Obtenemos los datos de la sesión
                         var usuario = Context.Session.GetString("UserName");
-                        var role = Context.Session.GetString("Role");
+                        var role = Context.Session.GetString("Role")?.Trim();
                     }
 
                     <ul class="navbar-nav ms-auto">
@@ -53,6 +54,32 @@
 
                         @if (!string.IsNullOrWhiteSpace(usuario))
                         {
+                            @* 
+                                MENÚ DE USUARIOS - EXCLUSIVO PARA ADMIN
+                                CORRECCIÓN: Apunta a la carpeta /Usuario/ (singular)
+                            *@
+                            if (!string.IsNullOrEmpty(role) && role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle fw-bold text-warning"
+                                       href="#"
+                                       id="usuariosDropdown"
+                                       role="button"
+                                       data-bs-toggle="dropdown"
+                                       aria-expanded="false">
+                                        Usuarios
+                                    </a>
+                                    <ul class="dropdown-menu shadow" aria-labelledby="usuariosDropdown">
+                                        <li>
+                                            @* Ruta corregida a carpeta singular *@
+                                            <a class="dropdown-item" asp-page="/Usuario/Usuario">
+                                                Gestionar Usuarios
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle"
                                    href="#"
@@ -62,7 +89,7 @@
                                    aria-expanded="false">
                                     Medicamentos
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="medicamentosDropdown">
+                                <ul class="dropdown-menu shadow" aria-labelledby="medicamentosDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Medicamento/Medicamento">
                                             Gestionar Medicamentos
@@ -80,7 +107,7 @@
                                    aria-expanded="false">
                                     Ventas
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="ventasDropdown">
+                                <ul class="dropdown-menu shadow" aria-labelledby="ventasDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Cliente/Cliente">
                                             Gestionar Clientes
@@ -98,7 +125,7 @@
                                    aria-expanded="false">
                                     Bioquímicos
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="bioquimicosDropdown">
+                                <ul class="dropdown-menu shadow" aria-labelledby="bioquimicosDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
                                             Gestionar Bioquímicos
@@ -116,7 +143,7 @@
                                    aria-expanded="false">
                                     Clasificación
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="clasificacionDropdown">
+                                <ul class="dropdown-menu shadow" aria-labelledby="clasificacionDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-page="/Clasificacion/Clasificacion">
                                             Gestionar Clasificacion
@@ -126,11 +153,12 @@
                             </li>
 
                             <li class="nav-item">
-                                <span class="nav-link text-light">Hola, @usuario</span>
+                                @* Mostramos el rol para verificar qué está leyendo el sistema *@
+                                <span class="nav-link text-light">Hola, <b>@usuario (@role)</b></span>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-warning" asp-page="/Auth/Logout">
+                                <a class="nav-link text-warning fw-bold" asp-page="/Auth/Logout">
                                     Cerrar Sesión
                                 </a>
                             </li>
@@ -158,59 +186,20 @@
         </nav>
     </header>
 
-    @RenderBody()
+    @* Contenedor para el cuerpo de la página *@
+    <main role="main" style="padding-top: 100px; min-height: 80vh;">
+        @RenderBody()
+    </main>
 
-    <footer class="footer mt-5">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-3">
-                    <h5>Síguenos</h5>
-                    <ul>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">LinkedIn</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Atención</h5>
-                    <ul>
-                        <li><a href="#">Atención al cliente</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a asp-page="/Privacy">Política de privacidad</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Servicios</h5>
-                    <ul>
-                        <li><a href="#">Servicios de salud</a></li>
-                        <li><a href="#">Entrega a domicilio</a></li>
-                        <li><a href="#">Ventas corporativas</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-3">
-                    <h5>Contacto</h5>
-                    <ul>
-                        <li>Cochabamba, Bolivia</li>
-                        <li>+591 77777777</li>
-                        <li>contacto@vitalcare.com</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <hr />
-
-            <div class="text-center">
-                <p>
-                    © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
-                </p>
-            </div>
+    <footer class="footer mt-5 bg-dark py-4 text-white">
+        <div class="container text-center">
+            <p>
+                © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
+            </p>
         </div>
     </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         window.addEventListener("scroll", function () {
@@ -218,8 +207,6 @@
             navbar.classList.toggle("scrolled", window.scrollY > 50);
         });
     </script>
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 
