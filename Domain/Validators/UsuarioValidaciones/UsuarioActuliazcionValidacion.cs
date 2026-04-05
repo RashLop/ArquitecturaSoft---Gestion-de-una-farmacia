@@ -5,41 +5,20 @@ namespace ProyectoArqSoft.Validaciones
 {
     public class UsuarioActualizacionValidacion : IResult<UsuarioActualizacionDto>
     {
-        public Result Validar(UsuarioActualizacionDto dto)
+              public Result Validar(UsuarioActualizacionDto dto)
         {
-            if (dto == null)
-                return Result.Fail("Los datos del usuario no pueden ser nulos.");
-
-            string email = dto.Email?.Trim() ?? string.Empty;
-            string userName = dto.UserName?.Trim() ?? string.Empty;
-            string role = dto.Role?.Trim() ?? string.Empty;
+            if (dto == null) return Result.Fail("Datos nulos.");
 
             return
-                ValidarId(dto.IdUsuario) ??
-                ValidarEmail(email) ??
-                ValidarUserName(userName) ??
+                ValidarEmail(dto.Email) ??
+                ValidarUserName(dto.UserName) ??
                 Result.Ok();
-        }
-
-        private Result? ValidarId(int id)
-        {
-            if (id <= 0)
-                return Result.Fail("El identificador del usuario no es válido.");
-
-            return null;
         }
 
         private Result? ValidarEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                return Result.Fail("El correo electrónico es obligatorio.");
-
-            if (email.Length > 100)
-                return Result.Fail("El correo electrónico no puede tener más de 100 caracteres.");
-
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                return Result.Fail("El formato del correo electrónico no es válido.");
-
+            if (string.IsNullOrWhiteSpace(email)) return Result.Fail("El email es obligatorio.");
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")) return Result.Fail("Email no válido.");
             return null;
         }
 
