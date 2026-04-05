@@ -72,7 +72,6 @@ builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
 builder.Services.AddScoped<IResult<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
 builder.Services.AddScoped<IResult<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
 builder.Services.AddScoped<IResult<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
-builder.Services.AddScoped<IResult<UsuarioTokenGeneracionDto>, UsuarioTokenGeneracionValidacion>();
 
 builder.Services.AddScoped<IRepository<ClasificacionEntidad>>(provider =>
 {

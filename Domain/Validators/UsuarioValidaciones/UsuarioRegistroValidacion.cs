@@ -3,13 +3,8 @@ using ProyectoArqSoft.DTO;
 
 namespace ProyectoArqSoft.Validaciones
 {
-    public class UsuarioRegistroValidacion : IResult<UsuarioRegistroDto>
+    public class UsuarioRegistroValidacion : UsuarioValidacionBase, IResult<UsuarioRegistroDto>
     {
-        private static readonly HashSet<string> ExtensionesValidas = new HashSet<string>
-        {
-            "LP", "CB", "SC", "OR", "PT", "TJ", "CH", "BE", "PD"
-        };
-
         public Result Validar(UsuarioRegistroDto dto)
         {
             if (dto == null)
@@ -19,109 +14,41 @@ namespace ProyectoArqSoft.Validaciones
             string apellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty;
             string apellidoMaterno = dto.ApellidoMaterno?.Trim() ?? string.Empty;
             string ci = dto.Ci?.Trim() ?? string.Empty;
-            string ciExtencion = dto.CiExtencion?.Trim() ?? string.Empty;
+            string ciExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty;
             string telefono = dto.Telefono?.Trim() ?? string.Empty;
             string email = dto.Email?.Trim() ?? string.Empty;
 
             return
-                ValidarNombres(nombres) ??
-                ValidarApellidoPaterno(apellidoPaterno) ??
-                ValidarApellidoMaterno(apellidoMaterno) ??
+                TextoRequerido(nombres, "Nombres", 45) ??
+                TextoRequerido(apellidoPaterno, "Primer apellido", 45) ??
+                TextoOpcional(apellidoMaterno, "Segundo apellido", 45) ??
                 ValidarCi(ci) ??
                 ValidarCiExtencion(ciExtencion) ??
                 ValidarTelefono(telefono) ??
-                ValidarEmail(email) ??
+                EmailValido(email) ??
                 Result.Ok();
-        }
-
-        private Result? ValidarNombres(string nombres)
-        {
-            if (string.IsNullOrWhiteSpace(nombres))
-                return Result.Fail("Los nombres son obligatorios.");
-
-            if (nombres.Length > 45)
-                return Result.Fail("Los nombres no pueden tener más de 45 caracteres.");
-
-            return null;
-        }
-
-        private Result? ValidarApellidoPaterno(string apellidoPaterno)
-        {
-            if (string.IsNullOrWhiteSpace(apellidoPaterno))
-                return Result.Fail("El apellido paterno es obligatorio.");
-
-            if (apellidoPaterno.Length > 45)
-                return Result.Fail("El apellido paterno no puede tener más de 45 caracteres.");
-
-            return null;
-        }
-
-        private Result? ValidarApellidoMaterno(string apellidoMaterno)
-        {
-            if (string.IsNullOrWhiteSpace(apellidoMaterno))
-                return Result.Fail("El apellido materno es obligatorio.");
-
-            if (apellidoMaterno.Length > 45)
-                return Result.Fail("El apellido materno no puede tener más de 45 caracteres.");
-
-            return null;
         }
 
         private Result? ValidarCi(string ci)
         {
-            if (string.IsNullOrWhiteSpace(ci))
-                return Result.Fail("El número de carnet es obligatorio.");
-
-            ci = ci.Trim();
-
-            if (ci.Contains(' '))
-                return Result.Fail("El número de carnet no debe contener espacios.");
-
-            if (!Regex.IsMatch(ci, @"^\d{5,10}(-\d+[A-Za-z])?$"))
-                return Result.Fail("El CI debe tener de 5 a 10 dígitos y formato válido, por ejemplo: 1234567 o 1234567-1A.");
-
-            return null;
+            return Requerido(ci, "El número de carnet es obligatorio.")
+                ?? (ci.Contains(' ') ? Result.Fail("El número de carnet no debe contener espacios.") : null)
+                ?? RegexValido(ci, @"^\d{5,10}$", "El CI debe tener entre 5 y 10 dígitos.");
         }
 
         private Result? ValidarCiExtencion(string ciExtencion)
         {
-            if (string.IsNullOrWhiteSpace(ciExtencion))
-                return Result.Fail("La extensión del CI es obligatoria.");
-
-            ciExtencion = ciExtencion.Trim().ToUpper();
-
-            if (!ExtensionesValidas.Contains(ciExtencion))
-                return Result.Fail("La extensión del CI no es válida.");
-
-            return null;
+            return Requerido(ciExtencion, "La extensión del CI es obligatoria.")
+                ?? (!ExtensionesValidas.Contains(ciExtencion)
+                    ? Result.Fail("La extensión del CI no es válida.")
+                    : null);
         }
 
         private Result? ValidarTelefono(string telefono)
         {
-            if (string.IsNullOrWhiteSpace(telefono))
-                return Result.Fail("El teléfono es obligatorio.");
-
-            if (telefono.Length > 45)
-                return Result.Fail("El teléfono no puede tener más de 45 caracteres.");
-
-            if (!Regex.IsMatch(telefono, @"^[0-9+\-\s]+$"))
-                return Result.Fail("El teléfono solo puede contener números, espacios, '+' y '-'.");
-
-            return null;
-        }
-
-        private Result? ValidarEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return Result.Fail("El correo electrónico es obligatorio.");
-
-            if (email.Length > 100)
-                return Result.Fail("El correo electrónico no puede tener más de 100 caracteres.");
-
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                return Result.Fail("El formato del correo electrónico no es válido.");
-
-            return null;
+            return Requerido(telefono, "El teléfono es obligatorio.")
+                ?? Maximo(telefono, 20, "El teléfono no puede tener más de 20 caracteres.")
+                ?? RegexValido(telefono, @"^\d{7,15}$", "El teléfono debe contener solo números y tener entre 7 y 15 dígitos.");
         }
     }
 }

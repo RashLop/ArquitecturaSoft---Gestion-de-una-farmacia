@@ -58,6 +58,8 @@
 
                     <form method="post" class="register-form" id="registerForm">
                         <div class="form-grid">
+
+                            <!-- NOMBRES -->
                             <div class="form-group">
                                 <label asp-for="Registro.Nombres">Nombres</label>
                                 <input type="text"
@@ -66,22 +68,24 @@
                                        required />
                             </div>
 
+                            <!-- PRIMER APELLIDO -->
                             <div class="form-group">
-                                <label asp-for="Registro.ApellidoPaterno">Apellido paterno</label>
+                                <label asp-for="Registro.ApellidoPaterno">Primer apellido</label>
                                 <input type="text"
                                        asp-for="Registro.ApellidoPaterno"
                                        placeholder="Ej. Pérez"
                                        required />
                             </div>
 
+                            <!-- SEGUNDO APELLIDO (OPCIONAL) -->
                             <div class="form-group">
-                                <label asp-for="Registro.ApellidoMaterno">Apellido materno</label>
+                                <label asp-for="Registro.ApellidoMaterno">Segundo apellido (opcional)</label>
                                 <input type="text"
                                        asp-for="Registro.ApellidoMaterno"
-                                       placeholder="Ej. Gutiérrez"
-                                       required />
+                                       placeholder="Ej. Gutiérrez" />
                             </div>
 
+                            <!-- CI -->
                             <div class="form-group">
                                 <label for="CiBase">Carnet de identidad</label>
                                 <input type="text"
@@ -90,6 +94,7 @@
                                        required />
                             </div>
 
+                            <!-- COMPLEMENTO -->
                             <div class="form-group">
                                 <label for="CiComplemento">Complemento (opcional)</label>
                                 <input type="text"
@@ -98,6 +103,7 @@
                                        maxlength="2" />
                             </div>
 
+                            <!-- EXTENSION -->
                             <div class="form-group">
                                 <label asp-for="Registro.CiExtencion">Expedido en</label>
                                 <select asp-for="Registro.CiExtencion" required>
@@ -114,6 +120,7 @@
                                 </select>
                             </div>
 
+                            <!-- TELEFONO -->
                             <div class="form-group">
                                 <label asp-for="Registro.Telefono">Teléfono</label>
                                 <input type="text"
@@ -122,6 +129,7 @@
                                        required />
                             </div>
 
+                            <!-- EMAIL -->
                             <div class="form-group full-width">
                                 <label asp-for="Registro.Email">Correo electrónico</label>
                                 <input type="email"
@@ -130,6 +138,7 @@
                                        required />
                             </div>
 
+                            <!-- USERNAME -->
                             <div class="form-group">
                                 <label asp-for="Registro.UserName">Nombre de usuario generado</label>
                                 <input type="text"
@@ -139,6 +148,7 @@
                                        class="readonly-field" />
                             </div>
 
+                            <!-- PASSWORD -->
                             <div class="form-group">
                                 <label asp-for="Registro.Password">Contraseña generada</label>
                                 <input type="password"
@@ -149,8 +159,10 @@
                             </div>
                         </div>
 
+                        <!-- CI COMPLETO -->
                         <input type="hidden" asp-for="Registro.Ci" id="CiCompleto" />
 
+                        <!-- MENSAJES -->
                         @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
                         {
                             <div class="alert alert-error">@Model.MensajeError</div>

@@ -33,7 +33,8 @@ namespace ProyectoArqSoft.Pages.Auth
 
     Registro.UserName = CredencialesHelper.GenerarUserName(
         Registro.Nombres,
-        Registro.ApellidoPaterno
+        Registro.ApellidoPaterno, 
+        Registro.Ci
     );
 
     Registro.Password = CredencialesHelper.GenerarPasswordTemporal();
