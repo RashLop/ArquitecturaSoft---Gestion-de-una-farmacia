@@ -22,7 +22,7 @@ namespace ProyectoArqSoft.Pages.Usuario
         {
             CargarParametros(filtro, mensaje, error);
 
-            Validacion resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
             if (resultado.IsFailure)
@@ -33,8 +33,8 @@ namespace ProyectoArqSoft.Pages.Usuario
 
         public IActionResult OnPostEliminarUsuarioLogicamente(int id)
         {
-            // Ejecuta la baja lógica (activo = 0)
-            Validacion resultado = usuarioService.EliminarUsuario(id);
+            // Ejecuta la baja lï¿½gica (activo = 0)
+            Result resultado = usuarioService.EliminarUsuario(id);
 
             if (resultado.IsFailure)
             {

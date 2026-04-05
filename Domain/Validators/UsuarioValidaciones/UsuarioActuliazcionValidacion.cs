@@ -18,7 +18,6 @@ namespace ProyectoArqSoft.Validaciones
                 ValidarId(dto.IdUsuario) ??
                 ValidarEmail(email) ??
                 ValidarUserName(userName) ??
-                ValidarRole(role) ??
                 Result.Ok();
         }
 
@@ -46,10 +45,10 @@ namespace ProyectoArqSoft.Validaciones
 
         private Result? ValidarUserName(string userName)
         {
-            if (string.IsNullOrWhiteSpace(userName)) return Validacion.Fail("Username obligatorio.");
+            if (string.IsNullOrWhiteSpace(userName)) return Result.Fail("Username obligatorio.");
             // CAMBIO: Se agregó el punto "." a la expresión regular
             if (!Regex.IsMatch(userName, @"^[a-zA-Z0-9._]+$"))
-                return Validacion.Fail("El username solo permite letras, números, puntos y guion bajo.");
+                return Result.Fail("El username solo permite letras, números, puntos y guion bajo.");
             return null;
         }
     }

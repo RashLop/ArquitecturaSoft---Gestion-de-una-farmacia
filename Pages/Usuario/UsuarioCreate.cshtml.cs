@@ -38,7 +38,7 @@ namespace ProyectoArqSoft.Pages.Usuarios
                 Password = pass
             };
 
-            Validacion resultado = usuarioService.CrearUsuario(dto, role);
+            Result resultado = usuarioService.CrearUsuario(dto, role);
             if (resultado.IsFailure)
             {
                 Estado.MensajeError = resultado.Error;
