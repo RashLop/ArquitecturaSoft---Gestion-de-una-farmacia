@@ -56,7 +56,7 @@
                         <p>Completa los datos solicitados</p>
                     </div>
 
-                    <form method="post" class="register-form">
+                    <form method="post" class="register-form" id="registerForm">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label asp-for="Registro.Nombres">Nombres</label>
@@ -83,19 +83,35 @@
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="Registro.Ci">Carnet de identidad</label>
+                                <label for="CiBase">Carnet de identidad</label>
                                 <input type="text"
-                                       asp-for="Registro.Ci"
+                                       id="CiBase"
                                        placeholder="Ej. 12345678"
                                        required />
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="Registro.CiExtencion">Extensión</label>
+                                <label for="CiComplemento">Complemento (opcional)</label>
                                 <input type="text"
-                                       asp-for="Registro.CiExtencion"
-                                       placeholder="Ej. CB, LP, SC"
-                                       required />
+                                       id="CiComplemento"
+                                       placeholder="Ej. 1A"
+                                       maxlength="2" />
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Registro.CiExtencion">Expedido en</label>
+                                <select asp-for="Registro.CiExtencion" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="LP">La Paz</option>
+                                    <option value="CB">Cochabamba</option>
+                                    <option value="SC">Santa Cruz</option>
+                                    <option value="OR">Oruro</option>
+                                    <option value="PT">Potosí</option>
+                                    <option value="TJ">Tarija</option>
+                                    <option value="CH">Chuquisaca</option>
+                                    <option value="BE">Beni</option>
+                                    <option value="PD">Pando</option>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -133,6 +149,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" asp-for="Registro.Ci" id="CiCompleto" />
+
                         @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
                         {
                             <div class="alert alert-error">@Model.MensajeError</div>
@@ -154,5 +172,15 @@
             </div>
         </section>
     </main>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function () {
+            const ciBase = document.getElementById("CiBase").value.trim();
+            const ciComplemento = document.getElementById("CiComplemento").value.trim().toUpperCase();
+            const ciCompleto = document.getElementById("CiCompleto");
+
+            ciCompleto.value = ciComplemento ? `${ciBase}-${ciComplemento}` : ciBase;
+        });
+    </script>
 </body>
 </html>
