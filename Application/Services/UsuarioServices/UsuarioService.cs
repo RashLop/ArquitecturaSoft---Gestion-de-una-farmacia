@@ -42,18 +42,19 @@ namespace ProyectoArqSoft.Services
             if (!validacionNegocio.IsSuccess)
                 return validacionNegocio;
 
-            string userNameGenerado = dto.UserName.Trim();
-            string passwordTemporal = dto.Password;
+            string userNameGenerado = dto.UserName?.Trim() ?? string.Empty;
+            string passwordTemporal = dto.Password?.Trim() ?? string.Empty;
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
+
             Usuario usuario = new Usuario
             {
-                Nombres = dto.Nombres.Trim(),
-                ApellidoPaterno = dto.ApellidoPaterno.Trim(),
-                ApellidoMaterno = dto.ApellidoMaterno.Trim(),
-                Ci = dto.Ci.Trim(),
-                CiExtencion = dto.CiExtencion.Trim().ToUpper(),
-                Telefono = dto.Telefono.Trim(),
-                Email = dto.Email.Trim(),
+                Nombres = dto.Nombres?.Trim() ?? string.Empty,
+                ApellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty,
+                ApellidoMaterno = dto.ApellidoMaterno?.Trim(),
+                Ci = dto.Ci?.Trim() ?? string.Empty,
+                CiExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty,
+                Telefono = dto.Telefono?.Trim() ?? string.Empty,
+                Email = dto.Email?.Trim() ?? string.Empty,
                 UserName = userNameGenerado,
                 PasswordHash = passwordHash,
                 Role = role,
@@ -112,15 +113,15 @@ namespace ProyectoArqSoft.Services
             if (usuarioActual == null)
                 return Result.Fail("El usuario no existe.");
 
-            usuarioActual.Nombres = dto.Nombres.Trim();
-            usuarioActual.ApellidoPaterno = dto.ApellidoPaterno.Trim();
-            usuarioActual.ApellidoMaterno = dto.ApellidoMaterno.Trim();
-            usuarioActual.Ci = dto.Ci.Trim();
-            usuarioActual.CiExtencion = dto.CiExtencion.Trim().ToUpper();
-            usuarioActual.Telefono = dto.Telefono.Trim();
-            usuarioActual.Email = dto.Email.Trim();
-            usuarioActual.UserName = dto.UserName.Trim();
-            usuarioActual.Role = dto.Role.Trim();
+            usuarioActual.Nombres = dto.Nombres?.Trim() ?? string.Empty;
+            usuarioActual.ApellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty;
+            usuarioActual.ApellidoMaterno = dto.ApellidoMaterno?.Trim();
+            usuarioActual.Ci = dto.Ci?.Trim() ?? string.Empty;
+            usuarioActual.CiExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty;
+            usuarioActual.Telefono = dto.Telefono?.Trim() ?? string.Empty;
+            usuarioActual.Email = dto.Email?.Trim() ?? string.Empty;
+            usuarioActual.UserName = dto.UserName?.Trim() ?? string.Empty;
+            usuarioActual.Role = dto.Role?.Trim() ?? string.Empty;
             usuarioActual.Activo = dto.Activo;
             usuarioActual.MustChangePassword = dto.MustChangePassword;
 
@@ -258,6 +259,7 @@ namespace ProyectoArqSoft.Services
         {
             token = token?.Trim() ?? string.Empty;
             nuevaPassword = nuevaPassword?.Trim() ?? string.Empty;
+
             if (string.IsNullOrWhiteSpace(token))
                 return Result.Fail("Token inválido.");
 
@@ -293,5 +295,4 @@ namespace ProyectoArqSoft.Services
             return Result.Ok();
         }
     }
-    
 }

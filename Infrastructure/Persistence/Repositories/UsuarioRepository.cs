@@ -51,7 +51,7 @@ namespace ProyectoArqSoft.Repositories
 
             MySqlCommand command = new MySqlCommand(query);
             command.Parameters.AddWithValue("@nombres", t.Nombres);
-            command.Parameters.AddWithValue("@apellido_materno", t.ApellidoMaterno);
+            command.Parameters.AddWithValue("@apellido_materno", (object?)t.ApellidoMaterno ?? DBNull.Value);
             command.Parameters.AddWithValue("@apellido_paterno", t.ApellidoPaterno);
             command.Parameters.AddWithValue("@ci", t.Ci);
             command.Parameters.AddWithValue("@telefono", t.Telefono);
@@ -85,7 +85,7 @@ namespace ProyectoArqSoft.Repositories
             MySqlCommand command = new MySqlCommand(query);
             command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
             command.Parameters.AddWithValue("@nombres", t.Nombres);
-            command.Parameters.AddWithValue("@apellido_materno", t.ApellidoMaterno);
+            command.Parameters.AddWithValue("@apellido_materno", (object?)t.ApellidoMaterno ?? DBNull.Value);
             command.Parameters.AddWithValue("@apellido_paterno", t.ApellidoPaterno);
             command.Parameters.AddWithValue("@ci", t.Ci);
             command.Parameters.AddWithValue("@telefono", t.Telefono);
@@ -256,7 +256,9 @@ namespace ProyectoArqSoft.Repositories
             {
                 IdUsuario = reader.GetInt32("idUsuario"),
                 Nombres = reader.GetString("nombres"),
-                ApellidoMaterno = reader.GetString("apellido_materno"),
+                ApellidoMaterno = reader.IsDBNull(reader.GetOrdinal("apellido_materno"))
+                    ? null
+                    : reader.GetString("apellido_materno"),
                 ApellidoPaterno = reader.GetString("apellido_paterno"),
                 Ci = reader.GetString("ci"),
                 Telefono = reader.GetString("telefono"),
