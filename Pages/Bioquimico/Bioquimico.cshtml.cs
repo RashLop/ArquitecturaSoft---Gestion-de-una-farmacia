@@ -1,65 +1,83 @@
-﻿// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.AspNetCore.Mvc.RazorPages;
-// using ProyectoArqSoft.Pages.Base;
-// using ProyectoArqSoft.Services;
-// using ProyectoArqSoft.Validaciones;
-// using System.Data;
+using System;
+using System.Data;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Validaciones;
 
-// namespace ProyectoArqSoft.Pages
-// {
-//     public class BioquimicoModel : BasePageModel
-//     {
-//         private readonly IBioquimicoService _bioquimicoService;
-//         private readonly IValidacion<string> _busquedaValidator;
+namespace ProyectoArqSoft.Pages.Bioquimico
+{
+    public class BioquimicoModel : BasePageModel
+    {
+        private const string RolBioquimico = "Bioquimico";
+        private readonly IUsuarioService usuarioService;
 
-//         public BioquimicoModel(
-//             IBioquimicoService bioquimicoService,
-//             IValidacion<string> busquedaValidator)
-//         {
-//             _bioquimicoService = bioquimicoService;
-//             _busquedaValidator = busquedaValidator;
-//         }
+        public DataTable BioquimicoDataTable { get; set; } = new DataTable();
 
-//         public DataTable dtBioquimicos { get; set; } = new();
+        public BioquimicoModel(IUsuarioService usuarioService)
+        {
+            this.usuarioService = usuarioService;
+        }
 
-//         [BindProperty(SupportsGet = true)]
-//         public string? Filtro { get; set; }
+        public IActionResult OnGet(string? filtro, string? mensaje, string? error)
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         public void OnGet()
-//         {
-//             string filtro = Filtro ?? string.Empty;
+            CargarParametros(filtro, mensaje, error);
 
-//             var validacion = _busquedaValidator.Validar(filtro);
+            Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
+            Estado.MensajeError = resultado.Error;
 
-//             if (validacion.IsFailure)
-//             {
-//                 Estado.MensajeError = validacion.Error;
-//                 dtBioquimicos = new DataTable();
-//                 return;
-//             }
+            if (resultado.IsFailure)
+                return Page();
 
-//             dtBioquimicos = _bioquimicoService.ObtenerTodos(filtro);
+            CargarBioquimicos(Estado.FiltroActual);
+            return Page();
+        }
 
-//             if (dtBioquimicos.Rows.Count == 0 && !string.IsNullOrWhiteSpace(filtro))
-//             {
-//                 Estado.Mensaje = $"No se encontraron resultados para: {filtro}";
-//             }
-//         }
+        public IActionResult OnPostEliminarBioquimicoLogicamente(int id)
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         public IActionResult OnPostEliminar(int id)
-//         {
-//             var resultado = _bioquimicoService.Eliminar(id);
+            Result resultado = usuarioService.EliminarUsuario(id);
 
-//             if (resultado.IsSuccess)
-//             {
-//                 TempData["Mensaje"] = "Bioquímico eliminado correctamente.";
-//             }
-//             else
-//             {
-//                 TempData["Error"] = resultado.Error;
-//             }
+            if (resultado.IsFailure)
+            {
+                Estado.MensajeError = resultado.Error;
+                CargarBioquimicos(Estado.FiltroActual);
+                return Page();
+            }
 
-//             return RedirectToPage();
-//         }
-//     }
-// }
+            return RedirectToPage("Bioquimico", new { mensaje = "Bioquímico dado de baja correctamente" });
+        }
+
+        private void CargarParametros(string? filtro, string? mensaje, string? error)
+        {
+            Estado.FiltroActual = FiltroHelper.LimpiarFiltro(filtro);
+            Estado.Mensaje = mensaje ?? string.Empty;
+            Estado.MensajeError = error ?? string.Empty;
+        }
+
+        private void CargarBioquimicos(string filtro)
+        {
+            DataTable tablaUsuarios = usuarioService.ObtenerTodos(filtro);
+            DataTable tablaFiltrada = tablaUsuarios.Clone();
+
+            foreach (DataRow row in tablaUsuarios.Rows)
+            {
+                string role = row["role"]?.ToString() ?? string.Empty;
+                if (string.Equals(role, RolBioquimico, StringComparison.OrdinalIgnoreCase))
+                {
+                    tablaFiltrada.ImportRow(row);
+                }
+            }
+
+            BioquimicoDataTable = tablaFiltrada;
+        }
+    }
+}

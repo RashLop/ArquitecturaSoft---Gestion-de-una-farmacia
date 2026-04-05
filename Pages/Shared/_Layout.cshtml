@@ -71,9 +71,13 @@
                                     </a>
                                     <ul class="dropdown-menu shadow" aria-labelledby="usuariosDropdown">
                                         <li>
-                                            @* Ruta corregida a carpeta singular *@
                                             <a class="dropdown-item" asp-page="/Usuario/Usuario">
                                                 Gestionar Usuarios
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
+                                                Gestionar Bioquímicos
                                             </a>
                                         </li>
                                     </ul>
@@ -111,24 +115,6 @@
                                     <li>
                                         <a class="dropdown-item" asp-page="/Cliente/Cliente">
                                             Gestionar Clientes
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle"
-                                   href="#"
-                                   id="bioquimicosDropdown"
-                                   role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Bioquímicos
-                                </a>
-                                <ul class="dropdown-menu shadow" aria-labelledby="bioquimicosDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
-                                            Gestionar Bioquímicos
                                         </a>
                                     </li>
                                 </ul>

@@ -1,5 +1,5 @@
-﻿@* @page
-@model ProyectoArqSoft.Pages.BioquimicoEditModel
+@page
+@model ProyectoArqSoft.Pages.Bioquimico.BioquimicoEditModel
 @{
     ViewData["Title"] = "Actualizar Bioquímico";
 }
@@ -7,35 +7,35 @@
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
-                    <h2 class="mb-0 text-success">📝 Actualizar Bioquímico</h2>
-                    <p class="text-muted mt-2 mb-0">Modifica los datos del profesional seleccionado</p>
+                    <h2 class="mb-0 text-success">Actualizar Bioquímico</h2>
+                    <p class="text-muted mt-2 mb-0">Edita los datos personales y de acceso del profesional.</p>
                 </div>
 
                 <div class="med-card-body p-4">
                     <form method="post" asp-page-handler="ActualizarBioquimico">
-                        
-                        <input type="hidden" asp-for="IdBioquimico" />
+                        <input type="hidden" asp-for="Input.IdUsuario" />
+                        <input type="hidden" asp-for="Input.Role" />
+                        <input type="hidden" asp-for="Input.MustChangePassword" />
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Nombres" class="form-control med-input" placeholder="Nombres" required />
-                            <label asp-for="Nombres"></label>
+                            <input asp-for="Input.Nombres" class="form-control med-input" placeholder="Nombres" required />
+                            <label asp-for="Input.Nombres">Nombres</label>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Apellido Paterno" required />
-                                    <label asp-for="ApellidoPaterno"></label>
+                                    <input asp-for="Input.ApellidoPaterno" class="form-control med-input" placeholder="Primer Apellido" required />
+                                    <label asp-for="Input.ApellidoPaterno">Primer Apellido</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Apellido Materno" required />
-                                    <label asp-for="ApellidoMaterno"></label>
+                                    <input asp-for="Input.ApellidoMaterno" class="form-control med-input" placeholder="Segundo Apellido" />
+                                    <label asp-for="Input.ApellidoMaterno">Segundo Apellido</label>
                                 </div>
                             </div>
                         </div>
@@ -43,18 +43,14 @@
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="Ci" class="form-control med-input" placeholder="Carnet de Identidad" required />
-                                    <label asp-for="Ci"></label>
-                                </div>
-                                <div class="form-text ms-1">
-                                    Ej: 1234567 o 1234567-1A
+                                    <input asp-for="Input.Ci" class="form-control med-input" placeholder="Carnet de Identidad" required />
+                                    <label asp-for="Input.Ci">Carnet de Identidad</label>
                                 </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <div class="form-floating">
-                                    <select asp-for="CiExtencion" class="form-select med-input" required>
-                                        <option value="" disabled>Expedido</option>
+                                    <select asp-for="Input.CiExtencion" class="form-select med-input" required>
                                         <option value="LP">LP</option>
                                         <option value="CB">CB</option>
                                         <option value="SC">SC</option>
@@ -65,20 +61,38 @@
                                         <option value="BE">BE</option>
                                         <option value="PD">PD</option>
                                     </select>
-                                    <label asp-for="CiExtencion"></label>
+                                    <label asp-for="Input.CiExtencion">Expedido</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Telefono" class="form-control med-input" placeholder="Teléfono" />
-                            <label asp-for="Telefono"></label>
+                            <input asp-for="Input.Telefono" class="form-control med-input" placeholder="Teléfono" required />
+                            <label asp-for="Input.Telefono">Teléfono</label>
                         </div>
 
-                        @if (Model.Estado != null && !string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" type="email" class="form-control med-input" placeholder="Correo Electrónico" required />
+                            <label asp-for="Input.Email">Correo Electrónico</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.UserName" class="form-control med-input" placeholder="Nombre de Usuario" required />
+                            <label asp-for="Input.UserName">Nombre de Usuario</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="Input.Activo" class="form-select med-input">
+                                <option value="1">Activo</option>
+                                <option value="0">De baja</option>
+                            </select>
+                            <label asp-for="Input.Activo">Estado</label>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
                             <div class="alert alert-danger med-alert shadow-sm" role="alert">
-                                <i class="fas fa-exclamation-triangle me-2"></i> @Model.Estado.MensajeError
+                                @Model.Estado.MensajeError
                             </div>
                         }
 
@@ -87,14 +101,12 @@
                                 Cancelar
                             </a>
                             <button type="submit" class="btn med-btn-primary px-4">
-                                <i class="fas fa-sync-alt me-1"></i> Actualizar Registro
+                                Actualizar Registro
                             </button>
                         </div>
-
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-</div> *@
+</div>

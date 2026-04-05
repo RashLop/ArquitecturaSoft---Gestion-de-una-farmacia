@@ -8,6 +8,8 @@ namespace ProyectoArqSoft.DTO
         public string Nombres { get; set; } = string.Empty;
         public string ApellidoPaterno { get; set; } = string.Empty;
         public string ApellidoMaterno { get; set; } = string.Empty;
+        public string Ci { get; set; } = string.Empty;
+        public string CiExtencion { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public sbyte Activo { get; set; } = 1;
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
