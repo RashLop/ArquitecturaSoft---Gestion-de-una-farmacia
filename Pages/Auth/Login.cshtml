@@ -8,42 +8,52 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login - Farmacia VitalCare</title>
     <link rel="stylesheet" href="~/css/login.css" />
 </head>
 <body>
     <div class="login-container">
-        <div class="login-box">
-            <img src="~/images/vitalcare.png" class="logo" />
-            <h2>Farmacia VitalCare</h2>
+        <div class="login-left">
+            <span class="login-badge">BIENVENIDO</span>
+            <h1>Farmacia<br />VitalCare</h1>
+            <p>
+                Sistema profesional para la gestión eficiente de inventario,
+                ventas y personal farmacéutico.
+            </p>
+        </div>
+
+        <div class="login-right">
+            <div class="logo-wrap">
+                <img src="~/images/vitalcare.png" alt="VitalCare" class="logo" />
+            </div>
+
+            <div class="login-title">
+                <h2>Iniciar Sesión</h2>
+                <p>Ingresa tus credenciales para acceder al sistema</p>
+            </div>
 
             <form method="post">
-                <input type="text"
-                       asp-for="LoginRequest.EmailOUserName"
-                       placeholder="Usuario o correo electrónico"
-                       required />
+                <div class="form-group">
+                    <label asp-for="LoginRequest.EmailOUserName">Correo electrónico o nombre de usuario</label>
+                    <input asp-for="LoginRequest.EmailOUserName" type="text" placeholder="usuario@correo.com o nombre de usuario" />
+                </div>
 
-                <input type="password"
-                       asp-for="LoginRequest.Password"
-                       placeholder="Contraseña"
-                       required />
+                <div class="form-group">
+                    <label asp-for="LoginRequest.Password">Contraseña</label>
+                    <input asp-for="LoginRequest.Password" type="password" placeholder="••••••••" />
+                </div>
 
                 @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
                 {
-                    <div style="color:red; margin-bottom:10px;">
-                        @Model.MensajeError
-                    </div>
+                    <div class="alert alert-error">@Model.MensajeError</div>
                 }
 
-                <button type="submit">Ingresar</button>
+                <button type="submit" class="btn-login">Ingresar</button>
 
-                <div style="margin-top: 12px; text-align:center;">
-                    <a asp-page="/Auth/Register">Crear cuenta</a>
-                </div>
-
-                <div style="margin-top: 8px; text-align:center;">
-                    <a asp-page="/Index">Volver al inicio</a>
+                <div class="extra-links">
+                    ¿No tienes cuenta?
+                    <a asp-page="/Auth/Register">Regístrate</a>
                 </div>
             </form>
         </div>
