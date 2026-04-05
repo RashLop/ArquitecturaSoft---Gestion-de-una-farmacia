@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ProyectoArqSoft.DTO;
 
@@ -25,8 +26,8 @@ namespace ProyectoArqSoft.Validaciones
 
             return
                 ValidarNombres(nombres) ??
-                ValidarApellidoPaterno(apellidoPaterno) ??
-                ValidarApellidoMaterno(apellidoMaterno) ??
+                ValidarPrimerApellido(apellidoPaterno) ??
+                ValidarSegundoApellido(apellidoMaterno) ??
                 ValidarCi(ci) ??
                 ValidarCiExtencion(ciExtencion) ??
                 ValidarTelefono(telefono) ??
@@ -45,24 +46,24 @@ namespace ProyectoArqSoft.Validaciones
             return null;
         }
 
-        private Result? ValidarApellidoPaterno(string apellidoPaterno)
+        private Result? ValidarPrimerApellido(string apellidoPaterno)
         {
             if (string.IsNullOrWhiteSpace(apellidoPaterno))
-                return Result.Fail("El apellido paterno es obligatorio.");
+                return Result.Fail("El primer apellido es obligatorio.");
 
             if (apellidoPaterno.Length > 45)
-                return Result.Fail("El apellido paterno no puede tener más de 45 caracteres.");
+                return Result.Fail("El primer apellido no puede tener más de 45 caracteres.");
 
             return null;
         }
 
-        private Result? ValidarApellidoMaterno(string apellidoMaterno)
+        private Result? ValidarSegundoApellido(string apellidoMaterno)
         {
             if (string.IsNullOrWhiteSpace(apellidoMaterno))
-                return Result.Fail("El apellido materno es obligatorio.");
+                return null;
 
             if (apellidoMaterno.Length > 45)
-                return Result.Fail("El apellido materno no puede tener más de 45 caracteres.");
+                return Result.Fail("El segundo apellido no puede tener más de 45 caracteres.");
 
             return null;
         }

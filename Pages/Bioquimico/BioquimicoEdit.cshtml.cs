@@ -1,93 +1,81 @@
-// using System.ComponentModel.DataAnnotations;
-// using Microsoft.AspNetCore.Mvc;
-// using ProyectoArqSoft.Pages.Base;
-// using ProyectoArqSoft.Services;
-// using ProyectoArqSoft.Validaciones;
-// using BioquimicoEntidad = ProyectoArqSoft.Models.Bioquimico;
+using System;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
 
-// namespace ProyectoArqSoft.Pages
-// {
-//     public class BioquimicoEditModel : BasePageModel
-//     {
-//         private readonly IBioquimicoService _bioquimicoService;
+namespace ProyectoArqSoft.Pages.Bioquimico
+{
+    public class BioquimicoEditModel : BasePageModel
+    {
+        private readonly IUsuarioService usuarioService;
 
-//         [BindProperty]
-//         public int IdBioquimico { get; set; }
+        [BindProperty]
+        public UsuarioActualizacionDto Input { get; set; } = new UsuarioActualizacionDto
+        {
+            Role = "Bioquimico",
+            Activo = 1,
+            MustChangePassword = 1
+        };
 
-//         [BindProperty]
-//         [Display(Name = "Nombres")]
-//         public string Nombres { get; set; } = string.Empty;
+        public BioquimicoEditModel(IUsuarioService usuarioService)
+        {
+            this.usuarioService = usuarioService;
+        }
 
-//         [BindProperty]
-//         [Display(Name = "Apellido Paterno")]
-//         public string ApellidoPaterno { get; set; } = string.Empty;
+        public IActionResult OnGet()
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         [BindProperty]
-//         [Display(Name = "Apellido Materno")]
-//         public string ApellidoMaterno { get; set; } = string.Empty;
+            return Page();
+        }
 
-//         [BindProperty]
-//         [Display(Name = "CI")]
-//         public string Ci { get; set; } = string.Empty;
+        public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         [BindProperty]
-//         [Display(Name = "Expedido")]
-//         public string CiExtencion { get; set; } = string.Empty;
+            UsuarioDto? usuario = usuarioService.ObtenerUsuarioPorId(id);
 
-//         [BindProperty]
-//         [Display(Name = "Teléfono")]
-//         public string Telefono { get; set; } = string.Empty;
+            if (usuario == null || !string.Equals(usuario.Role, "Bioquimico", StringComparison.OrdinalIgnoreCase))
+                return RedirectToPage("Bioquimico", new { error = "Bioquímico no encontrado" });
 
-//         public BioquimicoEditModel(IBioquimicoService bioquimicoService)
-//         {
-//             _bioquimicoService = bioquimicoService;
-//         }
+            Input.IdUsuario = usuario.IdUsuario;
+            Input.Nombres = usuario.Nombres;
+            Input.ApellidoPaterno = usuario.ApellidoPaterno;
+            Input.ApellidoMaterno = usuario.ApellidoMaterno;
+            Input.Ci = usuario.Ci;
+            Input.CiExtencion = usuario.CiExtencion;
+            Input.Telefono = usuario.Telefono;
+            Input.Email = usuario.Email;
+            Input.UserName = usuario.UserName;
+            Input.Role = "Bioquimico";
+            Input.Activo = usuario.Activo;
+            Input.MustChangePassword = usuario.MustChangePassword;
 
-//         public void OnGet()
-//         {
-//         }
+            return Page();
+        }
 
-//         public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
-//         {
-//             BioquimicoEntidad? bioquimico = _bioquimicoService.ObtenerPorId(id);
+        public IActionResult OnPostActualizarBioquimico()
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//             if (bioquimico == null)
-//                 return RedirectToPage("Bioquimico");
+            Input.Role = "Bioquimico";
 
-//             IdBioquimico = bioquimico.IdBioquimico;
-//             Nombres = bioquimico.Nombres;
-//             ApellidoPaterno = bioquimico.ApellidoPaterno;
-//             ApellidoMaterno = bioquimico.ApellidoMaterno;
-//             Ci = bioquimico.Ci;
-//             CiExtencion = bioquimico.CiExtencion;
-//             Telefono = bioquimico.Telefono;
+            var resultado = usuarioService.ActualizarUsuario(Input);
 
-//             return Page();
-//         }
+            if (resultado.IsFailure)
+            {
+                Estado.MensajeError = resultado.Error;
+                return Page();
+            }
 
-//         public IActionResult OnPostActualizarBioquimico()
-//         {
-//             var bioquimicoEditado = new BioquimicoEntidad
-//             {
-//                 IdBioquimico = IdBioquimico,
-//                 Nombres = Nombres,
-//                 ApellidoPaterno = ApellidoPaterno,
-//                 ApellidoMaterno = ApellidoMaterno,
-//                 Ci = Ci,
-//                 CiExtencion = CiExtencion,
-//                 Telefono = Telefono
-//             };
-
-//             Validacion resultado = _bioquimicoService.Actualizar(bioquimicoEditado);
-
-//             if (resultado.IsFailure)
-//             {
-//                 Estado.MensajeError = resultado.Error;
-//                 return Page();
-//             }
-
-//             TempData["Mensaje"] = "Actualizado correctamente";
-//             return RedirectToPage("Bioquimico");
-//         }
-//     }
-// }
+            return RedirectToPage("Bioquimico", new { mensaje = "Bioquímico actualizado correctamente" });
+        }
+    }
+}

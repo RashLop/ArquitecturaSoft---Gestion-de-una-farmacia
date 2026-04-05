@@ -1,5 +1,5 @@
-﻿@* @page
-@model ProyectoArqSoft.Pages.BioquimicoCreateModel
+@page
+@model ProyectoArqSoft.Pages.Bioquimico.BioquimicoCreateModel
 @{
     ViewData["Title"] = "Nuevo Bioquímico";
 }
@@ -7,33 +7,31 @@
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
-                    <h2 class="mb-0 text-success">🧪 Nuevo Bioquímico</h2>
-                    <p class="text-muted mt-2 mb-0">Completa la información profesional del bioquímico</p>
+                    <h2 class="mb-0 text-success">Nuevo Bioquímico</h2>
+                    <p class="text-muted mt-2 mb-0">Registra al profesional usando la cuenta de usuario del sistema.</p>
                 </div>
 
                 <div class="med-card-body p-4">
                     <form method="post" asp-page-handler="CrearBioquimico">
-
                         <div class="form-floating mb-3">
                             <input asp-for="Nombres" class="form-control med-input" placeholder="Nombres" required />
-                            <label asp-for="Nombres"></label>
+                            <label asp-for="Nombres">Nombres</label>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Apellido Paterno" required />
-                                    <label asp-for="ApellidoPaterno"></label>
+                                    <input asp-for="ApellidoPaterno" class="form-control med-input" placeholder="Primer Apellido" required />
+                                    <label asp-for="ApellidoPaterno">Primer Apellido</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Apellido Materno" required />
-                                    <label asp-for="ApellidoMaterno"></label>
+                                    <input asp-for="ApellidoMaterno" class="form-control med-input" placeholder="Segundo Apellido" />
+                                    <label asp-for="ApellidoMaterno">Segundo Apellido</label>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +40,7 @@
                             <div class="col-md-8 mb-3">
                                 <div class="form-floating">
                                     <input asp-for="Ci" class="form-control med-input" placeholder="Carnet de Identidad" required />
-                                    <label asp-for="Ci"></label>
+                                    <label asp-for="Ci">Carnet de Identidad</label>
                                 </div>
                             </div>
 
@@ -60,20 +58,41 @@
                                         <option value="BE">BE</option>
                                         <option value="PD">PD</option>
                                     </select>
-                                    <label asp-for="CiExtencion"></label>
+                                    <label asp-for="CiExtencion">Expedido</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Telefono" class="form-control med-input" placeholder="Teléfono / Celular" />
-                            <label asp-for="Telefono"></label>
+                            <input asp-for="Telefono" class="form-control med-input" placeholder="Teléfono" required />
+                            <label asp-for="Telefono">Teléfono</label>
                         </div>
 
-                        @if (Model.Estado != null && !string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control med-input" placeholder="Correo Electrónico" required />
+                            <label asp-for="Email">Correo Electrónico</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="UserName" class="form-control med-input" placeholder="Nombre de Usuario" required />
+                                    <label asp-for="UserName">Nombre de Usuario</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input asp-for="Password" type="password" class="form-control med-input" placeholder="Contraseña Temporal" required />
+                                    <label asp-for="Password">Contraseña Temporal</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
                             <div class="alert alert-danger med-alert shadow-sm" role="alert">
-                                <i class="fas fa-exclamation-triangle me-2"></i> @Model.Estado.MensajeError
+                                @Model.Estado.MensajeError
                             </div>
                         }
 
@@ -82,14 +101,12 @@
                                 Cancelar
                             </a>
                             <button type="submit" class="btn med-btn-primary px-4">
-                                <i class="fas fa-save me-1"></i> Guardar Registro
+                                Guardar Registro
                             </button>
                         </div>
-
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-</div> *@
+</div>

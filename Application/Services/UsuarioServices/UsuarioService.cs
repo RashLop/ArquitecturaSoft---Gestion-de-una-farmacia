@@ -119,6 +119,8 @@ namespace ProyectoArqSoft.Services
             usuarioActual.Nombres = dto.Nombres.Trim();
             usuarioActual.ApellidoPaterno = dto.ApellidoPaterno.Trim();
             usuarioActual.ApellidoMaterno = dto.ApellidoMaterno.Trim();
+            usuarioActual.Ci = dto.Ci.Trim();
+            usuarioActual.CiExtencion = dto.CiExtencion.Trim().ToUpper();
             usuarioActual.Telefono = dto.Telefono.Trim();
             usuarioActual.Email = dto.Email.Trim();
             usuarioActual.UserName = dto.UserName.Trim();
@@ -224,9 +226,17 @@ namespace ProyectoArqSoft.Services
             return new UsuarioDto
             {
                 IdUsuario = usuario.IdUsuario,
+                Nombres = usuario.Nombres,
+                ApellidoPaterno = usuario.ApellidoPaterno,
+                ApellidoMaterno = usuario.ApellidoMaterno,
+                Ci = usuario.Ci,
+                CiExtencion = usuario.CiExtencion,
+                Telefono = usuario.Telefono,
+                Activo = usuario.Activo,
                 Email = usuario.Email,
                 UserName = usuario.UserName,
-                Role = usuario.Role
+                Role = usuario.Role,
+                MustChangePassword = usuario.MustChangePassword
             };
         }
 

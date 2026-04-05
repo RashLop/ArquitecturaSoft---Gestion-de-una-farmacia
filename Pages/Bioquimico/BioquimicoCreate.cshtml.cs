@@ -1,70 +1,67 @@
-﻿// using Microsoft.AspNetCore.Mvc;
-// using ProyectoArqSoft.Pages.Base;
-// using ProyectoArqSoft.Services;
-// using ProyectoArqSoft.Validaciones;
-// using ProyectoArqSoft.Models;
-// using System.ComponentModel.DataAnnotations;
-// using BioquimicoEntidad = ProyectoArqSoft.Models.Bioquimico;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Pages.Base;
+using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Validaciones;
 
-// namespace ProyectoArqSoft.Pages
-// {
-//     public class BioquimicoCreateModel : BasePageModel
-//     {
-//         private readonly IBioquimicoService _bioquimicoService;
+namespace ProyectoArqSoft.Pages.Bioquimico
+{
+    public class BioquimicoCreateModel : BasePageModel
+    {
+        private readonly IUsuarioService usuarioService;
 
-//         [BindProperty]
-//         public string Nombres { get; set; } = string.Empty;
+        [BindProperty] public string Nombres { get; set; } = string.Empty;
+        [BindProperty] public string ApellidoPaterno { get; set; } = string.Empty;
+        [BindProperty] public string ApellidoMaterno { get; set; } = string.Empty;
+        [BindProperty] public string Ci { get; set; } = string.Empty;
+        [BindProperty] public string CiExtencion { get; set; } = string.Empty;
+        [BindProperty] public string Telefono { get; set; } = string.Empty;
+        [BindProperty] public string Email { get; set; } = string.Empty;
+        [BindProperty] public string UserName { get; set; } = string.Empty;
+        [BindProperty] public string Password { get; set; } = string.Empty;
 
-//         [BindProperty]
-//         [Display(Name = "Apellido Paterno")]
-//         public string ApellidoPaterno { get; set; } = string.Empty;
+        public BioquimicoCreateModel(IUsuarioService usuarioService)
+        {
+            this.usuarioService = usuarioService;
+        }
 
-//         [BindProperty]
-//         [Display(Name = "Apellido Materno")]
-//         public string ApellidoMaterno { get; set; } = string.Empty;
+        public IActionResult OnGet()
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         [BindProperty]
-//         [Display(Name = "Carnet de Identidad")]
-//         public string Ci { get; set; } = string.Empty;
+            return Page();
+        }
 
-//         [BindProperty]
-//         [Display(Name = "Expedido")]
-//         public string CiExtencion { get; set; } = string.Empty;
+        public IActionResult OnPostCrearBioquimico()
+        {
+            IActionResult? acceso = ValidarAccesoAdmin();
+            if (acceso != null)
+                return acceso;
 
-//         [BindProperty]
-//         [Display(Name = "Teléfono")]
-//         public string Telefono { get; set; } = string.Empty;
+            UsuarioRegistroDto dto = new UsuarioRegistroDto
+            {
+                Nombres = Nombres,
+                ApellidoPaterno = ApellidoPaterno,
+                ApellidoMaterno = ApellidoMaterno,
+                Ci = Ci,
+                CiExtencion = CiExtencion,
+                Telefono = Telefono,
+                Email = Email,
+                UserName = UserName,
+                Password = Password
+            };
 
-//         public BioquimicoCreateModel(IBioquimicoService bioquimicoService)
-//         {
-//             _bioquimicoService = bioquimicoService;
-//         }
+            Result resultado = usuarioService.CrearUsuario(dto, "Bioquimico");
 
-//         public void OnGet()
-//         {
-//         }
+            if (resultado.IsFailure)
+            {
+                Estado.MensajeError = resultado.Error;
+                return Page();
+            }
 
-//         public IActionResult OnPostCrearBioquimico()
-//         {
-//             var nuevoBioquimico = new BioquimicoEntidad
-//             {
-//                 Nombres = Nombres,
-//                 ApellidoPaterno = ApellidoPaterno,
-//                 ApellidoMaterno = ApellidoMaterno,
-//                 Ci = Ci,
-//                 CiExtencion = CiExtencion,
-//                 Telefono = Telefono
-//             };
-
-//             Validacion resultado = _bioquimicoService.Crear(nuevoBioquimico);
-
-//             if (resultado.IsFailure)
-//             {
-//                 Estado.MensajeError = resultado.Error;
-//                 return Page();
-//             }
-
-//             return RedirectToPage("Bioquimico");
-//         }
-//     }
-// }
+            return RedirectToPage("Bioquimico", new { mensaje = "Bioquímico registrado correctamente" });
+        }
+    }
+}
