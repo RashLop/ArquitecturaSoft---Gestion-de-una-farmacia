@@ -58,9 +58,10 @@ namespace ProyectoArqSoft.Services
             return Result.Ok();
         }
 
-        public Result Actualizar(int id, string nombre, string origen)
+        public Result Actualizar(int id, string nombre, string origen, int idUsuario)
         {
             Clasificacion clasificacion = ConstruirClasificacion(id, nombre, origen);
+            clasificacion.IdUsuario = idUsuario;
 
             Result validacion = _validador.Validar(clasificacion);
             if (validacion.IsFailure)
@@ -75,14 +76,15 @@ namespace ProyectoArqSoft.Services
             return Result.Ok();
         }
 
-        public Result EliminarLogicamente(int id)
+        public Result EliminarLogicamente(int id, int idUsuario)
         {
             if (_repository.TieneMedicamentosActivosAsociados(id))
                 return Result.Fail("No se puede eliminar la clasificación porque tiene medicamentos activos asociados.");
 
             Clasificacion clasificacion = new Clasificacion
             {
-                Id = id
+                Id = id,
+                IdUsuario = idUsuario
             };
 
             if (_repository.Delete(clasificacion) <= 0)

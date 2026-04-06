@@ -41,6 +41,7 @@ namespace ProyectoArqSoft.FactoryProducts
             string query = @"UPDATE clasificacion
                              SET nombre = @nombre,
                                  origen = @origen,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_clasificacion = @id_clasificacion";
 
@@ -50,6 +51,7 @@ namespace ProyectoArqSoft.FactoryProducts
                 command.Parameters.AddWithValue("@id_clasificacion", t.Id);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@origen", t.Origen);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -60,6 +62,7 @@ namespace ProyectoArqSoft.FactoryProducts
         {
             string query = @"UPDATE clasificacion
                              SET estado = 0,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_clasificacion = @id";
 
@@ -67,6 +70,7 @@ namespace ProyectoArqSoft.FactoryProducts
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", t.Id);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();

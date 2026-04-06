@@ -10,6 +10,7 @@ namespace ProyectoArqSoft.Models
         public DateTime FechaRegistro { get; set; }
         public DateTime? UltimaActualizacion { get; set; }
         public string Origen { get; set; } = string.Empty;
+        public int? IdUsuario { get; set; }
 
         public Clasificacion()
         {
