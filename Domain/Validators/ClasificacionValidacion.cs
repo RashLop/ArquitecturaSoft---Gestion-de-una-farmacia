@@ -13,6 +13,7 @@ namespace ProyectoArqSoft.Validaciones
         {
             return ValidarNombre(clasificacion.Nombre)
                 ?? ValidarOrigen(clasificacion.Origen)
+                ?? ValidarDescripcion(clasificacion.Descripcion)
                 ?? Result.Ok();
         }
 
@@ -49,6 +50,19 @@ namespace ProyectoArqSoft.Validaciones
             string patron = @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$";
             if (!Regex.IsMatch(origen, patron))
                 return Result.Fail("El origen contiene caracteres inválidos.");
+
+            return null;
+        }
+
+        private Result? ValidarDescripcion(string descripcion)
+        {
+            if (string.IsNullOrWhiteSpace(descripcion))
+                return Result.Fail("La descripción es obligatoria.");
+
+            descripcion = descripcion.Trim();
+
+            if (descripcion.Length < 5 || descripcion.Length > 100)
+                return Result.Fail("La descripción debe tener entre 5 y 100 caracteres.");
 
             return null;
         }
