@@ -34,17 +34,17 @@ namespace ProyectoArqSoft.Pages
         }
 
         public IActionResult OnPostEliminarClasificacionLogicamente(int id)
-        {
-            string? usuarioIdTexto = HttpContext.Session.GetString("UserId");
+        {            
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            if (string.IsNullOrWhiteSpace(usuarioIdTexto) || !int.TryParse(usuarioIdTexto, out int idUsuario))
+            if (idUsuario == null)
             {
                 Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
                 CargarClasificaciones(Estado.FiltroActual);
                 return Page();
             }
 
-            Result resultado = clasificacionService.EliminarLogicamente(id, idUsuario);
+            Result resultado = clasificacionService.EliminarLogicamente(id, idUsuario.Value);
 
             if (resultado.IsFailure)
             {
