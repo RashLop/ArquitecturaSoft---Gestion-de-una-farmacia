@@ -52,7 +52,15 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarClasificacion()
         {
-            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre, Origen);
+            string? usuarioIdTexto = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrWhiteSpace(usuarioIdTexto) || !int.TryParse(usuarioIdTexto, out int idUsuario))
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                return Page();
+            }
+
+            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre, Origen, idUsuario);
 
             if (resultado.IsFailure)
             {

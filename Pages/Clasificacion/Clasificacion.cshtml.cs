@@ -35,7 +35,16 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarClasificacionLogicamente(int id)
         {
-            Result resultado = clasificacionService.EliminarLogicamente(id);
+            string? usuarioIdTexto = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrWhiteSpace(usuarioIdTexto) || !int.TryParse(usuarioIdTexto, out int idUsuario))
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                CargarClasificaciones(Estado.FiltroActual);
+                return Page();
+            }
+
+            Result resultado = clasificacionService.EliminarLogicamente(id, idUsuario);
 
             if (resultado.IsFailure)
             {
