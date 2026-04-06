@@ -299,5 +299,18 @@ namespace ProyectoArqSoft.Repositories
 
             return command.ExecuteNonQuery();
         }
+
+        public int Count()
+        {
+            string query = "SELECT COUNT(*) FROM usuario WHERE activo = 1";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                connection.Open();
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
     }
 }
