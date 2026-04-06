@@ -9,7 +9,7 @@ namespace ProyectoArqSoft.Helpers
             return StringHelper.LimpiarEspacios(filtro);
         }
 
-        public static Result ValidarFiltro(string filtro, int minimoCaracteres = 3, int maximoCaracteres = 20)
+        public static Result ValidarFiltro(string filtro, int minimoCaracteres = 3, int maximoCaracteres = 45)
         {
             if (string.IsNullOrWhiteSpace(filtro))
                 return Result.Ok();
