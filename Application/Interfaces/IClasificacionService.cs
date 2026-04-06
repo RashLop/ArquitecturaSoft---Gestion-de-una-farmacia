@@ -15,7 +15,7 @@ namespace ProyectoArqSoft.Services
         Clasificacion? ObtenerPorId(int id);
 
         Result Crear(string nombre, string origen);
-        Result Actualizar(int id, string nombre, string origen);
-        Result EliminarLogicamente(int id);
+        Result Actualizar(int id, string nombre, string origen, int idUsuario);
+        Result EliminarLogicamente(int id, int idUsuario);
     }
 }
