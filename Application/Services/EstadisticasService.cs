@@ -1,34 +1,34 @@
 ﻿using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Model.DTOS;
 using ProyectoArqSoft.Pages;
-
+using ProyectoArqSoft.Repositories;
 
 namespace ProyectoArqSoft.Services
 {
     public class EstadisticasService
     {
         private readonly MedicamentoRepository _medicamentoRepo;
-        //private readonly ClienteRepository _clienteRepo;
-        //private readonly BioquimicoRepository _bioquimicoRepo;
+        private readonly ClienteRepository _clienteRepo;
+        private readonly UsuarioRepository _usuarioRepo;
 
         public EstadisticasService(
-            MedicamentoRepository medicamentoRepo
-            //ClienteRepository clienteRepo,
-            //BioquimicoRepository bioquimicoRepo
+            MedicamentoRepository medicamentoRepo,
+            ClienteRepository clienteRepo,
+            UsuarioRepository usuarioRepo
             )
         {
             _medicamentoRepo = medicamentoRepo;
-            //_clienteRepo = clienteRepo;
-            //_bioquimicoRepo = bioquimicoRepo;
+            _clienteRepo = clienteRepo;
+            _usuarioRepo = usuarioRepo;
         }
 
         public EstadisticasDTO ObtenerEstadisticas()
         {
             return new EstadisticasDTO
             {
-                TotalMedicamentos = _medicamentoRepo.Count()
-                //TotalClientes = _clienteRepo.Count(),
-                //TotalBioquimicos = _bioquimicoRepo.Count(),
+                TotalMedicamentos = _medicamentoRepo.Count(),
+                TotalClientes = _clienteRepo.Count(),
+                TotalUsuarios = _usuarioRepo.Count(),
             };
         }
     }
