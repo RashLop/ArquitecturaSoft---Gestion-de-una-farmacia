@@ -19,17 +19,53 @@ namespace ProyectoArqSoft.Domain.Validators
 
         private Result? ValidarNit(string nit)
         {
-            if (string.IsNullOrWhiteSpace(nit))
+            if (nit == null)
                 return Result.Fail("El NIT es obligatorio.");
 
-            if (nit.Any(char.IsWhiteSpace))
-                return Result.Fail("El NIT no debe contener espacios.");
+            if (nit.Length == 0)
+                return Result.Fail("El NIT es obligatorio.");
 
-            if (!Regex.IsMatch(nit, @"^\d+$"))
-                return Result.Fail("El NIT solo debe contener numeros y el formato correcto (ej: 123456789).");
+            if (string.IsNullOrWhiteSpace(nit))
+                return Result.Fail("El NIT no debe contener solo espacios.");
 
-            if (nit.Length < 5 || nit.Length > 20)
-                return Result.Fail("El NIT debe tener de 5 a 20 digitos y el formato correcto (ej: 123456789).");
+            if (nit.Any(c => c == '\t' || c == '\n' || c == '\r'))
+                return Result.Fail("El NIT no debe contener tabs ni saltos de linea.");
+
+            if (!nit.Equals(nit.Trim(), StringComparison.Ordinal))
+                return Result.Fail("El NIT no debe contener espacios al inicio o al final.");
+
+            if (nit.Contains(' '))
+                return Result.Fail("El NIT no debe contener espacios internos.");
+
+            if (nit.StartsWith("+") || nit.StartsWith("-"))
+                return Result.Fail("El NIT no debe contener signos positivos ni negativos.");
+
+            if (Regex.IsMatch(nit, @"^\d+\.\d+$"))
+                return Result.Fail("El NIT no debe contener numeros decimales.");
+
+            bool contieneLetras = nit.Any(char.IsLetter);
+            bool contieneSimbolos = nit.Any(c => !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c));
+
+            if (contieneLetras && contieneSimbolos)
+                return Result.Fail("El NIT no debe mezclar letras con simbolos o caracteres especiales.");
+
+            if (contieneLetras && nit.Any(char.IsWhiteSpace))
+                return Result.Fail("El NIT no debe contener texto ni espacios.");
+
+            if (contieneLetras)
+                return Result.Fail("El NIT solo debe contener numeros, no letras.");
+
+            if (contieneSimbolos)
+                return Result.Fail("El NIT no debe contener simbolos ni caracteres especiales.");
+
+            if (nit.Length < 5)
+                return Result.Fail("El NIT debe contener entre 5 y 12 digitos; faltan digitos.");
+
+            if (nit.Length > 12)
+                return Result.Fail("El NIT debe contener entre 5 y 12 digitos; sobran digitos.");
+
+            if (!Regex.IsMatch(nit, @"^\d{5,12}$"))
+                return Result.Fail("El NIT debe contener entre 5 y 12 digitos numericos.");
 
             if (nit.All(c => c == '0'))
                 return Result.Fail("El NIT no puede estar compuesto solo por ceros.");
@@ -42,8 +78,20 @@ namespace ProyectoArqSoft.Domain.Validators
             if (string.IsNullOrWhiteSpace(razonSocial))
                 return Result.Fail("La razon social es obligatoria.");
 
+            if (!razonSocial.Equals(razonSocial.Trim(), StringComparison.Ordinal))
+                return Result.Fail("La razon social no debe contener espacios al inicio o al final.");
+
+            if (razonSocial.Any(c => c == '\t' || c == '\n' || c == '\r'))
+                return Result.Fail("La razon social no debe contener tabs ni saltos de linea.");
+
             if (razonSocial.Length < 3 || razonSocial.Length > 45)
                 return Result.Fail("La razon social debe tener entre 3 y 45 caracteres.");
+
+            if (!Regex.IsMatch(razonSocial, @"^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-&]+$"))
+                return Result.Fail("La razon social contiene caracteres no permitidos.");
+
+            if (!razonSocial.Any(char.IsLetterOrDigit))
+                return Result.Fail("La razon social debe contener al menos letras o numeros.");
 
             return null;
         }
@@ -64,8 +112,11 @@ namespace ProyectoArqSoft.Domain.Validators
 
         private static bool EsConsumidorFinal(Cliente cliente)
         {
-            return cliente.Nit.Equals("CF", StringComparison.OrdinalIgnoreCase) &&
-                   cliente.RazonSocial.Equals("Consumidor Final", StringComparison.OrdinalIgnoreCase);
+            string nit = cliente.Nit ?? string.Empty;
+            string razonSocial = cliente.RazonSocial ?? string.Empty;
+
+            return nit.Equals("CF", StringComparison.OrdinalIgnoreCase) &&
+                   razonSocial.Equals("Consumidor Final", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
