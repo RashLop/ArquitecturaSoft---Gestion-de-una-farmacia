@@ -41,9 +41,9 @@ namespace ProyectoArqSoft.Services
             return _repository.GetById(id);
         }
 
-        public Result Crear(string nombre, string origen)
+        public Result Crear(string nombre, string origen, string descripcion)
         {
-            Clasificacion clasificacion = ConstruirClasificacion(0, nombre, origen);
+            Clasificacion clasificacion = ConstruirClasificacion(0, nombre, origen, descripcion);
 
             Result validacion = _validador.Validar(clasificacion);
             if (validacion.IsFailure)
@@ -58,9 +58,9 @@ namespace ProyectoArqSoft.Services
             return Result.Ok();
         }
 
-        public Result Actualizar(int id, string nombre, string origen, int idUsuario)
+        public Result Actualizar(int id, string nombre, string origen, string descripcion, int idUsuario)
         {
-            Clasificacion clasificacion = ConstruirClasificacion(id, nombre, origen);
+            Clasificacion clasificacion = ConstruirClasificacion(id, nombre, origen, descripcion);
             clasificacion.IdUsuario = idUsuario;
 
             Result validacion = _validador.Validar(clasificacion);
@@ -93,13 +93,14 @@ namespace ProyectoArqSoft.Services
             return Result.Ok();
         }
 
-        private Clasificacion ConstruirClasificacion(int id, string nombre, string origen)
+        private Clasificacion ConstruirClasificacion(int id, string nombre, string origen, string descripcion)
         {
             return new Clasificacion
             {
                 Id = id,
                 Nombre = StringHelper.LimpiarEspacios(nombre),
-                Origen = StringHelper.LimpiarEspacios(origen)
+                Origen = StringHelper.LimpiarEspacios(origen),
+                Descripcion = StringHelper.LimpiarEspacios(descripcion)
             };
         }
     }
