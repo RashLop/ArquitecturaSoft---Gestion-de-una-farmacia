@@ -48,6 +48,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                  concentracion=@concentracion,
                                  precio=@precio,
                                  stock=@stock,
+                                 id_usuario=@id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_medicamento=@id_medicamento";
 
@@ -62,6 +63,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 command.Parameters.AddWithValue("@concentracion", t.Concentracion);
                 command.Parameters.AddWithValue("@precio", t.Precio);
                 command.Parameters.AddWithValue("@stock", t.Stock);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -72,6 +74,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             string query = @"UPDATE medicamento
                              SET estado = 0,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_medicamento = @id";
 
@@ -79,6 +82,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", t.Id);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();

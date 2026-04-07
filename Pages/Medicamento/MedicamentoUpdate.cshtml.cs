@@ -72,6 +72,15 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarMedicamento()
         {
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                CargarClasificaciones();
+                return Page();
+            }
+
             Result resultado = medicamentoService.Actualizar(
                 IdMedicamento,
                 Nombre,
@@ -79,7 +88,8 @@ namespace ProyectoArqSoft.Pages
                 IdClasificacion,
                 Concentracion,
                 Precio,
-                Stock);
+                Stock,
+                idUsuario.Value);
 
             if (resultado.IsFailure)
             {

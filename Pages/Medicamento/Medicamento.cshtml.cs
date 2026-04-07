@@ -35,7 +35,16 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarMedicamentoLogicamente(int id)
         {
-            Result resultado = medicamentoService.EliminarLogicamente(id);
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                CargarMedicamentos(Estado.FiltroActual);
+                return Page();
+            }
+
+            Result resultado = medicamentoService.EliminarLogicamente(id, idUsuario.Value);
 
             if (resultado.IsFailure)
             {

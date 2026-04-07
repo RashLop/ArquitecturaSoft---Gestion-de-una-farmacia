@@ -13,6 +13,7 @@ public class Medicamento
     public short Estado { get; set; } = 1; 
     public DateTime FechaRegistro { get; set; }
     public DateTime UltimaActualizacion { get; set; }
+    public int? IdUsuario { get; set; }
     
     public Medicamento()
     {
