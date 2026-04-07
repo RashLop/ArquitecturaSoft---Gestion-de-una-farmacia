@@ -1,4 +1,4 @@
-using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.FactoryProducts;
 
 namespace ProyectoArqSoft.Validaciones

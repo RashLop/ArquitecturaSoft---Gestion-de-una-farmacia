@@ -1,5 +1,5 @@
 ﻿using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Model.DTOS;
+using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Pages;
 using ProyectoArqSoft.Repositories;
 

@@ -1,6 +1,4 @@
-using System;
-
-namespace ProyectoArqSoft.DTO
+namespace ProyectoArqSoft.Domain.DTOs
 {
     public class UsuarioRegistroDto
     {

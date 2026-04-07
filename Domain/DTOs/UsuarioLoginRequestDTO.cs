@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.DTO
+namespace ProyectoArqSoft.Domain.DTOs
 {
     public class UsuarioLoginRequestDto
     {

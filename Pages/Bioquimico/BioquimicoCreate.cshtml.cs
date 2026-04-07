@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Validaciones;

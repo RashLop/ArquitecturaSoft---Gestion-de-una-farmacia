@@ -1,6 +1,5 @@
 using System.Data;
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Services

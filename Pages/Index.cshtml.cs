@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Model.DTOS;
 using ProyectoArqSoft.Repositories;
 using ProyectoArqSoft.Services;
 using System.Data;

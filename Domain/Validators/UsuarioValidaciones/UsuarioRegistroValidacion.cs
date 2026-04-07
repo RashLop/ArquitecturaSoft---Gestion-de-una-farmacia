@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Domain.DTOs;
 
 namespace ProyectoArqSoft.Validaciones
 {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
-using ProyectoArqSoft.DTO;
-using ProyectoArqSoft.Validaciones; // Aquí debe estar la clase Result
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Validaciones; // Aquï¿½ debe estar la clase Result
 
 namespace ProyectoArqSoft.Pages.Usuario
 {
@@ -23,12 +23,12 @@ namespace ProyectoArqSoft.Pages.Usuario
 
         public IActionResult OnPostCrearUsuario()
         {
-            // 1. PROTOCOLO DE GENERACIÓN DE USERNAME (nombre.apellido)
+            // 1. PROTOCOLO DE GENERACIï¿½N DE USERNAME (nombre.apellido)
             string primerNombre = nombres.Trim().Split(' ')[0].ToLower();
             string primerApellido = apPaterno.Trim().ToLower();
             string userNameGenerado = $"{primerNombre}.{primerApellido}";
 
-            // 2. GENERACIÓN DE CONTRASEÑA ALEATORIA (Seguridad exigida por rúbrica)
+            // 2. GENERACIï¿½N DE CONTRASEï¿½A ALEATORIA (Seguridad exigida por rï¿½brica)
             string passAleatorio = Guid.NewGuid().ToString().Substring(0, 8);
 
             var dto = new UsuarioRegistroDto
