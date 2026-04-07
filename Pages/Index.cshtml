@@ -189,7 +189,7 @@
                 <div class="col-md-3">
                     <div class="stat-card">
                         <div class="stat-icon">💊</div>
-                        <h2>@Model.TotalMedicamentos+</h2>
+                        <h2>@Model.TotalFarmacia.TotalMedicamentos</h2>
                         <p>Medicamentos</p>
                     </div>
                 </div>
@@ -197,7 +197,7 @@
                 <div class="col-md-3">
                     <div class="stat-card">
                         <div class="stat-icon">👥</div>
-                        <h2>120+</h2>
+                        <h2>@Model.TotalFarmacia.TotalClientes</h2>
                         <p>Clientes</p>
                     </div>
                 </div>
@@ -205,8 +205,8 @@
                 <div class="col-md-3">
                     <div class="stat-card">
                         <div class="stat-icon">🧪</div>
-                        <h2>8</h2>
-                        <p>Bioquímicos</p>
+                        <h2>@Model.TotalFarmacia.TotalUsuarios</h2>
+                        <p>Usuarios</p>
                     </div>
                 </div>
 

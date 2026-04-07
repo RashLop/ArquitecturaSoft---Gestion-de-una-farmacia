@@ -318,5 +318,69 @@ namespace ProyectoArqSoft.Repositories
 
             return command.ExecuteNonQuery();
         }
+        public int SoftDelete(Usuario t, int? idUsuarioSesion)
+        {
+            string query = @"UPDATE usuario
+                            SET activo = 0,
+                                ultima_actualizacion = NOW(),
+                                id_usuario = @idUsuarioSesion
+                            WHERE idusuario = @idUsuario";
+
+            MySqlCommand command = new MySqlCommand(query);
+            command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
+            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
+
+            return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
+        }
+
+        public int Update(Usuario t, int? idUsuarioSesion)
+        {
+            string query = @"UPDATE usuario
+                            SET nombres = @nombres,
+                                apellido_materno = @apellido_materno,
+                                apellido_paterno = @apellido_paterno,
+                                ci = @ci,
+                                telefono = @telefono,
+                                ci_extencion = @ci_extencion,
+                                email = @email,
+                                user_name = @user_name,
+                                role = @role,
+                                activo = @activo,
+                                id_usuario = @idUsuarioSesion,
+                                ultima_actualizacion = NOW()
+                            WHERE idusuario = @idUsuario";
+
+            using MySqlConnection connection = new MySqlConnection(connectionString);
+            connection.Open();
+
+            using MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@nombres", t.Nombres);
+            command.Parameters.AddWithValue("@apellido_materno", t.ApellidoMaterno);
+            command.Parameters.AddWithValue("@apellido_paterno", t.ApellidoPaterno);
+            command.Parameters.AddWithValue("@ci", t.Ci);
+            command.Parameters.AddWithValue("@telefono", t.Telefono);
+            command.Parameters.AddWithValue("@ci_extencion", t.CiExtencion);
+            command.Parameters.AddWithValue("@email", t.Email);
+            command.Parameters.AddWithValue("@user_name", t.UserName);
+            command.Parameters.AddWithValue("@role", t.Role);
+            command.Parameters.AddWithValue("@activo", t.Activo);
+            command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
+            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
+
+            return command.ExecuteNonQuery();
+        }
+
+        public int Count()
+        {
+            string query = "SELECT COUNT(*) FROM usuario WHERE activo = 1";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                connection.Open();
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }
     }
 }

@@ -32,6 +32,8 @@ builder.Services.AddScoped<UsuarioRepositoryCreator>();
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<ClasificacionRepositoryCreator>();
 builder.Services.AddScoped<ClasificacionRepository>();
+//Estadisticas
+builder.Services.AddScoped<EstadisticasService>();
 
 // Si tienes creator de token:
 builder.Services.AddScoped<UsuarioTokenRepositoryCreator>();

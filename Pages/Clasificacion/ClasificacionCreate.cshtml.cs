@@ -20,6 +20,10 @@ namespace ProyectoArqSoft.Pages
         [Display(Name = "Origen")]
         public string Origen { get; set; } = string.Empty;
 
+        [BindProperty]
+        [Display(Name = "Descripción")]
+        public string Descripcion { get; set; } = string.Empty;
+
         public ClasificacionCreateModel(IClasificacionService clasificacionService)
         {
             this.clasificacionService = clasificacionService;
@@ -31,7 +35,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearClasificacion()
         {
-            Result resultado = clasificacionService.Crear(Nombre, Origen);
+            Result resultado = clasificacionService.Crear(Nombre, Origen, Descripcion);
 
             if (resultado.IsFailure)
             {

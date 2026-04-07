@@ -34,6 +34,15 @@
                             <label asp-for="Origen"></label>
                         </div>
 
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Descripcion"
+                                    class="form-control med-input"
+                                    placeholder="Descripción"
+                                    style="height: 100px"
+                                    required></textarea>
+                            <label asp-for="Descripcion"></label>
+                        </div>
+
                         @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
                         {
                             <div class="alert alert-danger med-alert" role="alert">

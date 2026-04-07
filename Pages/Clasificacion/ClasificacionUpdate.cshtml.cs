@@ -27,6 +27,10 @@ namespace ProyectoArqSoft.Pages
         [Display(Name = "Origen")]
         public string Origen { get; set; } = string.Empty;
 
+        [BindProperty]
+        [Display(Name = "Descripción")]
+        public string Descripcion { get; set; } = string.Empty;
+
         public ClasificacionUpdateModel(IClasificacionService clasificacionService)
         {
             this.clasificacionService = clasificacionService;
@@ -46,13 +50,22 @@ namespace ProyectoArqSoft.Pages
             IdClasificacion = clasificacion.Id;
             Nombre = clasificacion.Nombre;
             Origen = clasificacion.Origen;
+            Descripcion = clasificacion.Descripcion;
 
             return Page();
         }
 
         public IActionResult OnPostActualizarClasificacion()
         {
-            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre, Origen);
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                return Page();
+            }
+
+            Result resultado = clasificacionService.Actualizar(IdClasificacion, Nombre, Origen, Descripcion, idUsuario.Value);
 
             if (resultado.IsFailure)
             {

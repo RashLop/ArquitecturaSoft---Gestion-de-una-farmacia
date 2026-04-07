@@ -21,15 +21,16 @@ namespace ProyectoArqSoft.FactoryProducts
         public int Insert(Clasificacion t)
         {
             string query = @"INSERT INTO clasificacion
-                             (nombre, origen)
+                             (nombre, origen, descripcion)
                              VALUES
-                             (@nombre, @origen)";
+                             (@nombre, @origen, @descripcion)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@origen", t.Origen);
+                command.Parameters.AddWithValue("@descripcion", t.Descripcion);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -41,6 +42,8 @@ namespace ProyectoArqSoft.FactoryProducts
             string query = @"UPDATE clasificacion
                              SET nombre = @nombre,
                                  origen = @origen,
+                                 descripcion = @descripcion,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_clasificacion = @id_clasificacion";
 
@@ -50,6 +53,8 @@ namespace ProyectoArqSoft.FactoryProducts
                 command.Parameters.AddWithValue("@id_clasificacion", t.Id);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@origen", t.Origen);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+                command.Parameters.AddWithValue("@descripcion", t.Descripcion);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -60,6 +65,7 @@ namespace ProyectoArqSoft.FactoryProducts
         {
             string query = @"UPDATE clasificacion
                              SET estado = 0,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE id_clasificacion = @id";
 
@@ -67,6 +73,7 @@ namespace ProyectoArqSoft.FactoryProducts
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", t.Id);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -103,6 +110,7 @@ namespace ProyectoArqSoft.FactoryProducts
             string query = @"SELECT id_clasificacion,
                                     nombre,
                                     origen,
+                                    descripcion,
                                     estado,
                                     fecha_registro,
                                     ultima_actualizacion
@@ -125,6 +133,7 @@ namespace ProyectoArqSoft.FactoryProducts
                             Id = Convert.ToInt32(reader["id_clasificacion"]),
                             Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString()),
                             Origen = StringHelper.LimpiarEspacios(reader["origen"].ToString()),
+                            Descripcion = StringHelper.LimpiarEspacios(reader["descripcion"].ToString()),
                             Estado = Convert.ToInt16(reader["estado"]),
                             FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
                             UltimaActualizacion = reader["ultima_actualizacion"] == DBNull.Value
@@ -161,14 +170,16 @@ namespace ProyectoArqSoft.FactoryProducts
         {
             string query = @"SELECT id_clasificacion,
                                     nombre,
-                                    origen
+                                    origen,
+                                    descripcion
                              FROM clasificacion
                              WHERE estado = 1";
 
             query += FiltroSqlHelper.ConstruirCondicionLike(
                 filtro,
                 "nombre",
-                "origen"
+                "origen",
+                "descripcion"
             );
 
             query += " ORDER BY nombre";
