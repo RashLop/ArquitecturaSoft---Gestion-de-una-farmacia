@@ -1,10 +1,10 @@
-    using System.Net;
+using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Application.Interfaces;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 {
     public class EmailService : IEmailService
     {

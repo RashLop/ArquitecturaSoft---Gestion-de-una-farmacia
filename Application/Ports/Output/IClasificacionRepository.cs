@@ -1,8 +1,6 @@
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 
-//namespace ProyectoArqSoft.Application.Ports.Output
-namespace ProyectoArqSoft.FactoryProducts
+namespace ProyectoArqSoft.Application.Ports.Output
 {
     public interface IClasificacionRepository : IRepository<Clasificacion>
     {

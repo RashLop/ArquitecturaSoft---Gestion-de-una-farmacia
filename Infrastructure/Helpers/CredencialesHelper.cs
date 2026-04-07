@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 
-namespace ProyectoArqSoft.Helpers
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class CredencialesHelper
     {

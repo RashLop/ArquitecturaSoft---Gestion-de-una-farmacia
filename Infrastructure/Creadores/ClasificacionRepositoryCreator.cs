@@ -1,12 +1,8 @@
-//using ProyectoArqSoft.Application.Ports.Output;
-using ProyectoArqSoft.FactoryCreators;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
-//using ProyectoArqSoft.Infrastructure.Repositories;
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 
-//amespace ProyectoArqSoft.Infrastructure.Creadores
-namespace ProyectoArqSoft.FactoryCreators
+namespace ProyectoArqSoft.Infrastructure.Creadores
 {
     public class ClasificacionRepositoryCreator : RepositoryCreator<Clasificacion>
     {

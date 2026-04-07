@@ -1,4 +1,4 @@
-﻿namespace ProyectoArqSoft.Model.DTOS
+﻿namespace ProyectoArqSoft.Domain.DTOs
 {
     public class EstadisticasDTO
     {

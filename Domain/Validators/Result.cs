@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class Result
     {

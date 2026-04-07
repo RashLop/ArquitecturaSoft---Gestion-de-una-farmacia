@@ -1,14 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-//using ProyectoArqSoft.Application.Interfaces;
-using ProyectoArqSoft.Services;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
-//using ProyectoArqSoft.Domain.Validators;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
 
-using ClasificacionEntidad = ProyectoArqSoft.Models.Clasificacion; // cambiar namespace de Clasificacion de namespace ProyectoArqSoft.Models a namespace ProyectoArqSoft.Domain.Model
+using ClasificacionEntidad = ProyectoArqSoft.Domain.Models.Clasificacion; 
 
 namespace ProyectoArqSoft.Pages
 {

@@ -1,7 +1,7 @@
-    using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
-namespace ProyectoArqSoft.Helpers
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class TokenHelper
     {

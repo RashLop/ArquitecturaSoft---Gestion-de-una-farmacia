@@ -1,11 +1,9 @@
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 //using ProyectoArqSoft.Domain.Validators;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 using System.Data;
 
-//namespace ProyectoArqSoft.Application.Interfaces
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Interfaces
 
 {
     public interface IClasificacionService

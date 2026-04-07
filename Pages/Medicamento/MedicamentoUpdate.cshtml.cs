@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
-using MedicamentoEntidad = ProyectoArqSoft.Models.Medicamento;
+using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.Validators;
+using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
 using System.Data;
 
 namespace ProyectoArqSoft.Pages

@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
-using ClienteEntidad = ProyectoArqSoft.Models.Cliente;
+using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.Validators;
+using ClienteEntidad = ProyectoArqSoft.Domain.Models.Cliente;
 
 namespace ProyectoArqSoft.Pages
 {

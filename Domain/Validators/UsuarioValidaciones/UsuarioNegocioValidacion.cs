@@ -1,7 +1,7 @@
-using ProyectoArqSoft.DTO;
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Application.Ports.Output;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class UsuarioNegocioValidacion
     {

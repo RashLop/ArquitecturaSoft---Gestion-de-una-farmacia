@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using ProyectoArqSoft.DTO;
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Application.Interfaces;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class UsuarioRegistroValidacion : UsuarioValidacionBase, IResult<UsuarioRegistroDto>
     {

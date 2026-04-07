@@ -1,10 +1,11 @@
 using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Infrastructure.Helpers;
+using ProyectoArqSoft.Domain.Models;
 using System.Data;
-using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Connection;
 
-namespace ProyectoArqSoft.FactoryProducts
+namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 {
     public class ClienteRepository : IRepository<Cliente>
     {

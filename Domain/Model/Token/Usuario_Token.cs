@@ -1,6 +1,5 @@
-using System;
+namespace ProyectoArqSoft.Domain.Models
 
-namespace ProyectoArqSoft.Models
 {
     public class UsuarioToken
     {

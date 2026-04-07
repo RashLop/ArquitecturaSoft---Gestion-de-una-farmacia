@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.SignalR;
+namespace ProyectoArqSoft.Domain.Models; 
 
-namespace ProyectoArqSoft.Models ; 
 public class Medicamento
 {
     public  int Id {get; set; }

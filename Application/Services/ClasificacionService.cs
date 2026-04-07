@@ -1,16 +1,11 @@
-//using ProyectoArqSoft.Application.Interfaces;
-using ProyectoArqSoft.Services;
-//using ProyectoArqSoft.Application.Ports.Output;
-using ProyectoArqSoft.FactoryProducts;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
-//using ProyectoArqSoft.Domain.Validators;
-using ProyectoArqSoft.Validaciones;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using System.Data;
 
-//namespace ProyectoArqSoft.Application.Services
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 
 {
     public class ClasificacionService : IClasificacionService

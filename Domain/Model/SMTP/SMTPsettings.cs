@@ -1,4 +1,5 @@
-namespace ProyectoArqSoft.Models
+namespace ProyectoArqSoft.Domain.Models
+
 {
     public class SmtpSettings
     {

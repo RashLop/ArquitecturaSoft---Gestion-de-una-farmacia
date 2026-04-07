@@ -1,7 +1,8 @@
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 
-namespace ProyectoArqSoft.FactoryCreators
+namespace ProyectoArqSoft.Infrastructure.Creadores
 {
     public class MedicamentoRepositoryCreator : RepositoryCreator<Medicamento>
     {

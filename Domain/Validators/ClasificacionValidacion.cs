@@ -1,11 +1,8 @@
 using System.Text.RegularExpressions;
-//using ProyectoArqSoft.Application.Interfaces;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Application.Interfaces;
 
-//namespace ProyectoArqSoft.Domain.Validators
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class ClasificacionValidacion : IResult<Clasificacion>
     {

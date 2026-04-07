@@ -1,8 +1,8 @@
-using ProyectoArqSoft.DTO;
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Domain.Validators;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Interfaces
 {
     public interface IUsuarioTokenService
     {

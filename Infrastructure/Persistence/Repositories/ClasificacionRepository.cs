@@ -1,13 +1,11 @@
 using MySql.Data.MySqlClient;
-//using ProyectoArqSoft.Application.Ports.Output;
-using ProyectoArqSoft.Services;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using System.Data;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Connection;
 
-//namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
-namespace ProyectoArqSoft.FactoryProducts
+namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 {
     public class ClasificacionRepository : IClasificacionRepository
     {

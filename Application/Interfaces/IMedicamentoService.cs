@@ -1,8 +1,8 @@
-using ProyectoArqSoft.Models;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Domain.Validators;
 using System.Data;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Interfaces
 {
     public interface IMedicamentoService
     {

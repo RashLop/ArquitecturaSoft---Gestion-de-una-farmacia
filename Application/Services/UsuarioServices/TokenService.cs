@@ -2,9 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Application.Interfaces;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 {
     public class TokenService : ITokenService
     {

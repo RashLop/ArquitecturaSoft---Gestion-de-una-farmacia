@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
-namespace ProyectoArqSoft.Helpers
+
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class StringHelper
     {

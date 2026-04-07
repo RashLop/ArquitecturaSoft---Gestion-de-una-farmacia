@@ -1,6 +1,6 @@
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Interfaces
 {
     public interface ITokenService
     {
