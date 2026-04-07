@@ -44,6 +44,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                              SET nit = @nit,
                                  razon_social = @razon_social,
                                  correo_electronico = @correo_electronico,
+                                 id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
                              WHERE idCliente = @idCliente";
 
@@ -54,6 +55,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 command.Parameters.AddWithValue("@idCliente", t.IdCliente);
                 command.Parameters.AddWithValue("@nit", t.Nit);
                 command.Parameters.AddWithValue("@razon_social", t.RazonSocial);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
                 command.Parameters.AddWithValue(
                     "@correo_electronico",
                     string.IsNullOrWhiteSpace(t.CorreoElectronico) ? DBNull.Value : t.CorreoElectronico);
@@ -105,7 +107,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Cliente? GetById(int id)
         {
-            string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico
+            string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico, id_usuario
                              FROM cliente
                              WHERE idCliente = @idCliente";
 
@@ -127,6 +129,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                             RazonSocial = StringHelper.LimpiarEspacios(reader["razon_social"].ToString()),
                             CorreoElectronico = StringHelper.LimpiarEspacios(reader["correo_electronico"].ToString()),
                             FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                            IdUsuario = reader["id_usuario"] == DBNull.Value
+                                ? null
+                                : Convert.ToInt32(reader["id_usuario"]),
                             UltimaActualizacion = reader["ultima_actualizacion"] == DBNull.Value
                                 ? null
                                 : Convert.ToDateTime(reader["ultima_actualizacion"])

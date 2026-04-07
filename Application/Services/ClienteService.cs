@@ -64,9 +64,11 @@ namespace ProyectoArqSoft.Application.Services
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
-            string? correoElectronico)
+            string? correoElectronico,
+            int idUsuario)
         {
             Cliente cliente = ConstruirCliente(id, esConsumidorFinal, nit, razonSocial, correoElectronico);
+            cliente.IdUsuario = idUsuario;
 
             var validacion = _validador.Validar(cliente);
             if (validacion.IsFailure)
