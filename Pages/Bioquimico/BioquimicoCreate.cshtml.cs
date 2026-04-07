@@ -1,28 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Pages.Base;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
     public class BioquimicoCreateModel : BasePageModel
     {
-        private readonly IUsuarioService usuarioService;
+        private readonly IUsuarioService _usuarioService;
 
-        [BindProperty] public string Nombres { get; set; } = string.Empty;
-        [BindProperty] public string ApellidoPaterno { get; set; } = string.Empty;
-        [BindProperty] public string ApellidoMaterno { get; set; } = string.Empty;
-        [BindProperty] public string Ci { get; set; } = string.Empty;
-        [BindProperty] public string CiExtencion { get; set; } = string.Empty;
-        [BindProperty] public string Telefono { get; set; } = string.Empty;
-        [BindProperty] public string Email { get; set; } = string.Empty;
-        [BindProperty] public string UserName { get; set; } = string.Empty;
-        [BindProperty] public string Password { get; set; } = string.Empty;
+        [BindProperty]
+        public UsuarioRegistroDto Registro { get; set; } = new();
+
+        [BindProperty]
+        public string CiComplemento { get; set; } = string.Empty;
+
+        public string MensajeError { get; set; } = string.Empty;
+        public string MensajeOk { get; set; } = string.Empty;
 
         public BioquimicoCreateModel(IUsuarioService usuarioService)
         {
-            this.usuarioService = usuarioService;
+            _usuarioService = usuarioService;
         }
 
         public IActionResult OnGet()
@@ -34,34 +34,47 @@ namespace ProyectoArqSoft.Pages.Bioquimico
             return Page();
         }
 
-        public IActionResult OnPostCrearBioquimico()
+        public IActionResult OnPost()
         {
             IActionResult? acceso = ValidarAccesoAdmin();
             if (acceso != null)
                 return acceso;
 
-            UsuarioRegistroDto dto = new UsuarioRegistroDto
-            {
-                Nombres = Nombres,
-                ApellidoPaterno = ApellidoPaterno,
-                ApellidoMaterno = ApellidoMaterno,
-                Ci = Ci,
-                CiExtencion = CiExtencion,
-                Telefono = Telefono,
-                Email = Email,
-                UserName = UserName,
-                Password = Password
-            };
+            string role = "Bioquimico";
 
-            Result resultado = usuarioService.CrearUsuario(dto, "Bioquimico");
+            Registro.Ci = (Registro.Ci ?? string.Empty).Trim();
+            CiComplemento = (CiComplemento ?? string.Empty).Trim().ToUpper();
 
-            if (resultado.IsFailure)
+            if (!string.IsNullOrWhiteSpace(CiComplemento))
             {
-                Estado.MensajeError = resultado.Error;
+                Registro.Ci = $"{Registro.Ci}-{CiComplemento}";
+            }
+
+            Registro.UserName = CredencialesHelper.GenerarUserName(
+                Registro.Nombres,
+                Registro.ApellidoPaterno,
+                Registro.Ci
+            );
+
+            Registro.Password = CredencialesHelper.GenerarPasswordTemporal();
+
+            ModelState.Remove("Registro.UserName");
+            ModelState.Remove("Registro.Password");
+
+            Result resultado = _usuarioService.CrearUsuario(Registro, role);
+
+            if (!resultado.IsSuccess)
+            {
+                MensajeError = resultado.Error;
                 return Page();
             }
 
-            return RedirectToPage("Bioquimico", new { mensaje = "Bioquímico registrado correctamente" });
+            MensajeOk = "Usuario registrado correctamente. Revisa las credenciales generadas y tu correo electrónico.";
+            ModelState.Clear();
+            Registro = new UsuarioRegistroDto();
+            CiComplemento = string.Empty;
+
+            return Page();
         }
     }
 }

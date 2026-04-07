@@ -6,103 +6,121 @@
 
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
+        <div class="col-lg-10 col-md-11">
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
                     <h2 class="mb-0 text-success">Actualizar Bioquímico</h2>
-                    <p class="text-muted mt-2 mb-0">Edita los datos personales y de acceso del profesional.</p>
+                    <p class="text-muted mt-2 mb-0">
+                        Edita los datos personales y de acceso del profesional.
+                    </p>
                 </div>
 
                 <div class="med-card-body p-4">
-                    <form method="post" asp-page-handler="ActualizarBioquimico">
+                    <form method="post" asp-page-handler="ActualizarBioquimico" id="bioquimicoEditForm">
                         <input type="hidden" asp-for="Input.IdUsuario" />
                         <input type="hidden" asp-for="Input.Role" />
                         <input type="hidden" asp-for="Input.MustChangePassword" />
+                        <input type="hidden" asp-for="Input.Ci" id="CiCompleto" />
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Input.Nombres" class="form-control med-input" placeholder="Nombres" required />
+                            <input asp-for="Input.Nombres" class="form-control med-input" placeholder="Nombres" />
                             <label asp-for="Input.Nombres">Nombres</label>
+                            <span asp-validation-for="Input.Nombres" class="text-danger"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="Input.ApellidoPaterno" class="form-control med-input" placeholder="Primer Apellido" required />
-                                    <label asp-for="Input.ApellidoPaterno">Primer Apellido</label>
+                                    <input asp-for="Input.ApellidoPaterno" class="form-control med-input" placeholder="Primer apellido" />
+                                    <label asp-for="Input.ApellidoPaterno">Primer apellido</label>
+                                    <span asp-validation-for="Input.ApellidoPaterno" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="Input.ApellidoMaterno" class="form-control med-input" placeholder="Segundo Apellido" />
-                                    <label asp-for="Input.ApellidoMaterno">Segundo Apellido</label>
+                                    <input asp-for="Input.ApellidoMaterno" class="form-control med-input" placeholder="Segundo apellido" />
+                                    <label asp-for="Input.ApellidoMaterno">Segundo apellido (opcional)</label>
+                                    <span asp-validation-for="Input.ApellidoMaterno" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-8 mb-3">
+                            <div class="col-md-7 mb-3">
                                 <div class="form-floating">
-                                    <input asp-for="Input.Ci" class="form-control med-input" placeholder="Carnet de Identidad" required />
-                                    <label asp-for="Input.Ci">Carnet de Identidad</label>
+                                    <input asp-for="CiBase" class="form-control med-input" placeholder="Carnet de identidad" />
+                                    <label asp-for="CiBase">Carnet de identidad</label>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <div class="form-floating">
-                                    <select asp-for="Input.CiExtencion" class="form-select med-input" required>
-                                        <option value="LP">LP</option>
-                                        <option value="CB">CB</option>
-                                        <option value="SC">SC</option>
-                                        <option value="OR">OR</option>
-                                        <option value="PT">PT</option>
-                                        <option value="CH">CH</option>
-                                        <option value="TJ">TJ</option>
-                                        <option value="BE">BE</option>
-                                        <option value="PD">PD</option>
+                                    <input asp-for="CiComplemento" class="form-control med-input" placeholder="Complemento" maxlength="2" />
+                                    <label asp-for="CiComplemento">Complemento</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <div class="form-floating">
+                                    <select asp-for="Input.CiExtencion" class="form-select med-input">
+                                        <option value="">Seleccione</option>
+                                        <option value="BE">Beni</option>
+                                        <option value="CB">Cochabamba</option>
+                                        <option value="CH">Chuquisaca</option>
+                                        <option value="LP">La Paz</option>
+                                        <option value="OR">Oruro</option>
+                                        <option value="PD">Pando</option>
+                                        <option value="PT">Potosí</option>
+                                        <option value="SC">Santa Cruz</option>
+                                        <option value="TJ">Tarija</option>
                                     </select>
                                     <label asp-for="Input.CiExtencion">Expedido</label>
+                                    <span asp-validation-for="Input.CiExtencion" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Input.Telefono" class="form-control med-input" placeholder="Teléfono" required />
+                            <input asp-for="Input.Telefono" class="form-control med-input" placeholder="Teléfono" />
                             <label asp-for="Input.Telefono">Teléfono</label>
+                            <span asp-validation-for="Input.Telefono" class="text-danger"></span>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Input.Email" type="email" class="form-control med-input" placeholder="Correo Electrónico" required />
-                            <label asp-for="Input.Email">Correo Electrónico</label>
+                            <input asp-for="Input.Email" type="email" class="form-control med-input" placeholder="Correo electrónico" />
+                            <label asp-for="Input.Email">Correo electrónico</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
-
-                        <div class="form-floating mb-3">
-                            <input asp-for="Input.UserName" class="form-control med-input" placeholder="Nombre de Usuario" required />
-                            <label asp-for="Input.UserName">Nombre de Usuario</label>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nombre de usuario</label>
+                            <div class="form-control med-input bg-light" style="padding-top: 1rem; padding-bottom: 1rem;">
+                                @Model.Input.UserName
+                            </div>
+                            <small class="text-muted">
+                                El nombre de usuario es generado automáticamente por el sistema y no se puede editar.
+                            </small>
                         </div>
 
                         <div class="form-floating mb-3">
                             <select asp-for="Input.Activo" class="form-select med-input">
                                 <option value="1">Activo</option>
-                                <option value="0">De baja</option>
+                                <option value="0">Inactivo</option>
                             </select>
                             <label asp-for="Input.Activo">Estado</label>
+                            <span asp-validation-for="Input.Activo" class="text-danger"></span>
                         </div>
 
                         @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
-                            <div class="alert alert-danger med-alert shadow-sm" role="alert">
+                            <div class="alert alert-danger shadow-sm" role="alert">
                                 @Model.Estado.MensajeError
                             </div>
                         }
 
                         <div class="d-flex justify-content-end gap-2 mt-4 border-top pt-3">
-                            <a asp-page="Bioquimico" class="btn med-btn-secondary">
-                                Cancelar
-                            </a>
-                            <button type="submit" class="btn med-btn-primary px-4">
-                                Actualizar Registro
-                            </button>
+                            <a asp-page="Bioquimico" class="btn med-btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn med-btn-primary px-4">Actualizar Registro</button>
                         </div>
                     </form>
                 </div>
@@ -110,3 +128,18 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("bioquimicoEditForm").addEventListener("submit", function () {
+            const ciBase = document.getElementById("CiBase").value.trim();
+            const ciComplemento = document.getElementById("CiComplemento").value.trim().toUpperCase();
+            const ciCompleto = document.getElementById("CiCompleto");
+
+            ciCompleto.value = ciComplemento
+                ? `${ciBase}-${ciComplemento}`
+                : ciBase;
+        });
+    </script>
+}

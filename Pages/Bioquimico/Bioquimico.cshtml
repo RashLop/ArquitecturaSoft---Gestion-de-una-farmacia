@@ -45,10 +45,11 @@
 
     <div class="card-module">
         <table class="table table-hover align-middle">
-            <thead class="table-success">
+            <thead class="table-success text-center">
                 <tr>
                     <th>Nombre Completo</th>
                     <th>Carnet</th>
+                    <th>Expedido</th>
                     <th>Teléfono</th>
                     <th>Email</th>
                     <th>Username</th>
@@ -66,7 +67,8 @@
 
                         <tr>
                             <td class="fw-semibold">@row["nombres"] @row["apellido_paterno"] @row["apellido_materno"]</td>
-                            <td>@row["ci"] - @row["ci_extencion"]</td>
+                            <td>@row["ci"]</td>
+                            <td>@row["ci_extencion"]</td>
                             <td>@row["telefono"]</td>
                             <td>@row["email"]</td>
                             <td>@row["user_name"]</td>
@@ -109,7 +111,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">No se encontraron bioquímicos.</td>
+                        <td colspan="8" class="text-center py-4 text-muted">No se encontraron bioquímicos.</td>
                     </tr>
                 }
             </tbody>

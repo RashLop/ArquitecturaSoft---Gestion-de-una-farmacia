@@ -1,6 +1,6 @@
 namespace ProyectoArqSoft.Domain.Validators
 {
-    public class Result
+    public class    Result
     {
         public bool IsSuccess { get; }
         public bool IsFailure => !IsSuccess;

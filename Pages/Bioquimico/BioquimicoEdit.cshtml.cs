@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
+using Result = ProyectoArqSoft.Domain.Validators.Result;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
@@ -17,6 +18,12 @@ namespace ProyectoArqSoft.Pages.Bioquimico
             Activo = 1,
             MustChangePassword = 1
         };
+
+        [BindProperty]
+        public string CiBase { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string CiComplemento { get; set; } = string.Empty;
 
         public BioquimicoEditModel(IUsuarioService usuarioService)
         {
@@ -40,8 +47,14 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
             UsuarioDto? usuario = usuarioService.ObtenerUsuarioPorId(id);
 
-            if (usuario == null || !string.Equals(usuario.Role, "Bioquimico", StringComparison.OrdinalIgnoreCase))
+            if (usuario == null || !EsBioquimico(usuario.Role))
                 return RedirectToPage("Bioquimico", new { error = "Bioquímico no encontrado" });
+
+            string ciCompleto = usuario.Ci?.Trim() ?? string.Empty;
+            int separador = ciCompleto.IndexOf('-');
+
+            CiBase = separador >= 0 ? ciCompleto[..separador].Trim() : ciCompleto;
+            CiComplemento = separador >= 0 ? ciCompleto[(separador + 1)..].Trim() : string.Empty;
 
             Input.IdUsuario = usuario.IdUsuario;
             Input.Nombres = usuario.Nombres;
@@ -62,13 +75,19 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         public IActionResult OnPostActualizarBioquimico()
         {
             int? idSession = HttpContext.Session.GetInt32("IdUsuario");
+
             IActionResult? acceso = ValidarAccesoAdmin();
             if (acceso != null)
                 return acceso;
 
+            UsuarioDto? usuarioActual = usuarioService.ObtenerUsuarioPorId(Input.IdUsuario);
+
+            if (usuarioActual == null || !EsBioquimico(usuarioActual.Role))
+                return RedirectToPage("Bioquimico", new { error = "Bioquímico no encontrado o rol inválido" });
+
             Input.Role = "Bioquimico";
 
-            var resultado = usuarioService.ActualizarUsuario(Input, idSession);
+            Result resultado = usuarioService.ActualizarUsuario(Input, idSession);
 
             if (resultado.IsFailure)
             {
@@ -77,6 +96,11 @@ namespace ProyectoArqSoft.Pages.Bioquimico
             }
 
             return RedirectToPage("Bioquimico", new { mensaje = "Bioquímico actualizado correctamente" });
+        }
+
+        private static bool EsBioquimico(string? role)
+        {
+            return string.Equals(role?.Trim(), "Bioquimico", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
