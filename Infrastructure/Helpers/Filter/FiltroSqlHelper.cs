@@ -1,7 +1,7 @@
 using MySql.Data.MySqlClient;
 using System.Text;
 
-namespace ProyectoArqSoft.Helpers
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class FiltroSqlHelper
     {

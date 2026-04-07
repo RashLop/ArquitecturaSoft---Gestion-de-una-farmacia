@@ -1,5 +1,5 @@
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Aplication.Interfaces;
+using ProyectoArqSoft.Application.Interfaces;
 
 namespace ProyectoArqSoft.Domain.Validators
 {

@@ -1,10 +1,10 @@
 using MySql.Data.MySqlClient;
-using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Models;
-using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Infrastructure.Persistence.Connection;
 
-namespace ProyectoArqSoft.Repositories
+namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 {
     public class UsuarioTokenRepository : IUsuarioTokenRepository
     {

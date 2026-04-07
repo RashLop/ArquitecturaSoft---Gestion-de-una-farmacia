@@ -1,10 +1,11 @@
-using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Domain.Validators;
 using System.Data;
+using ProyectoArqSoft.Application.Interfaces;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 {
     public class ClienteService : IClienteService
     {

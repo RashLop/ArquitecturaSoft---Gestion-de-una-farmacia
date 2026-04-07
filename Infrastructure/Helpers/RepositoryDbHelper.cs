@@ -1,7 +1,7 @@
 using System;
 using MySql.Data.MySqlClient;
 
-namespace ProyectoArqSoft.Helpers
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class RepositoryDbHelper
     {

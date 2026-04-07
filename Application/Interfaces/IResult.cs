@@ -1,6 +1,6 @@
 using ProyectoArqSoft.Domain.Validators;
 
-namespace ProyectoArqSoft.Aplication.Interfaces
+namespace ProyectoArqSoft.Application.Interfaces
 {
     public interface IResult<T>
     {

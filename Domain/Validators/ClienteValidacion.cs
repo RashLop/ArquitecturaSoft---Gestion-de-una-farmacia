@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ProyectoArqSoft.Domain.Models;
-using ProyectoArqSoft.Aplication.Interfaces;
+using ProyectoArqSoft.Application.Interfaces;
 
 namespace ProyectoArqSoft.Domain.Validators
 {

@@ -1,9 +1,9 @@
 using System;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Pages.Bioquimico

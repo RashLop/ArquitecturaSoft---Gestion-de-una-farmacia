@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace ProyectoArqSoft.FactoryProducts
+namespace ProyectoArqSoft.Application.Ports.Output
 {
     public interface IRepository<T> // equivalente coceptualmente al ICRUD
     {

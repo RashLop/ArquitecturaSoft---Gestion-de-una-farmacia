@@ -1,6 +1,6 @@
 using BCrypt.Net;
 
-namespace ProyectoArqSoft.Helpers
+namespace ProyectoArqSoft.Infrastructure.Helpers
 {
     public static class PasswordHelper
     {

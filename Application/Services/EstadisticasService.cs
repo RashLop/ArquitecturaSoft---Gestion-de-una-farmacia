@@ -1,9 +1,7 @@
-﻿using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Pages;
-using ProyectoArqSoft.Repositories;
+﻿using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 {
     public class EstadisticasService
     {

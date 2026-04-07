@@ -1,11 +1,12 @@
 using System.Data;
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Helpers;
+using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Domain.Validators;
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Application.Interfaces;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Services
 {
     public class UsuarioService : IUsuarioService
     {

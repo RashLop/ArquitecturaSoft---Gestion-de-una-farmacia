@@ -2,7 +2,7 @@ using System.Data;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Validators;
 
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Application.Interfaces
 {
     public interface IUsuarioService
     {

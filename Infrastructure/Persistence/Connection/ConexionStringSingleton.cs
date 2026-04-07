@@ -1,4 +1,4 @@
-namespace ProyectoArqSoft.Services
+namespace ProyectoArqSoft.Infrastructure.Persistence.Connection
 {
     public class ConexionStringSingleton
     {

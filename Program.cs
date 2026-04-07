@@ -6,11 +6,12 @@ using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
 using ClienteEntidad = ProyectoArqSoft.Domain.Models.Cliente;
 using ClasificacionEntidad = ProyectoArqSoft.Domain.Models.Clasificacion;
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.FactoryCreators;
-using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Repositories;
-using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Infrastructure.Creadores;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
+using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Application.Services;
 
 Env.Load();
 

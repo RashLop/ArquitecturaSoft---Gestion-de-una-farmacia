@@ -1,6 +1,6 @@
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Application.Ports.Output;
 
-namespace ProyectoArqSoft.FactoryCreators
+namespace ProyectoArqSoft.Infrastructure.Creadores
 {
     public abstract class RepositoryCreator<T> //Clase creadora
     {

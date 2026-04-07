@@ -1,7 +1,7 @@
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Models;
 
-namespace ProyectoArqSoft.FactoryProducts
+namespace ProyectoArqSoft.Application.Ports.Output
 {
     public interface IUsuarioTokenRepository
     {

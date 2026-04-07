@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
-using ProyectoArqSoft.Services;
+using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
 using System.Data;
 

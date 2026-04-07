@@ -1,8 +1,8 @@
-using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Repositories;
+using ProyectoArqSoft.Application.Ports.Output;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 
 
-namespace ProyectoArqSoft.FactoryCreators
+namespace ProyectoArqSoft.Infrastructure.Creadores
 {
     public class UsuarioRepositoryCreator
     {

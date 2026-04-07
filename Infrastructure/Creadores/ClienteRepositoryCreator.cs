@@ -1,7 +1,8 @@
-using ProyectoArqSoft.FactoryProducts;
+using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 
-namespace ProyectoArqSoft.FactoryCreators
+namespace ProyectoArqSoft.Infrastructure.Creadores
 {
     public class ClienteRepositoryCreator : RepositoryCreator<Cliente>
     {
