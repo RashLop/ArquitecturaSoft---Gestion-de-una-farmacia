@@ -25,8 +25,9 @@ namespace ProyectoArqSoft.Application.Interfaces
             int idClasificacion,
             string concentracion,
             decimal precio,
-            int stock);
+            int stock,
+            int IdUsuario);
 
-        Result EliminarLogicamente(int id);
+        Result EliminarLogicamente(int id, int IdUsuario);
     }
 }

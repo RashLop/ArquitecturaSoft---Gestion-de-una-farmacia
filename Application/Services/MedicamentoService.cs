@@ -69,7 +69,8 @@ namespace ProyectoArqSoft.Application.Services
             int idClasificacion,
             string concentracion,
             decimal precio,
-            int stock)
+            int stock,
+            int idUsuario)
         {
             Medicamento medicamento = ConstruirMedicamento(
                 id,
@@ -79,6 +80,8 @@ namespace ProyectoArqSoft.Application.Services
                 concentracion,
                 precio,
                 stock);
+
+            medicamento.IdUsuario=idUsuario;
 
             var validacion = _validador.Validar(medicamento);
             if (validacion.IsFailure)
@@ -90,11 +93,12 @@ namespace ProyectoArqSoft.Application.Services
             return Result.Ok();
         }
 
-        public Result EliminarLogicamente(int id)
+        public Result EliminarLogicamente(int id, int idUsuario)
         {
             Medicamento medicamento = new Medicamento
             {
-                Id = id
+                Id = id,
+                IdUsuario = idUsuario
             };
 
             if (_repository.Delete(medicamento) <= 0)
