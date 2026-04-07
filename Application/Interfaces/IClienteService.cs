@@ -21,7 +21,8 @@ namespace ProyectoArqSoft.Application.Interfaces
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
-            string? correoElectronico);
+            string? correoElectronico,
+            int idUsuario);
 
         Result Eliminar(int id);
     }
