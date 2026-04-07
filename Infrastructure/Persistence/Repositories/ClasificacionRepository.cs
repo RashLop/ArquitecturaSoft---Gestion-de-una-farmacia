@@ -171,7 +171,7 @@ namespace ProyectoArqSoft.FactoryProducts
             string query = @"SELECT id_clasificacion,
                                     nombre,
                                     origen,
-                                    descripcion,
+                                    descripcion
                              FROM clasificacion
                              WHERE estado = 1";
 
