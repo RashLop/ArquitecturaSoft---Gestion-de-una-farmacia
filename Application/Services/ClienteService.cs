@@ -47,6 +47,8 @@ namespace ProyectoArqSoft.Application.Services
             if (validacion.IsFailure)
                 return validacion;
 
+            LimpiarCampos(cliente);
+
             var validacionDuplicado = ValidarDuplicado(cliente);
             if (validacionDuplicado.IsFailure)
                 return validacionDuplicado;
@@ -69,6 +71,8 @@ namespace ProyectoArqSoft.Application.Services
             var validacion = _validador.Validar(cliente);
             if (validacion.IsFailure)
                 return validacion;
+
+            LimpiarCampos(cliente);
 
             var validacionDuplicado = ValidarDuplicado(cliente);
             if (validacionDuplicado.IsFailure)
@@ -109,7 +113,6 @@ namespace ProyectoArqSoft.Application.Services
             };
 
             AplicarConsumidorFinal(cliente, esConsumidorFinal);
-            LimpiarCampos(cliente);
 
             return cliente;
         }

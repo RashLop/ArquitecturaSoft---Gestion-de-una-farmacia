@@ -55,11 +55,7 @@
                                 <input asp-for="Nit"
                                        class="form-control med-input"
                                        placeholder="NIT"
-                                       inputmode="numeric"
-                                       maxlength="20"
-                                       pattern="[0-9]{5,20}"
-                                       title="Formato valido: 123456789"
-                                       required />
+                                       inputmode="numeric" />
                                 <label asp-for="Nit"></label>
                             </div>
 
@@ -128,7 +124,6 @@
                 contenedor.style.display = esConsumidorFinal ? 'none' : '';
                 correoGroup.style.display = esConsumidorFinal ? 'none' : '';
 
-                nit.required = !esConsumidorFinal;
                 razonSocial.required = !esConsumidorFinal;
 
                 if (esConsumidorFinal) {
