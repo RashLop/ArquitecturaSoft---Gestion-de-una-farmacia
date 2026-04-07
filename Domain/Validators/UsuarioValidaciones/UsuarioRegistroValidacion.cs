@@ -48,8 +48,8 @@ namespace ProyectoArqSoft.Validaciones
         private Result? ValidarTelefono(string telefono)
         {
             return Requerido(telefono, "El teléfono es obligatorio.")
-                ?? Maximo(telefono, 20, "El teléfono no puede tener más de 20 caracteres.")
-                ?? RegexValido(telefono, @"^\d{7,15}$", "El teléfono debe contener solo números y tener entre 7 y 15 dígitos.");
+                ?? Maximo(telefono, 8, "El teléfono debe tener 8 dígitos.")
+                ?? RegexValido(telefono, @"^\d{8}$", "El teléfono debe tener exactamente 8 dígitos numéricos.");
         }
     }
 }
