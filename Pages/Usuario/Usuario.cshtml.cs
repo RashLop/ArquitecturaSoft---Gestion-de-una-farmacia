@@ -33,8 +33,10 @@ namespace ProyectoArqSoft.Pages.Usuario
 
         public IActionResult OnPostEliminarUsuarioLogicamente(int id)
         {
+            int? idUsuarioSesion = HttpContext.Session.GetInt32("IdUsuario");
+
             // Ejecuta la baja l�gica (activo = 0)
-            Result resultado = usuarioService.EliminarUsuario(id);
+            Result resultado = usuarioService.EliminarUsuario(id, idUsuarioSesion);
 
             if (resultado.IsFailure)
             {

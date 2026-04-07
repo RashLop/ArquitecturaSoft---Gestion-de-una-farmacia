@@ -8,8 +8,8 @@ namespace ProyectoArqSoft.Services
     public interface IUsuarioService
     {
         Result CrearUsuario(UsuarioRegistroDto dto, string role);
-        Result ActualizarUsuario(UsuarioActualizacionDto dto);
-        Result EliminarUsuario(int idUsuario);
+        Result ActualizarUsuario(UsuarioActualizacionDto dto, int? idUsuarioSesion);
+        Result EliminarUsuario(int idUsuario, int? idUsuarioSesion);
 
         UsuarioDto? ObtenerUsuarioPorId(int idUsuario);
         UsuarioDto? ObtenerUsuarioPorEmail(string email);
@@ -24,6 +24,6 @@ namespace ProyectoArqSoft.Services
         Result ValidarActivacionCuenta(string token);
         Result ActivarCuenta(string token, string nuevaPassword);
 
-        Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto);
+        Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion);
     }
 }

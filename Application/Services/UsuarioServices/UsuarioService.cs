@@ -61,7 +61,7 @@ namespace ProyectoArqSoft.Services
             );
         }
 
-        public Result ActualizarUsuario(UsuarioActualizacionDto dto)
+        public Result ActualizarUsuario(UsuarioActualizacionDto dto, int? idUsuarioSesion)
         {
             Result validacion = ValidarActualizacion(dto);
             if (!validacion.IsSuccess)
@@ -73,13 +73,13 @@ namespace ProyectoArqSoft.Services
 
             AplicarActualizacion(usuarioActual, dto);
 
-            int filasAfectadas = _repository.Update(usuarioActual);
+            int filasAfectadas = _repository.Update(usuarioActual, idUsuarioSesion);
             return filasAfectadas > 0
                 ? Result.Ok()
                 : Result.Fail("No se pudo actualizar el usuario.");
         }
 
-        public Result EliminarUsuario(int idUsuario)
+        public Result EliminarUsuario(int idUsuario, int? idUsuarioSesion)
         {
             Result validacionNegocio = _negocioValidador.ValidarEliminacion(idUsuario);
             if (!validacionNegocio.IsSuccess)
@@ -89,7 +89,7 @@ namespace ProyectoArqSoft.Services
             if (usuario == null)
                 return Result.Fail("El usuario no existe.");
 
-            int filasAfectadas = _repository.Delete(usuario);
+            int filasAfectadas = _repository.SoftDelete(usuario, idUsuarioSesion);
             return filasAfectadas > 0
                 ? Result.Ok()
                 : Result.Fail("No se pudo eliminar el usuario.");
@@ -309,16 +309,13 @@ namespace ProyectoArqSoft.Services
             return valor?.Trim().ToUpper() ?? string.Empty;
         }
 
-        public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto)
+        public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion)
         {
             if (dto.IdUsuario <= 0)
                 return Result.Fail("El id del usuario no es válido.");
 
             if (string.IsNullOrWhiteSpace(dto.Email))
                 return Result.Fail("El email es obligatorio.");
-
-            if (string.IsNullOrWhiteSpace(dto.UserName))
-                return Result.Fail("El nombre de usuario es obligatorio.");
 
             if (string.IsNullOrWhiteSpace(dto.Role))
                 return Result.Fail("El rol es obligatorio.");
@@ -328,15 +325,15 @@ namespace ProyectoArqSoft.Services
                 return Result.Fail("El usuario no existe.");
 
             usuarioActual.Email = dto.Email.Trim();
-            usuarioActual.UserName = dto.UserName.Trim();
             usuarioActual.Role = dto.Role.Trim();
             usuarioActual.Activo = dto.Activo;
 
-            int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual);
+            int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual, idUsuarioSesion);
 
             return filasAfectadas > 0
                 ? Result.Ok()
                 : Result.Fail("No se pudo actualizar el usuario.");
                 }
+
     }
 }

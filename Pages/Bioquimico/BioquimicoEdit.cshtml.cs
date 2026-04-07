@@ -61,13 +61,14 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
         public IActionResult OnPostActualizarBioquimico()
         {
+            int? idSession = HttpContext.Session.GetInt32("IdUsuario");
             IActionResult? acceso = ValidarAccesoAdmin();
             if (acceso != null)
                 return acceso;
 
             Input.Role = "Bioquimico";
 
-            var resultado = usuarioService.ActualizarUsuario(Input);
+            var resultado = usuarioService.ActualizarUsuario(Input, idSession);
 
             if (resultado.IsFailure)
             {

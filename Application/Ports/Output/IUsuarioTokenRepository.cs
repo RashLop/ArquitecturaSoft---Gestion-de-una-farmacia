@@ -1,3 +1,4 @@
+using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Models;
 
 namespace ProyectoArqSoft.FactoryProducts
@@ -10,5 +11,6 @@ namespace ProyectoArqSoft.FactoryProducts
         int MarcarComoUsado(int idUsuarioToken);
         int RevocarTokensActivos(int idUsuario, string tipoToken);
         int EliminarTokensObsoletos(int dias);
+
     }
 }

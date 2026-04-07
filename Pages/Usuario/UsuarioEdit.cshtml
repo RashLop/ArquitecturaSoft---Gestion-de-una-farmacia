@@ -15,10 +15,6 @@
                     <form method="post" asp-page-handler="ActualizarUsuario">
                         @* Campos ocultos necesarios para el DTO *@
                         <input type="hidden" asp-for="Input.IdUsuario" />
-                        <input type="hidden" asp-for="Input.UserName" />
-                        <input type="hidden" asp-for="Input.Nombres" />
-                        <input type="hidden" asp-for="Input.ApellidoPaterno" />
-
                         <!-- CORREO ELECTRÓNICO -->
                         <div class="form-floating mb-3">
                             <input asp-for="Input.Email" class="form-control med-input" placeholder="Email" required />

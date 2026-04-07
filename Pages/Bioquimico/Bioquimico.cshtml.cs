@@ -40,11 +40,12 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
         public IActionResult OnPostEliminarBioquimicoLogicamente(int id)
         {
+            int? idSesion = HttpContext.Session.GetInt32("IdUsuario");
             IActionResult? acceso = ValidarAccesoAdmin();
             if (acceso != null)
                 return acceso;
 
-            Result resultado = usuarioService.EliminarUsuario(id);
+            Result resultado = usuarioService.EliminarUsuario(id, idSesion);
 
             if (resultado.IsFailure)
             {
