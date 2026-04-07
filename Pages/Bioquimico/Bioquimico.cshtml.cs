@@ -5,9 +5,11 @@ using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
+    [Authorize(Roles = "Admin")]
     public class BioquimicoModel : BasePageModel
     {
         private const string RolBioquimico = "Bioquimico";
@@ -22,9 +24,6 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
         public IActionResult OnGet(string? filtro, string? mensaje, string? error)
         {
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
 
             CargarParametros(filtro, mensaje, error);
 
@@ -41,10 +40,6 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         public IActionResult OnPostEliminarBioquimicoLogicamente(int id)
         {
             int? idSesion = HttpContext.Session.GetInt32("IdUsuario");
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
-
             Result resultado = usuarioService.EliminarUsuario(id, idSesion);
 
             if (resultado.IsFailure)

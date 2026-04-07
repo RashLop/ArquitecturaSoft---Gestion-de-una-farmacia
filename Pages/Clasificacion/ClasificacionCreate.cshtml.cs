@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
@@ -6,6 +7,7 @@ using ProyectoArqSoft.Pages.Base;
 
 namespace ProyectoArqSoft.Pages
 {
+    [Authorize(Roles = "Admin, Bioquimico")]
     public class ClasificacionCreateModel : BasePageModel
     {
         private readonly IClasificacionService clasificacionService;

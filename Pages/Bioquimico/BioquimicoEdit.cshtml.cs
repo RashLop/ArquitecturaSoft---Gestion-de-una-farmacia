@@ -4,9 +4,11 @@ using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
 using Result = ProyectoArqSoft.Domain.Validators.Result;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
+    [Authorize(Roles = "Admin")]
     public class BioquimicoEditModel : BasePageModel
     {
         private readonly IUsuarioService usuarioService;
@@ -41,10 +43,6 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
         public IActionResult OnPostCargarBioquimicoParaEdicion(int id)
         {
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
-
             UsuarioDto? usuario = usuarioService.ObtenerUsuarioPorId(id);
 
             if (usuario == null || !EsBioquimico(usuario.Role))
@@ -75,10 +73,6 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         public IActionResult OnPostActualizarBioquimico()
         {
             int? idSession = HttpContext.Session.GetInt32("IdUsuario");
-
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
 
             UsuarioDto? usuarioActual = usuarioService.ObtenerUsuarioPorId(Input.IdUsuario);
 

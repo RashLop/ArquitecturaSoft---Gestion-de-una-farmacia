@@ -3,9 +3,12 @@ using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Validators;
+using Microsoft.AspNetCore.Authorization;
+using ProyectoArqSoft.Infrastructure.Helpers;
 
 namespace ProyectoArqSoft.Pages.Usuario
 {
+    [Authorize(Roles = "Admin")]
     public class UsuarioCreateModel : BasePageModel
     {
         private readonly IUsuarioService usuarioService;
@@ -23,13 +26,13 @@ namespace ProyectoArqSoft.Pages.Usuario
 
         public IActionResult OnPostCrearUsuario()
         {
-            // 1. PROTOCOLO DE GENERACI�N DE USERNAME (nombre.apellido)
-            string primerNombre = nombres.Trim().Split(' ')[0].ToLower();
-            string primerApellido = apPaterno.Trim().ToLower();
-            string userNameGenerado = $"{primerNombre}.{primerApellido}";
+            var username = CredencialesHelper.GenerarUserName(
+                nombres,
+                apPaterno,
+                ci
+            );
+            var passAleatorio = CredencialesHelper.GenerarPasswordTemporal();
 
-            // 2. GENERACI�N DE CONTRASE�A ALEATORIA (Seguridad exigida por r�brica)
-            string passAleatorio = Guid.NewGuid().ToString().Substring(0, 8);
 
             var dto = new UsuarioRegistroDto
             {
@@ -40,11 +43,10 @@ namespace ProyectoArqSoft.Pages.Usuario
                 CiExtencion = ciExtencion,
                 Telefono = telefono,
                 Email = email,
-                UserName = userNameGenerado,
+                UserName = username,
                 Password = passAleatorio
             };
 
-            // USAMOS 'Result' QUE ES EL TIPO REAL EN TU PROYECTO
             Result resultado = usuarioService.CrearUsuario(dto, role);
 
             if (resultado.IsFailure)
@@ -53,7 +55,7 @@ namespace ProyectoArqSoft.Pages.Usuario
                 return Page();
             }
 
-            return RedirectToPage("Usuario", new { mensaje = $"Usuario registrado. Username: {userNameGenerado}. Credenciales enviadas por mail." });
+            return RedirectToPage("Usuario", new { mensaje = $"Usuario registrado. Username: {username}. Credenciales enviadas por mail." });
         }
     }
 }

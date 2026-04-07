@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
@@ -7,6 +8,7 @@ using System.Data;
 
 namespace ProyectoArqSoft.Pages.Usuario
 {
+    [Authorize(Roles = "Admin")]
     public class UsuarioModel : BasePageModel
     {
         private readonly IUsuarioService usuarioService;

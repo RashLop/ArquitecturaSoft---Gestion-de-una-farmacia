@@ -3,9 +3,11 @@ using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages.Usuario
 {
+    [Authorize(Roles = "Admin")]
     public class UsuarioEditModel : BasePageModel
     {
         private readonly IUsuarioService _usuarioService;

@@ -5,9 +5,11 @@ using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
 using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages
 {
+    [Authorize(Roles = "Admin, Bioquimico")]
     public class MedicamentoUpdateModel : BasePageModel
     {
         private readonly IMedicamentoService medicamentoService;

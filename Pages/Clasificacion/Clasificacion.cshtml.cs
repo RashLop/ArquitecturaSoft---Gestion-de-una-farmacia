@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 //using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Application.Interfaces;
@@ -8,6 +9,7 @@ using System.Data;
 
 namespace ProyectoArqSoft.Pages
 {
+    [Authorize(Roles = "Admin, Bioquimico")]
     public class ClasificacionModel : BasePageModel
     {
         private readonly IClasificacionService clasificacionService;

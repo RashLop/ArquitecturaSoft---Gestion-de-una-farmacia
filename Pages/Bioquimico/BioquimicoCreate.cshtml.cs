@@ -4,9 +4,11 @@ using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
+    [Authorize(Roles = "Admin")]
     public class BioquimicoCreateModel : BasePageModel
     {
         private readonly IUsuarioService _usuarioService;
@@ -27,19 +29,12 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
         public IActionResult OnGet()
         {
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
 
             return Page();
         }
 
         public IActionResult OnPost()
         {
-            IActionResult? acceso = ValidarAccesoAdmin();
-            if (acceso != null)
-                return acceso;
-
             string role = "Bioquimico";
 
             Registro.Ci = (Registro.Ci ?? string.Empty).Trim();

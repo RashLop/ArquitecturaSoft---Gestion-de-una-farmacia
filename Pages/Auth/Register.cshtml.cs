@@ -28,31 +28,31 @@ namespace ProyectoArqSoft.Pages.Auth
         }
 
         public IActionResult OnPost()
-{
-    string role = "Bioquimico";
+        {
+            string role = "Bioquimico";
 
-    Registro.UserName = CredencialesHelper.GenerarUserName(
-        Registro.Nombres,
-        Registro.ApellidoPaterno, 
-        Registro.Ci
-    );
+            Registro.UserName = CredencialesHelper.GenerarUserName(
+                Registro.Nombres,
+                Registro.ApellidoPaterno, 
+                Registro.Ci
+            );
 
-    Registro.Password = CredencialesHelper.GenerarPasswordTemporal();
+            Registro.Password = CredencialesHelper.GenerarPasswordTemporal();
 
-    ModelState.Remove("Registro.UserName");
-    ModelState.Remove("Registro.Password");
+            ModelState.Remove("Registro.UserName");
+            ModelState.Remove("Registro.Password");
 
-    Result resultado = _usuarioService.CrearUsuario(Registro, role);
+            Result resultado = _usuarioService.CrearUsuario(Registro, role);
 
-    if (!resultado.IsSuccess)
-    {
-        MensajeError = resultado.Error;
-        return Page();
-    }
+            if (!resultado.IsSuccess)
+            {
+                MensajeError = resultado.Error;
+                return Page();
+            }
 
-    MensajeOk = "Usuario registrado correctamente. Revisa las credenciales generadas y tu correo electrónico.";
-    return Page();
-}
+            MensajeOk = "Usuario registrado correctamente. Revisa las credenciales generadas y tu correo electrónico.";
+            return Page();
+        }
         
     }
 }

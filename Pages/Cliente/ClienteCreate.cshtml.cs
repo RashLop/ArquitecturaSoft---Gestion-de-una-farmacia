@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoArqSoft.Pages
 {
+    [Authorize(Roles = "Admin, Bioquimico")]
     public class ClienteCreateModel : BasePageModel
     {
         private readonly IClienteService clienteService;
