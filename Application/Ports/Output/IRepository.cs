@@ -2,7 +2,7 @@ using System.Data;
 
 namespace ProyectoArqSoft.Application.Ports.Output
 {
-    public interface IRepository<T> // equivalente coceptualmente al ICRUD
+    public interface IRepository<T> 
     {
         int Insert(T t);
         int Update(T t);
