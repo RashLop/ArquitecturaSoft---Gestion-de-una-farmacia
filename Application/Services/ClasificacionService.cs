@@ -2,8 +2,7 @@
 using ProyectoArqSoft.Services;
 //using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.FactoryProducts;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 //using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.Helpers;

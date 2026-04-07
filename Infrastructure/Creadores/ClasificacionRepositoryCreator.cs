@@ -1,7 +1,6 @@
 //using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.FactoryCreators;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 //using ProyectoArqSoft.Infrastructure.Repositories;
 using ProyectoArqSoft.FactoryProducts;
 

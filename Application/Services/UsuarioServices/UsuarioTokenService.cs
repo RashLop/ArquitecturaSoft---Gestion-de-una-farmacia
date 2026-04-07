@@ -1,7 +1,7 @@
 using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Services

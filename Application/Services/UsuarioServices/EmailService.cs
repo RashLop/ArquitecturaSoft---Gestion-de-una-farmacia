@@ -1,7 +1,7 @@
     using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Services

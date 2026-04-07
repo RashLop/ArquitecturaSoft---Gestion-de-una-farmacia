@@ -1,8 +1,5 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+namespace ProyectoArqSoft.Domain.Models
 
-namespace ProyectoArqSoft.Models
 {
     public class Usuario
     {

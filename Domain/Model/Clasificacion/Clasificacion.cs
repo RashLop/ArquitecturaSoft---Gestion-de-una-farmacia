@@ -1,5 +1,4 @@
-//namespace ProyectoArqSoft.Domain.Model
-namespace ProyectoArqSoft.Models 
+namespace ProyectoArqSoft.Domain.Models
 
 {
     public class Clasificacion

@@ -1,7 +1,7 @@
 using System.Data;
 using ProyectoArqSoft.DTO;
 using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Validaciones;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Domain.DTOs;

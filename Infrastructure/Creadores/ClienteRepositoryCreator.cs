@@ -1,5 +1,5 @@
 using ProyectoArqSoft.FactoryProducts;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 
 namespace ProyectoArqSoft.FactoryCreators
 {

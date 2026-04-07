@@ -1,5 +1,5 @@
 using ProyectoArqSoft.DTO;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Validaciones;
 
 namespace ProyectoArqSoft.Services

@@ -1,6 +1,6 @@
 using System.Data;
 using MySql.Data.MySqlClient;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Services;

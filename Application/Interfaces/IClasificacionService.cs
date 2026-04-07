@@ -1,5 +1,4 @@
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 //using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Validaciones;
 using System.Data;

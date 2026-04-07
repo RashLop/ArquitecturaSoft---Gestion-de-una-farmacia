@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 
 namespace ProyectoArqSoft.Validaciones
 {

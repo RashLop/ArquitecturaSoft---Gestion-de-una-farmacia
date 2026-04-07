@@ -1,7 +1,7 @@
 using MySql.Data.MySqlClient;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Helpers;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Services;
 
 namespace ProyectoArqSoft.Repositories

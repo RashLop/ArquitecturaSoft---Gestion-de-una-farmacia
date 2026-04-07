@@ -1,4 +1,4 @@
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 
 namespace ProyectoArqSoft.Services
 {

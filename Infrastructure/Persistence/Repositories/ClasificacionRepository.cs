@@ -1,8 +1,7 @@
 using MySql.Data.MySqlClient;
 //using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.Services;
-//using ProyectoArqSoft.Domain.Model.Clasificacion;
-using ProyectoArqSoft.Models;
+using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Helpers;
 using System.Data;
 
