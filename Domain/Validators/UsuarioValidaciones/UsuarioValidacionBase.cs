@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
-using ProyectoArqSoft.FactoryProducts;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public abstract class UsuarioValidacionBase
     {

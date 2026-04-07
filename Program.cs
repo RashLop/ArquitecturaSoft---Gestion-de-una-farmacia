@@ -10,7 +10,7 @@ using ProyectoArqSoft.FactoryCreators;
 using ProyectoArqSoft.FactoryProducts;
 using ProyectoArqSoft.Repositories;
 using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 
 Env.Load();
 

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Validaciones; // Aqu� debe estar la clase Result
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Pages.Usuario
 {

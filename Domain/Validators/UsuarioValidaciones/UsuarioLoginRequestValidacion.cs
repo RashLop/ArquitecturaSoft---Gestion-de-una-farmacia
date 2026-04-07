@@ -1,6 +1,7 @@
 using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Aplication.Interfaces;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class UsuarioLoginRequestValidacion : UsuarioValidacionBase, IResult<UsuarioLoginRequestDto>
     {

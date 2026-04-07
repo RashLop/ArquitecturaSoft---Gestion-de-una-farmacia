@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using ProyectoArqSoft.Helpers;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Validators.Validaciones
 {
     public class BioquimicoBusquedaValidacion : IResult<string>
     {

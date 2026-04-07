@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
 using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Pages.Usuario
 {

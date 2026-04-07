@@ -1,4 +1,4 @@
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Services
 {

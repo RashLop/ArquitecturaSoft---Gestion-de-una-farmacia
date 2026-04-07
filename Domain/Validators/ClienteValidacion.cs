@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using ProyectoArqSoft.Domain.Models;
+using ProyectoArqSoft.Aplication.Interfaces;
 
-namespace ProyectoArqSoft.Validaciones
+namespace ProyectoArqSoft.Domain.Validators
 {
     public class ClienteValidacion : IResult<Cliente>
     {

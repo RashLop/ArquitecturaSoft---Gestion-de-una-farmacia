@@ -1,6 +1,6 @@
 using ProyectoArqSoft.Domain.Models;
 //using ProyectoArqSoft.Domain.Validators;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 using System.Data;
 
 //namespace ProyectoArqSoft.Application.Interfaces

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Helpers;
 using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Pages.Auth
 {

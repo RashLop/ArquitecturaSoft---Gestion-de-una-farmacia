@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Pages.Base;
 using ProyectoArqSoft.Services;
-using ProyectoArqSoft.Validaciones;
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Pages.Bioquimico
 {
