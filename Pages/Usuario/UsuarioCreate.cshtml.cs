@@ -17,6 +17,7 @@ namespace ProyectoArqSoft.Pages.Usuario
         [BindProperty] public string apPaterno { get; set; } = string.Empty;
         [BindProperty] public string apMaterno { get; set; } = string.Empty;
         [BindProperty] public string ci { get; set; } = string.Empty;
+        [BindProperty] public string? ciComplemento { get; set; }
         [BindProperty] public string ciExtencion { get; set; } = string.Empty;
         [BindProperty] public string telefono { get; set; } = string.Empty;
         [BindProperty] public string email { get; set; } = string.Empty;
