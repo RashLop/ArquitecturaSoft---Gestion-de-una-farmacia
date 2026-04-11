@@ -36,6 +36,13 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         public IActionResult OnPost()
         {
             string role = "Bioquimico";
+            int? idUsuarioSesion = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuarioSesion == null)
+            {
+                MensajeError = "No se pudo identificar el usuario que realiza la operacion.";
+                return Page();
+            }
 
             Registro.Ci = (Registro.Ci ?? string.Empty).Trim();
             CiComplemento = (CiComplemento ?? string.Empty).Trim().ToUpper();
@@ -56,7 +63,7 @@ namespace ProyectoArqSoft.Pages.Bioquimico
             ModelState.Remove("Registro.UserName");
             ModelState.Remove("Registro.Password");
 
-            Result resultado = _usuarioService.CrearUsuario(Registro, role);
+            Result resultado = _usuarioService.CrearUsuario(Registro, role, idUsuarioSesion);
 
             if (!resultado.IsSuccess)
             {

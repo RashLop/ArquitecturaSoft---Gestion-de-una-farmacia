@@ -31,7 +31,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                 user_name,
                                 password_hash,
                                 role,
-                                must_change_password
+                                must_change_password,
+                                id_usuario
                             )
                             VALUES
                             (
@@ -46,7 +47,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                 @user_name,
                                 @password_hash,
                                 @role,
-                                @must_change_password
+                                @must_change_password,
+                                @id_usuario
                             )";
 
             MySqlCommand command = new MySqlCommand(query);
@@ -62,6 +64,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             command.Parameters.AddWithValue("@password_hash", t.PasswordHash);
             command.Parameters.AddWithValue("@role", t.Role);
             command.Parameters.AddWithValue("@must_change_password", t.MustChangePassword);
+            command.Parameters.AddWithValue("@id_usuario", t.IdUsuarioCreador);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
@@ -232,6 +235,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 UltimaActualizacion = reader.IsDBNull(reader.GetOrdinal("ultima_actualizacion"))
                     ? (DateTime?)null
                     : reader.GetDateTime("ultima_actualizacion"),
+                IdUsuarioCreador = reader.IsDBNull(reader.GetOrdinal("id_usuario"))
+                    ? (int?)null
+                    : reader.GetInt32("id_usuario"),
                 CiExtencion = reader.GetString("ci_extencion"),
                 Email = reader.GetString("email"),
                 UserName = reader.GetString("user_name"),

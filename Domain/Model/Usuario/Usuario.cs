@@ -12,6 +12,7 @@ namespace ProyectoArqSoft.Domain.Models
         public sbyte Activo { get; set; } = 1;
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public DateTime? UltimaActualizacion { get; set; }
+        public int? IdUsuarioCreador { get; set; }
         public string CiExtencion { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
