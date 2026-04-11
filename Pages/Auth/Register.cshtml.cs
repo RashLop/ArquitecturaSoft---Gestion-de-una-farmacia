@@ -42,7 +42,7 @@ namespace ProyectoArqSoft.Pages.Auth
             ModelState.Remove("Registro.UserName");
             ModelState.Remove("Registro.Password");
 
-            Result resultado = _usuarioService.CrearUsuario(Registro, role);
+            Result resultado = _usuarioService.CrearUsuario(Registro, role, null);
 
             if (!resultado.IsSuccess)
             {

@@ -27,6 +27,14 @@ namespace ProyectoArqSoft.Pages.Usuario
 
         public IActionResult OnPostCrearUsuario()
         {
+            int? idUsuarioSesion = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuarioSesion == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operacion.";
+                return Page();
+            }
+
             var username = CredencialesHelper.GenerarUserName(
                 nombres,
                 apPaterno,
@@ -48,7 +56,7 @@ namespace ProyectoArqSoft.Pages.Usuario
                 Password = passAleatorio
             };
 
-            Result resultado = usuarioService.CrearUsuario(dto, role);
+            Result resultado = usuarioService.CrearUsuario(dto, role, idUsuarioSesion);
 
             if (resultado.IsFailure)
             {

@@ -33,7 +33,7 @@ namespace ProyectoArqSoft.Application.Services
             _emailService = emailService;
         }
 
-        public Result CrearUsuario(UsuarioRegistroDto dto, string role)
+        public Result CrearUsuario(UsuarioRegistroDto dto, string role, int? idUsuarioSesion)
         {
             Result validacion = ValidarCreacion(dto);
             if (!validacion.IsSuccess)
@@ -42,7 +42,7 @@ namespace ProyectoArqSoft.Application.Services
             string passwordTemporal = Limpiar(dto.Password);
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
 
-            Usuario usuario = ConstruirUsuarioNuevo(dto, role, passwordHash);
+            Usuario usuario = ConstruirUsuarioNuevo(dto, role, passwordHash, idUsuarioSesion);
 
             int filasAfectadas = _repository.Insert(usuario);
             if (filasAfectadas <= 0)
@@ -227,7 +227,7 @@ namespace ProyectoArqSoft.Application.Services
             );
         }
 
-        private Usuario ConstruirUsuarioNuevo(UsuarioRegistroDto dto, string role, string passwordHash)
+        private Usuario ConstruirUsuarioNuevo(UsuarioRegistroDto dto, string role, string passwordHash, int? idUsuarioSesion)
         {
             return new Usuario
             {
@@ -242,7 +242,8 @@ namespace ProyectoArqSoft.Application.Services
                 PasswordHash = passwordHash,
                 Role = Limpiar(role),
                 Activo = 1,
-                MustChangePassword = 1
+                MustChangePassword = 1,
+                IdUsuarioCreador = idUsuarioSesion
             };
         }
 
