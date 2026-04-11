@@ -30,15 +30,15 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             {
                 connection.Open();
 
-                string query = @"SELECT v.id_venta,
+                string query = @"SELECT v.id,
                                         v.fecha_hora,
                                         v.total,
                                         v.metodo_pago,
                                         c.razon_social AS cliente,
                                         u.user_name AS usuario
                                  FROM venta v
-                                 INNER JOIN cliente c ON v.idCliente = c.id
-                                 INNER JOIN usuario u ON v.idUsuario = u.id
+                                 INNER JOIN cliente c ON v.Cliente_idCliente = c.id
+                                 INNER JOIN usuario u ON v.usuario_idUsuario = u.id
                                  WHERE v.estado = 1";
 
                 query += FiltroSqlHelper.ConstruirCondicionLike(
@@ -62,25 +62,25 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Venta? GetById(int id)
         {
-            string query = @"SELECT id_venta,
+            string query = @"SELECT id,
                                     fecha_hora,
                                     total,
                                     metodo_pago,
-                                    idCliente,
-                                    idUsuario,
+                                    Cliente_idCliente,
+                                    usuario_idUsuario,
                                     estado,
                                     fecha_registro,
                                     ultima_actualizacion,
                                     Id_usuario_editor
                              FROM venta
-                             WHERE id_venta = @id_venta";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_venta", id);
+                command.Parameters.AddWithValue("@id", id);
 
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
@@ -89,12 +89,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
                     return new Venta
                     {
-                        Id = Convert.ToInt32(reader["id_venta"]),
+                        Id = Convert.ToInt32(reader["id"]),
                         FechaHora = Convert.ToDateTime(reader["fecha_hora"]),
                         Total = Convert.ToDecimal(reader["total"]),
                         MetodoPago = StringHelper.LimpiarEspacios(reader["metodo_pago"]?.ToString()),
-                        IdCliente = Convert.ToInt32(reader["idCliente"]),
-                        IdUsuario = Convert.ToInt32(reader["idUsuario"]),
+                        IdCliente = Convert.ToInt32(reader["Cliente_idCliente"]),
+                        IdUsuario = Convert.ToInt32(reader["usuario_idUsuario"]),
                         Estado = Convert.ToInt16(reader["estado"]),
                         FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
                         UltimaActualizacion = reader["ultima_actualizacion"] == DBNull.Value
@@ -166,7 +166,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     }
 
                     string queryVenta = @"INSERT INTO venta
-                                          (total, metodo_pago, idCliente, idUsuario)
+                                          (total, metodo_pago, Cliente_idCliente, usuario_idUsuario)
                                           VALUES
                                           (@total, @metodo_pago, @idCliente, @idUsuario)";
 
@@ -243,7 +243,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         string queryRestore = @"UPDATE medicamento
                                                 SET stock = stock + @cantidad
-                                                WHERE id_medicamento = @id_medicamento";
+                                                WHERE id = @id_medicamento";
 
                         MySqlCommand commandRestore = new MySqlCommand(queryRestore, connection, transaction);
                         commandRestore.Parameters.AddWithValue("@cantidad", detalleActual.Cantidad);
@@ -268,10 +268,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     string queryUpdateVenta = @"UPDATE venta
                                                 SET total = @total,
                                                     metodo_pago = @metodo_pago,
-                                                    idCliente = @idCliente,
+                                                    Cliente_idCliente = @idCliente,
                                                     ultima_actualizacion = NOW(),
                                                     Id_usuario_editor = @id_usuario_editor
-                                                WHERE id_venta = @id_venta
+                                                WHERE id = @id
                                                   AND estado = 1";
 
                     MySqlCommand commandUpdateVenta = new MySqlCommand(queryUpdateVenta, connection, transaction);
@@ -279,7 +279,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     commandUpdateVenta.Parameters.AddWithValue("@metodo_pago", venta.MetodoPago);
                     commandUpdateVenta.Parameters.AddWithValue("@idCliente", venta.IdCliente);
                     commandUpdateVenta.Parameters.AddWithValue("@id_usuario_editor", venta.IdUsuarioEditor);
-                    commandUpdateVenta.Parameters.AddWithValue("@id_venta", venta.Id);
+                    commandUpdateVenta.Parameters.AddWithValue("@id", venta.Id);
 
                     int filasVenta = commandUpdateVenta.ExecuteNonQuery();
                     if (filasVenta <= 0)
@@ -333,10 +333,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 {
                     string queryEstado = @"SELECT estado
                                            FROM venta
-                                           WHERE id_venta = @id_venta";
+                                           WHERE id = @id";
 
                     MySqlCommand commandEstado = new MySqlCommand(queryEstado, connection, transaction);
-                    commandEstado.Parameters.AddWithValue("@id_venta", idVenta);
+                    commandEstado.Parameters.AddWithValue("@id", idVenta);
 
                     object? estadoObj = commandEstado.ExecuteScalar();
 
@@ -365,7 +365,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         string queryRestore = @"UPDATE medicamento
                                                 SET stock = stock + @cantidad
-                                                WHERE id_medicamento = @id_medicamento";
+                                                WHERE id = @id_medicamento";
 
                         MySqlCommand commandRestore = new MySqlCommand(queryRestore, connection, transaction);
                         commandRestore.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
@@ -377,12 +377,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                            SET estado = 0,
                                                ultima_actualizacion = NOW(),
                                                Id_usuario_editor = @id_usuario_editor
-                                           WHERE id_venta = @id_venta
+                                           WHERE id = @id
                                              AND estado = 1";
 
                     MySqlCommand commandAnular = new MySqlCommand(queryAnular, connection, transaction);
                     commandAnular.Parameters.AddWithValue("@id_usuario_editor", idUsuarioEditor);
-                    commandAnular.Parameters.AddWithValue("@id_venta", idVenta);
+                    commandAnular.Parameters.AddWithValue("@id", idVenta);
 
                     int filas = commandAnular.ExecuteNonQuery();
                     if (filas <= 0)
@@ -428,10 +428,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             string query = @"SELECT estado
                              FROM venta
-                             WHERE id_venta = @id_venta";
+                             WHERE id = @id";
 
             MySqlCommand command = new MySqlCommand(query, connection, transaction);
-            command.Parameters.AddWithValue("@id_venta", idVenta);
+            command.Parameters.AddWithValue("@id", idVenta);
 
             object? estadoObj = command.ExecuteScalar();
 
@@ -451,7 +451,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             {
                 string query = @"SELECT stock, estado
                                  FROM medicamento
-                                 WHERE id_medicamento = @id_medicamento";
+                                 WHERE id = @id_medicamento";
 
                 MySqlCommand command = new MySqlCommand(query, connection, transaction);
                 command.Parameters.AddWithValue("@id_medicamento", detalle.IdMedicamento);
@@ -483,7 +483,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             string query = @"UPDATE medicamento
                              SET stock = stock - @cantidad
-                             WHERE id_medicamento = @id_medicamento
+                             WHERE id = @id_medicamento
                                AND estado = 1
                                AND stock >= @cantidad";
 

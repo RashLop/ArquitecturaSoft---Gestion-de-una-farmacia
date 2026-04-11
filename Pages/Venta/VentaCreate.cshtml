@@ -95,7 +95,7 @@
         {
             <text>
             {
-                id: @row["id_medicamento"],
+                id: @row["id"],
                 nombre: "@row["nombre"]",
                 precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture))
             },
