@@ -19,9 +19,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         public int Insert(Clasificacion t)
         {
             string query = @"INSERT INTO clasificacion
-                             (nombre, origen, descripcion)
+                             (nombre, origen, descripcion, id_usuario)
                              VALUES
-                             (@nombre, @origen, @descripcion)";
+                             (@nombre, @origen, @descripcion, @id_usuario)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -29,6 +29,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@origen", t.Origen);
                 command.Parameters.AddWithValue("@descripcion", t.Descripcion);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
