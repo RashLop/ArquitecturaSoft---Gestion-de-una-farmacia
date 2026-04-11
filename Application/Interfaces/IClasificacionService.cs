@@ -12,7 +12,7 @@ namespace ProyectoArqSoft.Application.Interfaces
         DataTable ObtenerTodos(string filtro);
         Clasificacion? ObtenerPorId(int id);
 
-        Result Crear(string nombre, string origen, string descripcion);
+        Result Crear(string nombre, string origen, string descripcion, int idUsuario);
         Result Actualizar(int id, string nombre, string origen, string descripcion, int idUsuario);
         Result EliminarLogicamente(int id, int idUsuario);
     }

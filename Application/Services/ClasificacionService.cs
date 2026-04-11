@@ -36,9 +36,10 @@ namespace ProyectoArqSoft.Application.Services
             return _repository.GetById(id);
         }
 
-        public Result Crear(string nombre, string origen, string descripcion)
+        public Result Crear(string nombre, string origen, string descripcion, int idUsuario)
         {
             Clasificacion clasificacion = ConstruirClasificacion(0, nombre, origen, descripcion);
+            clasificacion.IdUsuario = idUsuario;
 
             Result validacion = _validador.Validar(clasificacion);
             if (validacion.IsFailure)

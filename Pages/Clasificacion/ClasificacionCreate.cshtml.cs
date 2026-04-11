@@ -35,7 +35,15 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearClasificacion()
         {
-            Result resultado = clasificacionService.Crear(Nombre, Origen, Descripcion);
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operación.";
+                return Page();
+            }
+
+            Result resultado = clasificacionService.Crear(Nombre, Origen, Descripcion, idUsuario.Value);
 
             if (resultado.IsFailure)
             {
