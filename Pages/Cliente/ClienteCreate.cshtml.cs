@@ -38,11 +38,20 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearCliente()
         {
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operacion.";
+                return Page();
+            }
+
             Result resultado = clienteService.Crear(
                 EsConsumidorFinal,
                 Nit,
                 RazonSocial,
-                CorreoElectronico);
+                CorreoElectronico,
+                idUsuario.Value);
 
             if (resultado.IsFailure)
             {
