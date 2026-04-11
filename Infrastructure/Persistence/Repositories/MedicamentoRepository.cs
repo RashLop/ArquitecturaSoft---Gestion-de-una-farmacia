@@ -19,9 +19,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         public int Insert(Medicamento t)
         {
             string query = @"INSERT INTO medicamento
-                            (nombre, presentacion, id_clasificacion, concentracion, precio, stock)
+                            (nombre, presentacion, id_clasificacion, concentracion, precio, stock, id_usuario)
                             VALUES
-                            (@nombre, @presentacion, @id_clasificacion, @concentracion, @precio, @stock)";
+                            (@nombre, @presentacion, @id_clasificacion, @concentracion, @precio, @stock, @id_usuario)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -33,6 +33,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 command.Parameters.AddWithValue("@concentracion", t.Concentracion);
                 command.Parameters.AddWithValue("@precio", t.Precio);
                 command.Parameters.AddWithValue("@stock", t.Stock);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();

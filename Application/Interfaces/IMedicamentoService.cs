@@ -16,7 +16,8 @@ namespace ProyectoArqSoft.Application.Interfaces
             int idClasificacion,
             string concentracion,
             decimal precio,
-            int stock);
+            int stock,
+            int idUsuario);
 
         Result Actualizar(
             int id,
