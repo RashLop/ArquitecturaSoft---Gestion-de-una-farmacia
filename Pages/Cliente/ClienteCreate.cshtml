@@ -1,96 +1,76 @@
 @page
 @model ProyectoArqSoft.Pages.ClienteCreateModel
-@{
-}
 
 <div class="container py-5 medicamento-form-page">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
 
-            <div class="med-card shadow-sm">
-                <div class="med-card-header text-center">
-                    <h2 class="mb-0">Nuevo Cliente</h2>
-                    <p class="text-muted mt-2 mb-0">Completa los datos para registrar un cliente</p>
+            <div class="med-card shadow border-0" style="border-radius: 15px; overflow: hidden;">
+                <!-- ENCABEZADO VERDE ESTILO REGISTRO -->
+                <div class="med-card-header text-center bg-success text-white py-3">
+                    <h2 class="mb-0 fw-bold text-white">Nuevo Cliente</h2>
+                    <p class="mb-0 small">Completa los datos para registrar un cliente</p>
                 </div>
 
-                <div class="med-card-body">
+                <div class="med-card-body p-4">
                     <form method="post" asp-page-handler="CrearCliente">
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold d-block mb-3">Tipo de registro</label>
+                            <label class="form-label fw-bold small text-muted d-block mb-3">Tipo de registro</label>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="border rounded-4 p-3 w-100 h-100 bg-white shadow-sm" for="tipoClienteFormal" style="cursor:pointer;">
-                                        <input asp-for="EsConsumidorFinal"
-                                               id="tipoClienteFormal"
-                                               type="radio"
-                                               value="false"
-                                               class="form-check-input me-2" />
+                                        <input asp-for="EsConsumidorFinal" id="tipoClienteFormal" type="radio" value="false" class="form-check-input me-2" />
                                         <span class="fw-semibold d-block mb-1">Cliente con datos fiscales</span>
-                                        <span class="text-muted small">Registra NIT, razón social y, si corresponde, correo electrónico.</span>
+                                        <span class="text-muted small">Registra NIT, razón social y correo electrónico.</span>
                                     </label>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="border rounded-4 p-3 w-100 h-100 bg-light shadow-sm" for="tipoConsumidorFinal" style="cursor:pointer;">
-                                        <input asp-for="EsConsumidorFinal"
-                                               id="tipoConsumidorFinal"
-                                               type="radio"
-                                               value="true"
-                                               class="form-check-input me-2" />
+                                        <input asp-for="EsConsumidorFinal" id="tipoConsumidorFinal" type="radio" value="true" class="form-check-input me-2" />
                                         <span class="fw-semibold d-block mb-1">Consumidor Final</span>
-                                        <span class="text-muted small">El sistema registrara automaticamente NIT = CF y razón social = Consumidor Final.</span>
+                                        <span class="text-muted small">NIT = CF y razón social = Consumidor Final.</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
                         <div id="bloqueConsumidorFinal" class="alert alert-success border-0 shadow-sm mb-4" style="display:none;">
-                            Se registrara la venta como <strong>Consumidor Final</strong>. No necesitas ingresar NIT, razón social ni correo electrónico.
+                            <i class="bi bi-info-circle-fill me-2"></i> Se registrará la venta como <strong>Consumidor Final</strong>.
                         </div>
 
                         <div id="datosClienteFiscal">
                             <div class="form-floating mb-3">
-                                <input asp-for="Nit"
-                                       class="form-control med-input"
-                                       placeholder="NIT"
-                                       inputmode="numeric" />
-                                <label asp-for="Nit"></label>
+                                <input asp-for="Nit" class="form-control med-input" placeholder="NIT" inputmode="numeric" />
+                                <label class="ms-2">NIT / CI</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input asp-for="RazonSocial"
-                                       class="form-control med-input"
-                                       placeholder="Razon Social"
-                                       minlength="3"
-                                       maxlength="45"
-                                       title="Formato valido: minimo 3 caracteres"
-                                       required />
-                                <label asp-for="RazonSocial"></label>
+                                <input asp-for="RazonSocial" class="form-control med-input" placeholder="Razon Social" minlength="3" maxlength="45" required />
+                                <label class="ms-2">Razón Social / Nombre Completo</label>
                             </div>
 
                             <div id="correoElectronicoGroup" class="form-floating mb-3">
-                                <input asp-for="CorreoElectronico"
-                                       type="email"
-                                       class="form-control med-input"
-                                       placeholder="Correo Electronico"
-                                       maxlength="45"
-                                       title="Formato valido: ejemplo@correo.com" />
-                                <label asp-for="CorreoElectronico"></label>
+                                <input asp-for="CorreoElectronico" type="email" class="form-control med-input" placeholder="Correo Electronico" maxlength="45" />
+                                <label class="ms-2">Correo Electrónico (Para factura)</label>
                             </div>
                         </div>
 
                         @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
-                            <div class="alert alert-danger med-alert" role="alert">
-                                @Model.Estado.MensajeError
+                            <div class="alert alert-danger border-0 shadow-sm">
+                                <i class="bi bi-exclamation-circle me-2"></i> @Model.Estado.MensajeError
                             </div>
                         }
 
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a asp-page="Cliente" class="btn med-btn-secondary">Volver</a>
-                            <button type="submit" class="btn med-btn-primary">Guardar</button>
+                        <!-- BOTONES ESTANDARIZADOS -->
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a asp-page="Cliente" class="btn btn-secondary px-4">Volver</a>
+                            <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm" style="background-color: #198754;">
+                                Guardar
+                            </button>
                         </div>
 
                     </form>
@@ -113,29 +93,17 @@
             const razonSocial = document.getElementById('RazonSocial');
             const correo = document.getElementById('CorreoElectronico');
 
-            if (!opcionFormal.checked && !opcionConsumidorFinal.checked) {
-                opcionFormal.checked = true;
-            }
-
             const actualizarFormulario = () => {
                 const esConsumidorFinal = opcionConsumidorFinal.checked;
-
                 bloqueInformativo.style.display = esConsumidorFinal ? '' : 'none';
                 contenedor.style.display = esConsumidorFinal ? 'none' : '';
                 correoGroup.style.display = esConsumidorFinal ? 'none' : '';
-
                 razonSocial.required = !esConsumidorFinal;
-
-                if (esConsumidorFinal) {
-                    nit.value = '';
-                    razonSocial.value = '';
-                    correo.value = '';
-                }
             };
 
-            actualizarFormulario();
             opcionFormal.addEventListener('change', actualizarFormulario);
             opcionConsumidorFinal.addEventListener('change', actualizarFormulario);
+            actualizarFormulario();
         })();
     </script>
 }
