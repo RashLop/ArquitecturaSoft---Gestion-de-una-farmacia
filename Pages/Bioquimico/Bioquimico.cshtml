@@ -87,7 +87,7 @@
                                       asp-page="BioquimicoEdit"
                                       asp-page-handler="CargarBioquimicoParaEdicion"
                                       style="display:inline;">
-                                    <input type="hidden" name="id" value="@row["idUsuario"]" />
+                                    <input type="hidden" name="id" value="@row["id"]" />
                                     <button type="submit" class="btn btn-warning btn-sm">
                                         Editar
                                     </button>
@@ -97,7 +97,7 @@
                                 {
                                     <button type="button"
                                             class="btn btn-danger btn-sm btnEliminar"
-                                            data-id="@row["idUsuario"]"
+                                            data-id="@row["id"]"
                                             data-nombre="@row["nombres"] @row["apellido_paterno"] @row["apellido_materno"]"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEliminarBioquimico">

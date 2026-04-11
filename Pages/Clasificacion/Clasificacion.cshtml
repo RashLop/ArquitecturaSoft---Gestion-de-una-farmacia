@@ -69,7 +69,7 @@
 
                                 <input type="hidden"
                                        name="id"
-                                       value="@row["id_clasificacion"]" />
+                                       value="@row["id"]" />
 
                                 <button type="submit" class="btn btn-warning btn-sm">
                                     Editar
@@ -78,7 +78,7 @@
 
                             <button type="button"
                                     class="btn btn-danger btn-sm btnEliminar"
-                                    data-id="@row["id_clasificacion"]"
+                                    data-id="@row["id"]"
                                     data-nombre="@row["nombre"]"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEliminarClasificacion">

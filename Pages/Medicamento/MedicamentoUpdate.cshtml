@@ -47,7 +47,7 @@
 
                                     @foreach (System.Data.DataRow row in Model.ClasificacionDataTable.Rows)
                                     {
-                                        <option value="@row["id_clasificacion"]">@row["nombre"]</option>
+                                        <option value="@row["id"]">@row["nombre"]</option>
                                     }
                                 </select>
                                 <label asp-for="IdClasificacion"></label>
