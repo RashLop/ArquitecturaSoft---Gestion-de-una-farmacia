@@ -47,14 +47,18 @@
                         </div>
 
                         <div class="col-md-4 form-floating">
-                            <select asp-for="ciExtencion" class="form-select med-input" required>
-                                <option value="CB">CBBA</option>
-                                <option value="LP">LA PAZ</option>
-                                <option value="SC">SANTA CRUZ</option>
-                                <option value="OR">ORURO</option>
-                                <option value="PT">POTOSÍ</option>
+                            <select asp-for="ciExtencion" class="form-select" required>
+                                <option value="BE">Beni</option>
+                                <option value="CB">Cochabamba</option>
+                                <option value="CH">Chuquisaca</option>
+                                <option value="LP">La Paz</option>
+                                <option value="OR">Oruro</option>
+                                <option value="PD">Pando</option>
+                                <option value="PT">Potosí</option>
+                                <option value="SC">Santa Cruz</option>
+                                <option value="TJ">Tarija</option>
                             </select>
-                            <label class="ms-2">Extensión</label>
+                            <label asp-for="ciExtencion">Expedido en</label>
                         </div>
 
 
