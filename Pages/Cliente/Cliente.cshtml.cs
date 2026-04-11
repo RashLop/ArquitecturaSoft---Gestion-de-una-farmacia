@@ -35,7 +35,16 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostEliminarClienteLogicamente(int id)
         {
-            Result resultado = clienteService.Eliminar(id);
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que realiza la operacion.";
+                CargarClientes(Estado.FiltroActual);
+                return Page();
+            }
+
+            Result resultado = clienteService.Eliminar(id, idUsuario.Value);
 
             if (resultado.IsFailure)
             {

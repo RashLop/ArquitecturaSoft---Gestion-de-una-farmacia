@@ -39,9 +39,11 @@ namespace ProyectoArqSoft.Application.Services
             bool esConsumidorFinal,
             string nit,
             string razonSocial,
-            string? correoElectronico)
+            string? correoElectronico,
+            int idUsuario)
         {
             Cliente cliente = ConstruirCliente(0, esConsumidorFinal, nit, razonSocial, correoElectronico);
+            cliente.IdUsuario = idUsuario;
 
             var validacion = _validador.Validar(cliente);
             if (validacion.IsFailure)
@@ -86,11 +88,12 @@ namespace ProyectoArqSoft.Application.Services
             return Result.Ok();
         }
 
-        public Result Eliminar(int id)
+        public Result Eliminar(int id, int idUsuario)
         {
             Cliente cliente = new Cliente
             {
-                IdCliente = id
+                IdCliente = id,
+                IdUsuario = idUsuario
             };
 
             if (_repository.Delete(cliente) <= 0)

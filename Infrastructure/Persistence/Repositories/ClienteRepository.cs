@@ -19,9 +19,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         public int Insert(Cliente t)
         {
             string query = @"INSERT INTO cliente
-                            (nit, razon_social, correo_electronico)
+                            (nit, razon_social, correo_electronico, id_usuario, estado)
                             VALUES
-                            (@nit, @razon_social, @correo_electronico)";
+                            (@nit, @razon_social, @correo_electronico, @id_usuario, @estado)";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -29,6 +29,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
                 command.Parameters.AddWithValue("@nit", t.Nit);
                 command.Parameters.AddWithValue("@razon_social", t.RazonSocial);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
+                command.Parameters.AddWithValue("@estado", t.Estado);
                 command.Parameters.AddWithValue(
                     "@correo_electronico",
                     string.IsNullOrWhiteSpace(t.CorreoElectronico) ? DBNull.Value : t.CorreoElectronico);
@@ -67,13 +69,17 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public int Delete(Cliente t)
         {
-            string query = @"DELETE FROM cliente
+            string query = @"UPDATE cliente
+                             SET estado = 0,
+                                 id_usuario = @id_usuario,
+                                 ultima_actualizacion = NOW()
                              WHERE idCliente = @idCliente";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@idCliente", t.IdCliente);
+                command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
                 return command.ExecuteNonQuery();
@@ -107,9 +113,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Cliente? GetById(int id)
         {
-            string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico, id_usuario
+            string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico, id_usuario, estado
                              FROM cliente
-                             WHERE idCliente = @idCliente";
+                             WHERE idCliente = @idCliente
+                               AND estado = 1";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -129,6 +136,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                             RazonSocial = StringHelper.LimpiarEspacios(reader["razon_social"].ToString()),
                             CorreoElectronico = StringHelper.LimpiarEspacios(reader["correo_electronico"].ToString()),
                             FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                            Estado = Convert.ToInt16(reader["estado"]),
                             IdUsuario = reader["id_usuario"] == DBNull.Value
                                 ? null
                                 : Convert.ToInt32(reader["id_usuario"]),
@@ -152,7 +160,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     fecha_registro,
                                     ultima_actualizacion
                              FROM cliente
-                             WHERE 1 = 1";
+                             WHERE estado = 1";
 
             query += FiltroSqlHelper.ConstruirCondicionLike(
                 filtro,
@@ -168,7 +176,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public int Count()
         {
-            string query = "SELECT COUNT(*) FROM cliente";
+            string query = "SELECT COUNT(*) FROM cliente WHERE estado = 1";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
