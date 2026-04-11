@@ -102,7 +102,7 @@
 
                                 <input type="hidden"
                                        name="id"
-                                       value="@row["id_medicamento"]" />
+                                       value="@row["id"]" />
 
                                 <button type="submit"
                                         class="btn btn-warning btn-sm">
@@ -114,7 +114,7 @@
                             <!-- BOTON ELIMINAR (abre modal) -->
                             <button type="button"
                                     class="btn btn-danger btn-sm btnEliminar"
-                                    data-id="@row["id_medicamento"]"
+                                    data-id="@row["id"]"
                                     data-nombre="@row["nombre"]"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalEliminarMedicamento">

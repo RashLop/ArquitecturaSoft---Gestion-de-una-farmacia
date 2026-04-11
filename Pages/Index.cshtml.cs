@@ -48,7 +48,7 @@ namespace ProyectoArqSoft.Pages
                                         m.precio
                                 FROM medicamento m
                                 INNER JOIN clasificacion c 
-                                    ON m.id_clasificacion = c.id_clasificacion
+                                    ON m.id_clasificacion = c.id
                                 WHERE m.estado = 1
                                 ORDER BY RAND()
                                 LIMIT 3";

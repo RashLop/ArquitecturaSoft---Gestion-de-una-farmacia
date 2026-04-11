@@ -91,10 +91,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             string query = @"UPDATE usuario_token
                              SET usado = 1,
                                  fecha_uso = NOW()
-                             WHERE idusuario_token = @idusuario_token";
+                             WHERE id = @id";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@idusuario_token", idUsuarioToken);
+            command.Parameters.AddWithValue("@id", idUsuarioToken);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
@@ -136,7 +136,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             return new UsuarioToken
             {
-                IdUsuarioToken = reader.GetInt32("idusuario_token"),
+                IdUsuarioToken = reader.GetInt32("id"),
                 UsuarioIdUsuario = reader.GetInt32("usuario_idUsuario"),
                 TokenHash = reader.GetString("token_hash"),
                 TipoToken = reader.GetString("tipo_token"),

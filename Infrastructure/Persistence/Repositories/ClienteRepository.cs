@@ -48,13 +48,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                  correo_electronico = @correo_electronico,
                                  id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE idCliente = @idCliente";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@idCliente", t.IdCliente);
+                command.Parameters.AddWithValue("@id", t.IdCliente);
                 command.Parameters.AddWithValue("@nit", t.Nit);
                 command.Parameters.AddWithValue("@razon_social", t.RazonSocial);
                 command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
@@ -73,12 +73,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                              SET estado = 0,
                                  id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE idCliente = @idCliente";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@idCliente", t.IdCliente);
+                command.Parameters.AddWithValue("@id", t.IdCliente);
                 command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
 
                 connection.Open();
@@ -113,15 +113,15 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Cliente? GetById(int id)
         {
-            string query = @"SELECT idCliente, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico, id_usuario, estado
+            string query = @"SELECT id, fecha_registro, ultima_actualizacion, nit, razon_social, correo_electronico, id_usuario, estado
                              FROM cliente
-                             WHERE idCliente = @idCliente
+                             WHERE id = @id
                                AND estado = 1";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@idCliente", id);
+                command.Parameters.AddWithValue("@id", id);
 
                 connection.Open();
 
@@ -131,7 +131,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         return new Cliente
                         {
-                            IdCliente = Convert.ToInt32(reader["idCliente"]),
+                            IdCliente = Convert.ToInt32(reader["id"]),
                             Nit = StringHelper.LimpiarEspacios(reader["nit"].ToString()),
                             RazonSocial = StringHelper.LimpiarEspacios(reader["razon_social"].ToString()),
                             CorreoElectronico = StringHelper.LimpiarEspacios(reader["correo_electronico"].ToString()),
@@ -153,7 +153,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         private static string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT idCliente,
+            string query = @"SELECT id,
                                     nit,
                                     razon_social,
                                     correo_electronico,

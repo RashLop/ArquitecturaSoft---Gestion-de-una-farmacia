@@ -83,10 +83,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             string query = @"SELECT *
                              FROM usuario
-                             WHERE idUsuario = @idUsuario";
+                             WHERE id = @id";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@idUsuario", id);
+            command.Parameters.AddWithValue("@id", id);
 
             return RepositoryDbHelper.ExecuteReaderSingle(connectionString, command, MapearUsuario);
         }
@@ -149,10 +149,10 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                              SET password_hash = @password_hash,
                                  must_change_password = @must_change_password,
                                  ultima_actualizacion = NOW()
-                             WHERE idUsuario = @idUsuario";
+                             WHERE id = @id";
 
             MySqlCommand command = new MySqlCommand(query);
-            command.Parameters.AddWithValue("@idUsuario", idUsuario);
+            command.Parameters.AddWithValue("@id", idUsuario);
             command.Parameters.AddWithValue("@password_hash", nuevoPasswordHash);
             command.Parameters.AddWithValue("@must_change_password", mustChangePassword);
 
@@ -186,7 +186,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         private string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT idUsuario,
+            string query = @"SELECT id,
                                     nombres,
                                     apellido_paterno,
                                     apellido_materno,
@@ -222,7 +222,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             return new Usuario
             {
-                IdUsuario = reader.GetInt32("idUsuario"),
+                IdUsuario = reader.GetInt32("id"),
                 Nombres = reader.GetString("nombres"),
                 ApellidoMaterno = reader.IsDBNull(reader.GetOrdinal("apellido_materno"))
                     ? null
@@ -257,7 +257,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                 activo = @activo,
                                 Id_usuario = @idUsuarioSesion,
                                 ultima_actualizacion = NOW()
-                             WHERE idUsuario = @idUsuario";
+                             WHERE id = @id";
                             
 
             using MySqlConnection connection = new MySqlConnection(connectionString);
@@ -269,7 +269,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             command.Parameters.AddWithValue("@user_name", usuario.UserName);
             command.Parameters.AddWithValue("@role", usuario.Role);
             command.Parameters.AddWithValue("@activo", usuario.Activo);
-            command.Parameters.AddWithValue("@idUsuario", usuario.IdUsuario);
+            command.Parameters.AddWithValue("@id", usuario.IdUsuario);
 
             return command.ExecuteNonQuery();
         }
@@ -279,11 +279,11 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                             SET activo = 0,
                                 ultima_actualizacion = NOW(),
                                 id_usuario = @idUsuarioSesion
-                            WHERE idusuario = @idUsuario";
+                            WHERE id = @id";
 
             MySqlCommand command = new MySqlCommand(query);
             command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
-            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
+            command.Parameters.AddWithValue("@id", t.IdUsuario);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
@@ -303,7 +303,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                 activo = @activo,
                                 id_usuario = @idUsuarioSesion,
                                 ultima_actualizacion = NOW()
-                            WHERE idusuario = @idUsuario";
+                            WHERE id = @id";
 
             using MySqlConnection connection = new MySqlConnection(connectionString);
             connection.Open();
@@ -320,7 +320,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             command.Parameters.AddWithValue("@role", t.Role);
             command.Parameters.AddWithValue("@activo", t.Activo);
             command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
-            command.Parameters.AddWithValue("@idUsuario", t.IdUsuario);
+            command.Parameters.AddWithValue("@id", t.IdUsuario);
 
             return command.ExecuteNonQuery();
         }

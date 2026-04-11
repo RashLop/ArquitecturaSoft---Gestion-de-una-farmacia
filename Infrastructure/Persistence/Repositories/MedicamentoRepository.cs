@@ -51,13 +51,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                  stock=@stock,
                                  id_usuario=@id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE id_medicamento=@id_medicamento";
+                             WHERE id=@id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@id_medicamento", t.Id);
+                command.Parameters.AddWithValue("@id", t.Id);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@presentacion", t.Presentacion);
                 command.Parameters.AddWithValue("@id_clasificacion", t.IdClasificacion);
@@ -77,7 +77,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                              SET estado = 0,
                                  id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE id_medicamento = @id";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -117,14 +117,14 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Medicamento? GetById(int id)
         {
-            string query = @"SELECT id_medicamento, nombre, presentacion, id_clasificacion, concentracion, precio, stock
+            string query = @"SELECT id, nombre, presentacion, id_clasificacion, concentracion, precio, stock
                              FROM medicamento
-                             WHERE id_medicamento = @id_medicamento";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_medicamento", id);
+                command.Parameters.AddWithValue("@id", id);
 
                 connection.Open();
 
@@ -134,7 +134,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         return new Medicamento
                         {
-                            Id = Convert.ToInt32(reader["id_medicamento"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString()),
                             Presentacion = StringHelper.LimpiarEspacios(reader["presentacion"].ToString()),
                             IdClasificacion = Convert.ToInt32(reader["id_clasificacion"]),
@@ -151,7 +151,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         private string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT m.id_medicamento,
+            string query = @"SELECT m.id,
                                     m.nombre,
                                     m.presentacion,
                                     c.nombre AS clasificacion,
@@ -159,7 +159,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     m.precio
                             FROM medicamento m
                             INNER JOIN clasificacion c 
-                                ON m.id_clasificacion = c.id_clasificacion
+                                ON m.id_clasificacion = c.id
                             WHERE m.estado = 1";
 
             query += FiltroSqlHelper.ConstruirCondicionLike(

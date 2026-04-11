@@ -139,7 +139,7 @@ namespace ProyectoArqSoft.Application.Services
             foreach (DataRow row in clientes.Rows)
             {
                 string nit = StringHelper.QuitarEspacios(row["nit"]?.ToString());
-                int idCliente = Convert.ToInt32(row["idCliente"]);
+                int idCliente = Convert.ToInt32(row["id"]);
 
                 if (nit.Equals(cliente.Nit, StringComparison.OrdinalIgnoreCase) &&
                     idCliente != cliente.IdCliente)

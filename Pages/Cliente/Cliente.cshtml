@@ -69,7 +69,7 @@
                                       asp-page="ClienteEdit"
                                       asp-page-handler="CargarClienteParaEdicion"
                                       style="display:inline;">
-                                    <input type="hidden" name="id" value="@row["idCliente"]" />
+                                    <input type="hidden" name="id" value="@row["id"]" />
                                     <button type="submit" class="btn btn-warning btn-sm">
                                         Editar
                                     </button>
@@ -79,7 +79,7 @@
                                         class="btn btn-danger btn-sm"
                                         data-bs-toggle="modal"
                                         data-bs-target="#@modalId"
-                                        data-id="@row["idCliente"]"
+                                        data-id="@row["id"]"
                                         data-nombre="@row["razon_social"]">
                                     Eliminar
                                 </button>

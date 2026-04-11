@@ -44,12 +44,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                  descripcion = @descripcion,
                                  id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE id_clasificacion = @id_clasificacion";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_clasificacion", t.Id);
+                command.Parameters.AddWithValue("@id", t.Id);
                 command.Parameters.AddWithValue("@nombre", t.Nombre);
                 command.Parameters.AddWithValue("@origen", t.Origen);
                 command.Parameters.AddWithValue("@id_usuario", t.IdUsuario);
@@ -66,7 +66,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                              SET estado = 0,
                                  id_usuario = @id_usuario,
                                  ultima_actualizacion = NOW()
-                             WHERE id_clasificacion = @id";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -106,7 +106,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public Clasificacion? GetById(int id)
         {
-            string query = @"SELECT id_clasificacion,
+            string query = @"SELECT id,
                                     nombre,
                                     origen,
                                     descripcion,
@@ -114,12 +114,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     fecha_registro,
                                     ultima_actualizacion
                              FROM clasificacion
-                             WHERE id_clasificacion = @id_clasificacion";
+                             WHERE id = @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id_clasificacion", id);
+                command.Parameters.AddWithValue("@id", id);
 
                 connection.Open();
 
@@ -129,7 +129,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         return new Clasificacion
                         {
-                            Id = Convert.ToInt32(reader["id_clasificacion"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             Nombre = StringHelper.LimpiarEspacios(reader["nombre"].ToString()),
                             Origen = StringHelper.LimpiarEspacios(reader["origen"].ToString()),
                             Descripcion = StringHelper.LimpiarEspacios(reader["descripcion"].ToString()),
@@ -167,7 +167,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         private string ConstruirQuery(string filtro)
         {
-            string query = @"SELECT id_clasificacion,
+            string query = @"SELECT id,
                                     nombre,
                                     origen,
                                     descripcion
@@ -224,13 +224,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                             FROM clasificacion
                             WHERE nombre = @nombre
                             AND estado = 1
-                            AND id_clasificacion <> @id_clasificacion";
+                            AND id <> @id";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@nombre", nombre);
-                command.Parameters.AddWithValue("@id_clasificacion", idClasificacion);
+                command.Parameters.AddWithValue("@id", idClasificacion);
 
                 connection.Open();
                 int cantidad = Convert.ToInt32(command.ExecuteScalar());
