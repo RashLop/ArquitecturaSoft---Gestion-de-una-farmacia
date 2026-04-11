@@ -1,0 +1,219 @@
+@page
+@model ProyectoArqSoft.Pages.VentaUpdateModel
+@{
+}
+
+<div class="container py-5 medicamento-form-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="med-card shadow-sm">
+                <div class="med-card-header text-center">
+                    <h2 class="mb-0">Actualizar Venta</h2>
+                    <p class="text-muted mt-2 mb-0">Modifica los datos de la venta seleccionada</p>
+                </div>
+
+                <div class="med-card-body">
+                    <form method="post" asp-page-handler="ActualizarVenta">
+                        <input type="hidden" asp-for="IdVenta" />
+                        <input type="hidden" asp-for="DetallesJson" id="DetallesJson" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdCliente" class="form-label">Cliente</label>
+                                <select asp-for="IdCliente" class="form-select med-input" required>
+                                    <option value="">Seleccione un cliente</option>
+                                    @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
+                                    {
+                                        <option value="@row["id"]">@row["razon_social"]</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                                <select asp-for="MetodoPago" class="form-select med-input" required>
+                                    <option value="">Seleccione un método</option>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Tarjeta">Tarjeta</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="QR">QR</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Detalle de venta</h5>
+                            <button type="button" class="btn btn-success btn-sm" id="btnAgregarDetalle">
+                                + Agregar medicamento
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle" id="tablaDetalles">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Medicamento</th>
+                                        <th style="width:130px;">Cantidad</th>
+                                        <th style="width:160px;">Precio Unitario</th>
+                                        <th style="width:140px;">Subtotal</th>
+                                        <th style="width:90px;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detalleBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-end mb-3">
+                            <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                        {
+                            <div class="alert alert-danger med-alert" role="alert">
+                                @Model.Estado.MensajeError
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-page="Venta" class="btn med-btn-secondary">Volver</a>
+                            <button type="submit" class="btn med-btn-primary">Actualizar Venta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    const medicamentos = [
+        @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
+        {
+            <text>
+            {
+                id: @row["id_medicamento"],
+                nombre: "@row["nombre"]",
+                precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture))
+            },
+            </text>
+        }
+    ];
+
+    const detalleBody = document.getElementById("detalleBody");
+    const detallesJsonInput = document.getElementById("DetallesJson");
+    const totalVentaSpan = document.getElementById("totalVenta");
+    const btnAgregarDetalle = document.getElementById("btnAgregarDetalle");
+
+    function crearFila(detalle = null) {
+        const tr = document.createElement("tr");
+
+        const opciones = medicamentos.map(m => {
+            const selected = detalle && Number(detalle.IdMedicamento) === Number(m.id) ? "selected" : "";
+            return `<option value="${m.id}" data-precio="${m.precio}" ${selected}>${m.nombre}</option>`;
+        }).join("");
+
+        tr.innerHTML = `
+            <td>
+                <select class="form-select medicamento-select">
+                    <option value="">Seleccione</option>
+                    ${opciones}
+                </select>
+            </td>
+            <td>
+                <input type="number" min="1" class="form-control cantidad-input" value="${detalle ? detalle.Cantidad : 1}">
+            </td>
+            <td>
+                <input type="number" min="0.01" step="0.01" class="form-control precio-input" value="${detalle ? detalle.PrecioUnitario : 0}">
+            </td>
+            <td>
+                <span class="subtotal-text">0.00</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm btnEliminarFila">Quitar</button>
+            </td>
+        `;
+
+        detalleBody.appendChild(tr);
+
+        const select = tr.querySelector(".medicamento-select");
+        const cantidadInput = tr.querySelector(".cantidad-input");
+        const precioInput = tr.querySelector(".precio-input");
+
+        function actualizarPrecioPorMedicamento() {
+            const option = select.options[select.selectedIndex];
+            if (option && option.dataset.precio && (!detalle || Number(precioInput.value) <= 0)) {
+                precioInput.value = option.dataset.precio;
+            }
+            recalcularFila(tr);
+        }
+
+        select.addEventListener("change", actualizarPrecioPorMedicamento);
+        cantidadInput.addEventListener("input", () => recalcularFila(tr));
+        precioInput.addEventListener("input", () => recalcularFila(tr));
+
+        tr.querySelector(".btnEliminarFila").addEventListener("click", () => {
+            tr.remove();
+            sincronizarJson();
+        });
+
+        if (!detalle) {
+            actualizarPrecioPorMedicamento();
+        } else {
+            recalcularFila(tr);
+        }
+    }
+
+    function recalcularFila(tr) {
+        const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
+        const precio = Number(tr.querySelector(".precio-input").value || 0);
+        const subtotal = cantidad * precio;
+        tr.querySelector(".subtotal-text").textContent = subtotal.toFixed(2);
+        sincronizarJson();
+    }
+
+    function sincronizarJson() {
+        const filas = detalleBody.querySelectorAll("tr");
+        const detalles = [];
+        let total = 0;
+
+        filas.forEach(tr => {
+            const idMedicamento = Number(tr.querySelector(".medicamento-select").value || 0);
+            const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
+            const precioUnitario = Number(tr.querySelector(".precio-input").value || 0);
+            const subtotal = cantidad * precioUnitario;
+
+            if (idMedicamento > 0) {
+                detalles.push({
+                    IdMedicamento: idMedicamento,
+                    Cantidad: cantidad,
+                    PrecioUnitario: precioUnitario
+                });
+            }
+
+            total += subtotal;
+        });
+
+        detallesJsonInput.value = JSON.stringify(detalles);
+        totalVentaSpan.textContent = "Bs. " + total.toFixed(2);
+    }
+
+    btnAgregarDetalle.addEventListener("click", () => crearFila());
+
+    let detallesIniciales = [];
+    try {
+        detallesIniciales = JSON.parse(detallesJsonInput.value || "[]");
+    } catch {
+        detallesIniciales = [];
+    }
+
+    if (detallesIniciales.length > 0) {
+        detallesIniciales.forEach(d => crearFila(d));
+    } else {
+        crearFila();
+    }
+</script>

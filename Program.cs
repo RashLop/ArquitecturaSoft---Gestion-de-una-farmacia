@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
 using ClienteEntidad = ProyectoArqSoft.Domain.Models.Cliente;
 using ClasificacionEntidad = ProyectoArqSoft.Domain.Models.Clasificacion;
+using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Infrastructure.Creadores;
 using ProyectoArqSoft.Application.Ports.Output;
@@ -67,6 +68,19 @@ builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
     var creator = provider.GetRequiredService<UsuarioTokenRepositoryCreator>();
     return creator.CreateRepo();
 });
+
+// DI Ventas
+builder.Services.AddScoped<VentaRepositoryCreator>();
+builder.Services.AddScoped<VentaRepository>();
+
+builder.Services.AddScoped<IVentaRepository>(provider =>
+{
+    var creator = provider.GetRequiredService<VentaRepositoryCreator>();
+    return creator.CreateRepo();
+});
+
+builder.Services.AddScoped<IResult<VentaEntidad>, VentaValidacion>();
+builder.Services.AddScoped<IVentaService, VentaService>();
 
 // Si NO tienes creator de token, usa esta en vez del bloque de arriba:
 // builder.Services.AddScoped<IUsuarioTokenRepository, UsuarioTokenRepository>();
