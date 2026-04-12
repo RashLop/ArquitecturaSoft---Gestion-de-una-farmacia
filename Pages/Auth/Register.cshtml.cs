@@ -56,3 +56,4 @@ namespace ProyectoArqSoft.Pages.Auth
         
     }
 }
+

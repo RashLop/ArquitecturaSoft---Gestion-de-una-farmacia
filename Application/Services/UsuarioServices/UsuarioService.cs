@@ -1,4 +1,5 @@
 using System.Data;
+using MySql.Data.MySqlClient;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Models;
@@ -307,7 +308,7 @@ namespace ProyectoArqSoft.Application.Services
 
         private static string LimpiarMayus(string? valor)
         {
-            return valor?.Trim().ToUpper() ?? string.Empty;
+            return valor?.Trim()?.ToUpper() ?? string.Empty;
         }
 
         public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion)
@@ -338,3 +339,4 @@ namespace ProyectoArqSoft.Application.Services
 
     }
 }
+

@@ -27,7 +27,7 @@ namespace ProyectoArqSoft.Pages.Usuario
             Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
                 return;
 
             CargarUsuarios(Estado.FiltroActual);
@@ -40,7 +40,7 @@ namespace ProyectoArqSoft.Pages.Usuario
             // Ejecuta la baja l�gica (activo = 0)
             Result resultado = usuarioService.EliminarUsuario(id, idUsuarioSesion);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 CargarUsuarios(Estado.FiltroActual);
@@ -63,3 +63,5 @@ namespace ProyectoArqSoft.Pages.Usuario
         }
     }
 }
+
+

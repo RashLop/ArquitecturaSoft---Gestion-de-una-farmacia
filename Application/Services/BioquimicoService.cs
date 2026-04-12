@@ -32,11 +32,11 @@
 //             LimpiarDatos(bioquimico);
 
 //             var validacion = _validador.Validar(bioquimico);
-//             if (validacion.IsFailure)
+//             if (validacion.IsSuccess == false)
 //                 return validacion;
 
 //             var validacionDuplicado = ValidarDocumentoDuplicado(bioquimico);
-//             if (validacionDuplicado.IsFailure)
+//             if (validacionDuplicado.IsSuccess == false)
 //                 return validacionDuplicado;
 
 //             if (_repository.Insert(bioquimico) <= 0)
@@ -50,11 +50,11 @@
 //             LimpiarDatos(bioquimico);
 
 //             var validacion = _validador.Validar(bioquimico);
-//             if (validacion.IsFailure)
+//             if (validacion.IsSuccess == false)
 //                 return validacion;
 
 //             var validacionDuplicado = ValidarDocumentoDuplicadoEnActualizacion(bioquimico);
-//             if (validacionDuplicado.IsFailure)
+//             if (validacionDuplicado.IsSuccess == false)
 //                 return validacionDuplicado;
 
 //             if (_repository.Update(bioquimico) <= 0)
@@ -115,3 +115,5 @@
 //         }
 //     }
 // }
+
+

@@ -27,7 +27,7 @@ namespace ProyectoArqSoft.Pages
             Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
                 return;
 
             CargarMedicamentos(Estado.FiltroActual);
@@ -46,7 +46,7 @@ namespace ProyectoArqSoft.Pages
 
             Result resultado = medicamentoService.EliminarLogicamente(id, idUsuario.Value);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();
@@ -68,3 +68,5 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
+
+

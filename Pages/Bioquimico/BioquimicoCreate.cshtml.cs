@@ -80,3 +80,4 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         }
     }
 }
+

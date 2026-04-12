@@ -26,3 +26,4 @@ namespace ProyectoArqSoft.Application.Interfaces
         Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion);
     }
 }
+

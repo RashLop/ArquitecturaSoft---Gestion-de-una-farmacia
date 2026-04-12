@@ -91,7 +91,7 @@ namespace ProyectoArqSoft.Pages
                 Stock,
                 idUsuario.Value);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
 
@@ -108,3 +108,5 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
+
+

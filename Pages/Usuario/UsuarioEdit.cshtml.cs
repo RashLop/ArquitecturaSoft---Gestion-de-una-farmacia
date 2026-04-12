@@ -35,7 +35,7 @@ namespace ProyectoArqSoft.Pages.Usuario
 
             Result resultado = _usuarioService.ActualizarUsuarioEdicion(Input, idUsuarioSesion);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();

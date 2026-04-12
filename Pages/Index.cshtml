@@ -1,4 +1,4 @@
-ï»¿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Inicio";
@@ -22,12 +22,12 @@
                         </h1>
 
                         <p class="mb-4">
-                            Sistema profesional para la gestiÃ³n eficiente de
-                            inventario, ventas y personal farmacÃ©utico.
+                            Sistema profesional para la gestión eficiente de
+                            inventario, ventas y personal farmacéutico.
                         </p>
 
                         <a asp-page="/Auth/Login" class="btn-main me-3">
-                            Iniciar SesiÃ³n
+                            Iniciar Sesión
                         </a>
                     }
                     else
@@ -38,7 +38,7 @@
                             Bienvenido, <span class="text-accent">@Model.Usuario</span>
                         </h1>
 
-                        <p>Accede rÃ¡pidamente a los productos del sistema.</p>
+                        <p>Accede rápidamente a los productos del sistema.</p>
 
                         <a asp-page="/Medicamento/Medicamento" class="btn-main">
                             Ir a los medicamentos
@@ -59,27 +59,27 @@
 
 
 
-    <!-- SECCIÃ“N INSTITUCIONAL -->
+    <!-- SECCIÓN INSTITUCIONAL -->
     <section class="section bg-light text-center">
         <div class="container">
             <h2 class="mb-3">Comprometidos con la Salud</h2>
             <p class="text-muted mb-5">
                 VitalCare proporciona herramientas modernas para optimizar
-                los procesos farmacÃ©uticos y garantizar una atenciÃ³n segura.
+                los procesos farmacéuticos y garantizar una atención segura.
             </p>
 
             <div class="row">
                 <div class="col-md-4">
-                    <h4 class="text-success">âœ” Seguridad</h4>
-                    <p>Control de accesos y protecciÃ³n de datos.</p>
+                    <h4 class="text-success">? Seguridad</h4>
+                    <p>Control de accesos y protección de datos.</p>
                 </div>
                 <div class="col-md-4">
-                    <h4 class="text-success">âœ” Eficiencia</h4>
-                    <p>GestiÃ³n rÃ¡pida y ordenada de inventario.</p>
+                    <h4 class="text-success">? Eficiencia</h4>
+                    <p>Gestión rápida y ordenada de inventario.</p>
                 </div>
                 <div class="col-md-4">
-                    <h4 class="text-success">âœ” Confianza</h4>
-                    <p>Registro transparente de cada transacciÃ³n.</p>
+                    <h4 class="text-success">? Confianza</h4>
+                    <p>Registro transparente de cada transacción.</p>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
                                 <div class="med-card">
 
                                     <div class="med-icon">
-                                        ðŸ’Š
+                                        ??
                                     </div>
 
                                     <h5 class="med-title">
@@ -114,15 +114,15 @@
                                     </h5>
 
                                     <p class="med-info">
-                                        <strong>PresentaciÃ³n:</strong> @row["presentacion"]
+                                        <strong>Presentación:</strong> @row["presentacion"]
                                     </p>
 
                                     <p class="med-info">
-                                        <strong>ClasificaciÃ³n:</strong> @row["clasificacion"]
+                                        <strong>Clasificación:</strong> @row["clasificacion"]
                                     </p>
 
                                     <p class="med-info">
-                                        <strong>ConcentraciÃ³n:</strong> @row["concentracion"]
+                                        <strong>Concentración:</strong> @row["concentracion"]
                                     </p>
 
                                     <div class="med-price">
@@ -144,33 +144,33 @@
 
     @if (Model.Usuario != null)
     {
-        <!-- MÃ“DULOS -->
+        <!-- MÓDULOS -->
         <section class="section text-center">
             <div class="container">
-                <h2 class="mb-5">MÃ³dulos del Sistema</h2>
+                <h2 class="mb-5">Módulos del Sistema</h2>
 
                 <div class="row">
 
                     <div class="col-lg-4">
                         <div class="card-module">
                             <h3> Medicamentos</h3>
-                            <p>AdministraciÃ³n completa del inventario de medicamentos.</p>
+                            <p>Administración completa del inventario de medicamentos.</p>
                             <a asp-page="/Medicamento/Medicamento">Entrar</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="card-module">
-                            <h3>ðŸ‘¥ Clientes</h3>
-                            <p>GestiÃ³n y registro de clientes de la farmacia.</p>
+                            <h3>?? Clientes</h3>
+                            <p>Gestión y registro de clientes de la farmacia.</p>
                             <a asp-page="/Cliente/Cliente">Entrar</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="card-module">
-                            <h3> BioquÃ­micos</h3>
-                            <p>AdministraciÃ³n del personal bioquÃ­mico autorizado.</p>
+                            <h3> Bioquímicos</h3>
+                            <p>Administración del personal bioquímico autorizado.</p>
                             <a asp-page="/Bioquimico/Bioquimico">Entrar</a>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
         </section>
     }
 
-    <!-- ESTADÃSTICAS -->
+    <!-- ESTADÍSTICAS -->
     <section class="stats-section">
         <div class="container">
             <h2 class="mb-5 text-center">Estadisticas del Sistema</h2>
@@ -188,7 +188,7 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">ðŸ’Š</div>
+                        <div class="stat-icon">??</div>
                         <h2>@Model.TotalFarmacia.TotalMedicamentos</h2>
                         <p>Medicamentos</p>
                     </div>
@@ -196,7 +196,7 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">ðŸ‘¥</div>
+                        <div class="stat-icon">??</div>
                         <h2>@Model.TotalFarmacia.TotalClientes</h2>
                         <p>Clientes</p>
                     </div>
@@ -204,7 +204,7 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">ðŸ§ª</div>
+                        <div class="stat-icon">??</div>
                         <h2>@Model.TotalFarmacia.TotalUsuarios</h2>
                         <p>Usuarios</p>
                     </div>
@@ -212,7 +212,7 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">ðŸ“¦</div>
+                        <div class="stat-icon">??</div>
                         <h2>350+</h2>
                         <p>Ventas Registradas</p>
                     </div>

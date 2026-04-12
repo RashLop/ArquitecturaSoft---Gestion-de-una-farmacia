@@ -14,7 +14,7 @@ namespace ProyectoArqSoft.Domain.Validators
             string apellidoPaterno = dto.ApellidoPaterno?.Trim() ?? string.Empty;
             string apellidoMaterno = dto.ApellidoMaterno?.Trim() ?? string.Empty;
             string ci = dto.Ci?.Trim() ?? string.Empty;
-            string ciExtencion = dto.CiExtencion?.Trim().ToUpper() ?? string.Empty;
+            string ciExtencion = dto.CiExtencion?.Trim()?.ToUpper() ?? string.Empty;
             string telefono = dto.Telefono?.Trim() ?? string.Empty;
             string email = dto.Email?.Trim() ?? string.Empty;
 
@@ -33,7 +33,7 @@ namespace ProyectoArqSoft.Domain.Validators
         {
             return Requerido(ci, "El número de carnet es obligatorio.")
                 ?? (ci.Contains(' ') ? Result.Fail("El número de carnet no debe contener espacios.") : null)
-                ?? RegexValido(ci, @"^\d{5,10}$", "El CI debe tener entre 5 y 10 dígitos.");
+                ?? RegexValido(ci, @"^\d{8}(?:-[A-Za-z0-9]{1,2})?$", "El CI debe tener 8 dígitos y un complemento opcional de hasta dos caracteres (Ej. 10000000-1B)." );
         }
 
         private Result? ValidarCiExtencion(string ciExtencion)
@@ -52,3 +52,4 @@ namespace ProyectoArqSoft.Domain.Validators
         }
     }
 }
+

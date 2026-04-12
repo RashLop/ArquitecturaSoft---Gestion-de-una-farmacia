@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/modal.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VitalCare.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/medicamento-form.css" asp-append-version="true" />
 </head>
@@ -37,7 +38,7 @@
                 <div class="collapse navbar-collapse" id="navbarVitalCare">
 
                     @{
-                        // Obtenemos los datos de la sesión
+                        // Obtenemos los datos de la sesi�n
                         var usuario = Context.Session.GetString("UserName");
                         var role = Context.Session.GetString("Role")?.Trim();
                     }
@@ -55,8 +56,8 @@
                         @if (!string.IsNullOrWhiteSpace(usuario))
                         {
                             @* 
-                                MENÚ DE USUARIOS - EXCLUSIVO PARA ADMIN
-                                CORRECCIÓN: Apunta a la carpeta /Usuario/ (singular)
+                                MEN� DE USUARIOS - EXCLUSIVO PARA ADMIN
+                                CORRECCI�N: Apunta a la carpeta /Usuario/ (singular)
                             *@
                             if (!string.IsNullOrEmpty(role) && role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                             {
@@ -77,7 +78,7 @@
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-page="/Bioquimico/Bioquimico">
-                                                Gestionar Bioquímicos
+                                                Gestionar Bioqu�micos
                                             </a>
                                         </li>
                                     </ul>
@@ -101,7 +102,7 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item" asp-page="/Clasificacion/Clasificacion">
-                                            Gestionar Clasificación
+                                            Gestionar Clasificaci�n
                                         </a>
                                     </li>
                                 </ul>
@@ -122,17 +123,22 @@
                                             Gestionar Clientes
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Venta/Venta">
+                                            Gestionar Ventas
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
                             <li class="nav-item">
-                                @* Mostramos el rol para verificar qué está leyendo el sistema *@
+                                @* Mostramos el rol para verificar qu� est� leyendo el sistema *@
                                 <span class="nav-link text-light">Hola, <b>@usuario (@role)</b></span>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link text-warning fw-bold" asp-page="/Auth/Logout">
-                                    Cerrar Sesión
+                                    Cerrar Sesi�n
                                 </a>
                             </li>
                         }
@@ -159,7 +165,7 @@
         </nav>
     </header>
 
-    @* Contenedor para el cuerpo de la página *@
+    @* Contenedor para el cuerpo de la p�gina *@
     <main role="main">
         @RenderBody()
     </main>
@@ -167,7 +173,7 @@
     <footer class="footer mt-5 bg-dark py-4 text-white">
         <div class="container text-center">
             <p>
-                © 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
+                � 2026 Farmacia VitalCare - Sistema de Gesti�n Farmac�utica
             </p>
         </div>
     </footer>
@@ -185,3 +191,4 @@
 
 </body>
 </html>
+

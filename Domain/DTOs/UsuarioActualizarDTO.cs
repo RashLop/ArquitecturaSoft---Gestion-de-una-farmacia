@@ -5,7 +5,7 @@ namespace ProyectoArqSoft.Domain.DTOs
         public int IdUsuario { get; set; }
         public string Nombres { get; set; } = string.Empty;
         public string ApellidoPaterno { get; set; } = string.Empty;
-        public string ApellidoMaterno { get; set; } = string.Empty;
+        public string? ApellidoMaterno { get; set; }
         public string Ci { get; set; } = string.Empty;
         public string CiExtencion { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
@@ -18,3 +18,4 @@ namespace ProyectoArqSoft.Domain.DTOs
         public sbyte MustChangePassword { get; set; } = 1;
     }
 }
+
