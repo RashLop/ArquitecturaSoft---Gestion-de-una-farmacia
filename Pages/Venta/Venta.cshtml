@@ -47,7 +47,6 @@
         <table class="table table-hover align-middle">
             <thead class="table-success">
                 <tr>
-                    <th>ID</th>
                     <th>Fecha/Hora</th>
                     <th>Cliente</th>
                     <th>Método de Pago</th>
@@ -59,7 +58,6 @@
                 @foreach (System.Data.DataRow row in Model.VentaDataTable.Rows)
                 {
                     <tr>
-                        <td>@row["id"]</td>
                         <td>@row["fecha_hora"]</td>
                         <td>@row["cliente"]</td>
                         <td>@row["metodo_pago"]</td>

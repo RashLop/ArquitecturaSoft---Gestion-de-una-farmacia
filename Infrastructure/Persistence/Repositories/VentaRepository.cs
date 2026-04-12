@@ -449,7 +449,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             foreach (DetalleVenta detalle in detalles)
             {
-                string query = @"SELECT stock, estado
+                string query = @"SELECT nombre, stock, estado
                                  FROM medicamento
                                  WHERE id = @id_medicamento";
 
@@ -461,10 +461,20 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 if (!reader.Read())
                     return Result.Fail($"El medicamento con id {detalle.IdMedicamento} no existe.");
 
+                string nombreMedicamento = StringHelper.LimpiarEspacios(reader["nombre"]?.ToString());
                 int stock = Convert.ToInt32(reader["stock"]);
                 int estado = Convert.ToInt32(reader["estado"]);
 
                 reader.Close();
+
+                if (estado != 1)
+                    return Result.Fail($"El medicamento {nombreMedicamento} esta inactivo.");
+
+                if (stock <= 0)
+                    return Result.Fail($"El medicamento {nombreMedicamento} no tiene stock disponible.");
+
+                if (stock < detalle.Cantidad)
+                    return Result.Fail($"Stock insuficiente para el medicamento {nombreMedicamento}.");
 
                 if (estado != 1)
                     return Result.Fail($"El medicamento con id {detalle.IdMedicamento} está inactivo.");
