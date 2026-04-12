@@ -40,7 +40,7 @@ namespace ProyectoArqSoft.Application.Services
             if (!validacion.IsSuccess)
                 return validacion;
 
-            string passwordTemporal = Limpiar(dto.Password);
+            string passwordTemporal = StringHelper.Limpiar(dto.Password);
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
 
             Usuario usuario = ConstruirUsuarioNuevo(dto, role, passwordHash, idUsuarioSesion);
@@ -106,7 +106,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public UsuarioDto? ObtenerUsuarioPorEmail(string email)
         {
-            email = Limpiar(email);
+            email = StringHelper.Limpiar(email);
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
@@ -115,7 +115,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public UsuarioDto? ObtenerUsuarioPorUserName(string userName)
         {
-            userName = Limpiar(userName);
+            userName = StringHelper.Limpiar(userName);
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
 
@@ -129,18 +129,18 @@ namespace ProyectoArqSoft.Application.Services
 
         public DataTable ObtenerTodos(string filtro)
         {
-            return _repository.GetAll(Limpiar(filtro));
+            return _repository.GetAll(StringHelper.Limpiar(filtro));
         }
 
         public bool ExisteEmail(string email)
         {
-            email = Limpiar(email);
+            email = StringHelper.Limpiar(email);
             return !string.IsNullOrWhiteSpace(email) && _repository.ExisteEmail(email);
         }
 
         public bool ExisteUserName(string userName)
         {
-            userName = Limpiar(userName);
+            userName = StringHelper.Limpiar(userName);
             return !string.IsNullOrWhiteSpace(userName) && _repository.ExisteUserName(userName);
         }
 
@@ -154,7 +154,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public Result ActivarCuenta(string token, string nuevaPassword)
         {
-            nuevaPassword = Limpiar(nuevaPassword);
+            nuevaPassword = StringHelper.Limpiar(nuevaPassword);
             if (string.IsNullOrWhiteSpace(nuevaPassword))
                 return Result.Fail("La nueva contraseña es obligatoria.");
 
@@ -232,16 +232,16 @@ namespace ProyectoArqSoft.Application.Services
         {
             return new Usuario
             {
-                Nombres = Limpiar(dto.Nombres),
-                ApellidoPaterno = Limpiar(dto.ApellidoPaterno),
+                Nombres = StringHelper.Limpiar(dto.Nombres),
+                ApellidoPaterno = StringHelper.Limpiar(dto.ApellidoPaterno),
                 ApellidoMaterno = dto.ApellidoMaterno?.Trim(),
-                Ci = Limpiar(dto.Ci),
-                CiExtencion = LimpiarMayus(dto.CiExtencion),
-                Telefono = Limpiar(dto.Telefono),
-                Email = Limpiar(dto.Email),
-                UserName = Limpiar(dto.UserName),
+                Ci = StringHelper.LimpiarCI(dto.Ci),
+                CiExtencion = StringHelper.LimpiarTextoMayus(dto.CiExtencion),
+                Telefono = StringHelper.Limpiar(dto.Telefono),
+                Email = StringHelper.Limpiar(dto.Email),
+                UserName = StringHelper.Limpiar(dto.UserName),
                 PasswordHash = passwordHash,
-                Role = Limpiar(role),
+                Role = StringHelper.Limpiar(role),
                 Activo = 1,
                 MustChangePassword = 1,
                 IdUsuarioCreador = idUsuarioSesion
@@ -250,15 +250,15 @@ namespace ProyectoArqSoft.Application.Services
 
         private void AplicarActualizacion(Usuario usuario, UsuarioActualizacionDto dto)
         {
-            usuario.Nombres = Limpiar(dto.Nombres);
-            usuario.ApellidoPaterno = Limpiar(dto.ApellidoPaterno);
+            usuario.Nombres = StringHelper.Limpiar(dto.Nombres);
+            usuario.ApellidoPaterno = StringHelper.Limpiar(dto.ApellidoPaterno);
             usuario.ApellidoMaterno = dto.ApellidoMaterno?.Trim();
-            usuario.Ci = Limpiar(dto.Ci);
-            usuario.CiExtencion = LimpiarMayus(dto.CiExtencion);
-            usuario.Telefono = Limpiar(dto.Telefono);
-            usuario.Email = Limpiar(dto.Email);
-            usuario.UserName = Limpiar(dto.UserName);
-            usuario.Role = Limpiar(dto.Role);
+            usuario.Ci = StringHelper.LimpiarCI(dto.Ci);
+            usuario.CiExtencion = StringHelper.LimpiarTextoMayus(dto.CiExtencion);
+            usuario.Telefono = StringHelper.Limpiar(dto.Telefono);
+            usuario.Email = StringHelper.Limpiar(dto.Email);
+            usuario.UserName = StringHelper.Limpiar(dto.UserName);
+            usuario.Role = StringHelper.Limpiar(dto.Role);
             usuario.Activo = dto.Activo;
             usuario.MustChangePassword = dto.MustChangePassword;
         }
@@ -271,7 +271,7 @@ namespace ProyectoArqSoft.Application.Services
 
         private UsuarioToken? ObtenerTokenActivacionValido(string token)
         {
-            token = Limpiar(token);
+            token = StringHelper.Limpiar(token);
 
             if (string.IsNullOrWhiteSpace(token))
                 return null;
@@ -301,16 +301,6 @@ namespace ProyectoArqSoft.Application.Services
             };
         }
 
-        private static string Limpiar(string? valor)
-        {
-            return valor?.Trim() ?? string.Empty;
-        }
-
-        private static string LimpiarMayus(string? valor)
-        {
-            return valor?.Trim()?.ToUpper() ?? string.Empty;
-        }
-
         public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion)
         {
             if (dto.IdUsuario <= 0)
@@ -326,8 +316,8 @@ namespace ProyectoArqSoft.Application.Services
             if (usuarioActual == null)
                 return Result.Fail("El usuario no existe.");
 
-            usuarioActual.Email = dto.Email.Trim();
-            usuarioActual.Role = dto.Role.Trim();
+            usuarioActual.Email = StringHelper.Limpiar(dto.Email);
+            usuarioActual.Role = StringHelper.Limpiar(dto.Role);
             usuarioActual.Activo = dto.Activo;
 
             int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual, idUsuarioSesion);
