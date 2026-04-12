@@ -35,11 +35,22 @@ namespace ProyectoArqSoft.Application.Services
 
         public Result CrearUsuario(UsuarioRegistroDto dto, string role, int? idUsuarioSesion)
         {
+            NormalizarRegistroDto(dto);
+
+            Result validacionTextoPersona = ValidarTextoPersona(
+                dto.Nombres,
+                dto.ApellidoPaterno,
+                dto.ApellidoMaterno
+            );
+
+            if (!validacionTextoPersona.IsSuccess)
+                return validacionTextoPersona;
+
             Result validacion = ValidarCreacion(dto);
             if (!validacion.IsSuccess)
                 return validacion;
 
-            string passwordTemporal = Limpiar(dto.Password);
+            string passwordTemporal = StringHelper.Limpiar(dto.Password);
             string passwordHash = PasswordHelper.Hash(passwordTemporal);
 
             Usuario usuario = ConstruirUsuarioNuevo(dto, role, passwordHash, idUsuarioSesion);
@@ -63,6 +74,17 @@ namespace ProyectoArqSoft.Application.Services
 
         public Result ActualizarUsuario(UsuarioActualizacionDto dto, int? idUsuarioSesion)
         {
+            NormalizarActualizacionDto(dto);
+
+            Result validacionTextoPersona = ValidarTextoPersona(
+                dto.Nombres,
+                dto.ApellidoPaterno,
+                dto.ApellidoMaterno
+            );
+
+            if (!validacionTextoPersona.IsSuccess)
+                return validacionTextoPersona;
+
             Result validacion = ValidarActualizacion(dto);
             if (!validacion.IsSuccess)
                 return validacion;
@@ -105,7 +127,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public UsuarioDto? ObtenerUsuarioPorEmail(string email)
         {
-            email = Limpiar(email);
+            email = StringHelper.LimpiarTextoMinus(email);
             if (string.IsNullOrWhiteSpace(email))
                 return null;
 
@@ -114,7 +136,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public UsuarioDto? ObtenerUsuarioPorUserName(string userName)
         {
-            userName = Limpiar(userName);
+            userName = StringHelper.LimpiarTexto(userName);
             if (string.IsNullOrWhiteSpace(userName))
                 return null;
 
@@ -128,18 +150,18 @@ namespace ProyectoArqSoft.Application.Services
 
         public DataTable ObtenerTodos(string filtro)
         {
-            return _repository.GetAll(Limpiar(filtro));
+            return _repository.GetAll(StringHelper.LimpiarTexto(filtro));
         }
 
         public bool ExisteEmail(string email)
         {
-            email = Limpiar(email);
+            email = StringHelper.LimpiarTextoMinus(email);
             return !string.IsNullOrWhiteSpace(email) && _repository.ExisteEmail(email);
         }
 
         public bool ExisteUserName(string userName)
         {
-            userName = Limpiar(userName);
+            userName = StringHelper.LimpiarTexto(userName);
             return !string.IsNullOrWhiteSpace(userName) && _repository.ExisteUserName(userName);
         }
 
@@ -153,7 +175,7 @@ namespace ProyectoArqSoft.Application.Services
 
         public Result ActivarCuenta(string token, string nuevaPassword)
         {
-            nuevaPassword = Limpiar(nuevaPassword);
+            nuevaPassword = StringHelper.Limpiar(nuevaPassword);
             if (string.IsNullOrWhiteSpace(nuevaPassword))
                 return Result.Fail("La nueva contraseña es obligatoria.");
 
@@ -179,6 +201,34 @@ namespace ProyectoArqSoft.Application.Services
             return Result.Ok();
         }
 
+        public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion)
+        {
+            NormalizarEdicionDto(dto);
+
+            if (dto.IdUsuario <= 0)
+                return Result.Fail("El id del usuario no es válido.");
+
+            if (string.IsNullOrWhiteSpace(dto.Email))
+                return Result.Fail("El email es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(dto.Role))
+                return Result.Fail("El rol es obligatorio.");
+
+            Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
+            if (usuarioActual == null)
+                return Result.Fail("El usuario no existe.");
+
+            usuarioActual.Email = dto.Email;
+            usuarioActual.Role = dto.Role;
+            usuarioActual.Activo = dto.Activo;
+
+            int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual, idUsuarioSesion);
+
+            return filasAfectadas > 0
+                ? Result.Ok()
+                : Result.Fail("No se pudo actualizar el usuario.");
+        }
+
         private Result ValidarCreacion(UsuarioRegistroDto dto)
         {
             Result validacionEntrada = _registroValidador.Validar(dto);
@@ -195,6 +245,23 @@ namespace ProyectoArqSoft.Application.Services
                 return validacionEntrada;
 
             return _negocioValidador.ValidarActualizacion(dto);
+        }
+
+        private Result ValidarTextoPersona(string nombres, string apellidoPaterno, string? apellidoMaterno)
+        {
+            if (StringHelper.NombrePareceFragmentado(nombres))
+                return Result.Fail("El campo nombres parece estar dividido incorrectamente. Verifique que no haya separado un solo nombre con espacios.");
+
+            if (StringHelper.ApellidoPareceFragmentado(apellidoPaterno))
+                return Result.Fail("El apellido paterno parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
+
+            if (!string.IsNullOrWhiteSpace(apellidoMaterno) &&
+                StringHelper.ApellidoPareceFragmentado(apellidoMaterno))
+            {
+                return Result.Fail("El apellido materno parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
+            }
+
+            return Result.Ok();
         }
 
         private Result GenerarYEnviarActivacion(
@@ -231,16 +298,16 @@ namespace ProyectoArqSoft.Application.Services
         {
             return new Usuario
             {
-                Nombres = Limpiar(dto.Nombres),
-                ApellidoPaterno = Limpiar(dto.ApellidoPaterno),
-                ApellidoMaterno = dto.ApellidoMaterno?.Trim(),
-                Ci = Limpiar(dto.Ci),
-                CiExtencion = LimpiarMayus(dto.CiExtencion),
-                Telefono = Limpiar(dto.Telefono),
-                Email = Limpiar(dto.Email),
-                UserName = Limpiar(dto.UserName),
+                Nombres = dto.Nombres,
+                ApellidoPaterno = dto.ApellidoPaterno,
+                ApellidoMaterno = dto.ApellidoMaterno,
+                Ci = dto.Ci,
+                CiExtencion = dto.CiExtencion,
+                Telefono = dto.Telefono,
+                Email = dto.Email,
+                UserName = dto.UserName,
                 PasswordHash = passwordHash,
-                Role = Limpiar(role),
+                Role = StringHelper.LimpiarTexto(role),
                 Activo = 1,
                 MustChangePassword = 1,
                 IdUsuarioCreador = idUsuarioSesion
@@ -249,17 +316,22 @@ namespace ProyectoArqSoft.Application.Services
 
         private void AplicarActualizacion(Usuario usuario, UsuarioActualizacionDto dto)
         {
-            usuario.Nombres = Limpiar(dto.Nombres);
-            usuario.ApellidoPaterno = Limpiar(dto.ApellidoPaterno);
-            usuario.ApellidoMaterno = dto.ApellidoMaterno?.Trim();
-            usuario.Ci = Limpiar(dto.Ci);
-            usuario.CiExtencion = LimpiarMayus(dto.CiExtencion);
-            usuario.Telefono = Limpiar(dto.Telefono);
-            usuario.Email = Limpiar(dto.Email);
-            usuario.UserName = Limpiar(dto.UserName);
-            usuario.Role = Limpiar(dto.Role);
-            usuario.Activo = dto.Activo;
-            usuario.MustChangePassword = dto.MustChangePassword;
+                usuario.Nombres = dto.Nombres;
+                usuario.ApellidoPaterno = dto.ApellidoPaterno;
+                usuario.ApellidoMaterno = dto.ApellidoMaterno;
+                usuario.Ci = dto.Ci;
+                usuario.CiExtencion = dto.CiExtencion;
+                usuario.Telefono = dto.Telefono;
+                usuario.Email = dto.Email;
+
+                if (!string.IsNullOrWhiteSpace(dto.UserName))
+                    usuario.UserName = dto.UserName;
+
+                if (!string.IsNullOrWhiteSpace(dto.Role))
+                    usuario.Role = dto.Role;
+
+                usuario.Activo = dto.Activo;
+                usuario.MustChangePassword = dto.MustChangePassword;
         }
 
         private UsuarioDto? ObtenerYMapear(Func<Usuario?> obtenerUsuario)
@@ -270,7 +342,7 @@ namespace ProyectoArqSoft.Application.Services
 
         private UsuarioToken? ObtenerTokenActivacionValido(string token)
         {
-            token = Limpiar(token);
+            token = StringHelper.Limpiar(token);
 
             if (string.IsNullOrWhiteSpace(token))
                 return null;
@@ -300,41 +372,46 @@ namespace ProyectoArqSoft.Application.Services
             };
         }
 
-        private static string Limpiar(string? valor)
+        private void NormalizarCamposUsuarioBase(UsuarioRegistroDto dto)
         {
-            return valor?.Trim() ?? string.Empty;
+            dto.Nombres = StringHelper.LimpiarTexto(dto.Nombres);
+            dto.ApellidoPaterno = StringHelper.LimpiarTexto(dto.ApellidoPaterno);
+            dto.ApellidoMaterno = StringHelper.LimpiarTexto(dto.ApellidoMaterno);
+            dto.Ci = StringHelper.LimpiarCI(dto.Ci);
+            dto.CiExtencion = StringHelper.LimpiarTextoMayus(dto.CiExtencion);
+            dto.Telefono = StringHelper.QuitarEspacios(dto.Telefono);
+            dto.Email = StringHelper.LimpiarTextoMinus(dto.Email);
+            dto.UserName = StringHelper.LimpiarTexto(dto.UserName);
         }
 
-        private static string LimpiarMayus(string? valor)
+        private void NormalizarCamposUsuarioBase(UsuarioActualizacionDto dto)
         {
-            return valor?.Trim().ToUpper() ?? string.Empty;
+            dto.Nombres = StringHelper.LimpiarTexto(dto.Nombres);
+            dto.ApellidoPaterno = StringHelper.LimpiarTexto(dto.ApellidoPaterno);
+            dto.ApellidoMaterno = StringHelper.LimpiarTexto(dto.ApellidoMaterno);
+            dto.Ci = StringHelper.LimpiarCI(dto.Ci);
+            dto.CiExtencion = StringHelper.LimpiarTextoMayus(dto.CiExtencion);
+            dto.Telefono = StringHelper.QuitarEspacios(dto.Telefono);
+            dto.Email = StringHelper.LimpiarTextoMinus(dto.Email);
+            dto.UserName = StringHelper.LimpiarTexto(dto.UserName);
         }
 
-        public Result ActualizarUsuarioEdicion(UsuarioEdicionDto dto, int? idUsuarioSesion)
+        private void NormalizarRegistroDto(UsuarioRegistroDto dto)
         {
-            if (dto.IdUsuario <= 0)
-                return Result.Fail("El id del usuario no es válido.");
+            NormalizarCamposUsuarioBase(dto);
+            dto.Password = StringHelper.Limpiar(dto.Password);
+        }
 
-            if (string.IsNullOrWhiteSpace(dto.Email))
-                return Result.Fail("El email es obligatorio.");
+        private void NormalizarActualizacionDto(UsuarioActualizacionDto dto)
+        {
+            NormalizarCamposUsuarioBase(dto);
+            dto.Role = StringHelper.LimpiarTexto(dto.Role);
+        }
 
-            if (string.IsNullOrWhiteSpace(dto.Role))
-                return Result.Fail("El rol es obligatorio.");
-
-            Usuario? usuarioActual = _repository.GetById(dto.IdUsuario);
-            if (usuarioActual == null)
-                return Result.Fail("El usuario no existe.");
-
-            usuarioActual.Email = dto.Email.Trim();
-            usuarioActual.Role = dto.Role.Trim();
-            usuarioActual.Activo = dto.Activo;
-
-            int filasAfectadas = _repository.UpdateDatosEdicion(usuarioActual, idUsuarioSesion);
-
-            return filasAfectadas > 0
-                ? Result.Ok()
-                : Result.Fail("No se pudo actualizar el usuario.");
-                }
-
+        private void NormalizarEdicionDto(UsuarioEdicionDto dto)
+        {
+            dto.Email = StringHelper.LimpiarTextoMinus(dto.Email);
+            dto.Role = StringHelper.LimpiarTexto(dto.Role);
+        }
     }
 }

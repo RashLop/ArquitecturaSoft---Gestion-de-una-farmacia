@@ -74,7 +74,7 @@ namespace ProyectoArqSoft.Pages
                 MetodoPago,
                 detalles);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 CargarCatalogos();
@@ -91,3 +91,5 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
+
+

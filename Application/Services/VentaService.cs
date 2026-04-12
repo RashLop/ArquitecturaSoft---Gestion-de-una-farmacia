@@ -56,7 +56,7 @@ namespace ProyectoArqSoft.Application.Services
                 idUsuarioEditor: null);
 
             Result validacion = _validador.Validar(venta);
-            if (validacion.IsFailure)
+            if (validacion.IsSuccess == false)
                 return validacion;
 
             return _repository.RegistrarVenta(venta);
@@ -86,7 +86,7 @@ namespace ProyectoArqSoft.Application.Services
                 idUsuarioEditor: idUsuarioEditor);
 
             Result validacion = _validador.Validar(venta);
-            if (validacion.IsFailure)
+            if (validacion.IsSuccess == false)
                 return validacion;
 
             return _repository.ActualizarVenta(venta);
@@ -134,3 +134,5 @@ namespace ProyectoArqSoft.Application.Services
         }
     }
 }
+
+

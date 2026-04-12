@@ -25,25 +25,35 @@ namespace ProyectoArqSoft.Application.Services
 
         public Result IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta)
         {
-            respuesta = null;
-
             Result validacionEntrada = _loginValidador.Validar(dto);
             if (!validacionEntrada.IsSuccess)
+            {
+                respuesta = null;
                 return validacionEntrada;
+            }
 
             string emailOUserName = dto.EmailOUserName?.Trim() ?? string.Empty;
             string password = dto.Password ?? string.Empty;
 
             Usuario? usuario = BuscarPorEmailOUserName(emailOUserName);
             if (usuario == null)
+            {
+                respuesta = null;
                 return Result.Fail("Las credenciales son incorrectas.");
+            }
 
             if (usuario.Activo == 0)
+            {
+                respuesta = null;
                 return Result.Fail("El usuario se encuentra inactivo.");
+            }
 
             bool passwordValido = PasswordHelper.Verify(password, usuario.PasswordHash);
             if (!passwordValido)
+            {
+                respuesta = null;
                 return Result.Fail("Las credenciales son incorrectas.");
+            }
 
             string token = _tokenService.GenerarToken(usuario, out int expiraEn);
 

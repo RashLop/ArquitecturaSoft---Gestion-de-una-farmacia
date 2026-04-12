@@ -159,7 +159,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 try
                 {
                     Result validacionDb = ValidarVentaParaRegistro(connection, transaction, venta);
-                    if (validacionDb.IsFailure)
+                    if (validacionDb.IsSuccess == false)
                     {
                         transaction.Rollback();
                         return validacionDb;
@@ -182,7 +182,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     foreach (DetalleVenta detalle in venta.Detalles)
                     {
                         Result resultadoStock = DescontarStock(connection, transaction, detalle.IdMedicamento, detalle.Cantidad);
-                        if (resultadoStock.IsFailure)
+                        if (resultadoStock.IsSuccess == false)
                         {
                             transaction.Rollback();
                             return resultadoStock;
@@ -224,14 +224,14 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 try
                 {
                     Result estadoVenta = ValidarVentaEditable(connection, transaction, venta.Id);
-                    if (estadoVenta.IsFailure)
+                    if (estadoVenta.IsSuccess == false)
                     {
                         transaction.Rollback();
                         return estadoVenta;
                     }
 
                     Result validacionBase = ValidarVentaParaActualizacion(connection, transaction, venta);
-                    if (validacionBase.IsFailure)
+                    if (validacionBase.IsSuccess == false)
                     {
                         transaction.Rollback();
                         return validacionBase;
@@ -252,7 +252,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     }
 
                     Result validacionStock = ValidarMedicamentosYStock(connection, transaction, venta.Detalles);
-                    if (validacionStock.IsFailure)
+                    if (validacionStock.IsSuccess == false)
                     {
                         transaction.Rollback();
                         return validacionStock;
@@ -291,7 +291,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     foreach (DetalleVenta detalle in venta.Detalles)
                     {
                         Result resultadoStock = DescontarStock(connection, transaction, detalle.IdMedicamento, detalle.Cantidad);
-                        if (resultadoStock.IsFailure)
+                        if (resultadoStock.IsSuccess == false)
                         {
                             transaction.Rollback();
                             return resultadoStock;
@@ -559,3 +559,4 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         }
     }
 }
+

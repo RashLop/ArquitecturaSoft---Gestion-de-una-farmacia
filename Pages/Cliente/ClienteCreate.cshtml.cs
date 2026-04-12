@@ -53,7 +53,7 @@ namespace ProyectoArqSoft.Pages
                 CorreoElectronico,
                 idUsuario.Value);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();
@@ -63,3 +63,6 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
+
+
+

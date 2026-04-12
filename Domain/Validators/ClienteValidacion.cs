@@ -1,4 +1,4 @@
-Ôªøusing System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Application.Interfaces;
 
@@ -87,7 +87,7 @@ namespace ProyectoArqSoft.Domain.Validators
             if (razonSocial.Length < 3 || razonSocial.Length > 45)
                 return Result.Fail("La razon social debe tener entre 3 y 45 caracteres.");
 
-            if (!Regex.IsMatch(razonSocial, @"^[a-zA-Z0-9√°√©√≠√≥√∫√Å√â√ç√ì√ö√±√ë\s\.\-&]+$"))
+            if (!Regex.IsMatch(razonSocial, @"^[a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄Ò—\s\.\-&]+$"))
                 return Result.Fail("La razon social contiene caracteres no permitidos.");
 
             if (!razonSocial.Any(char.IsLetterOrDigit))
@@ -120,3 +120,4 @@ namespace ProyectoArqSoft.Domain.Validators
         }
     }
 }
+

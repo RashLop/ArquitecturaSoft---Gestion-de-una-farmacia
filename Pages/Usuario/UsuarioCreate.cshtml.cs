@@ -58,7 +58,7 @@ namespace ProyectoArqSoft.Pages.Usuario
 
             Result resultado = usuarioService.CrearUsuario(dto, role, idUsuarioSesion);
 
-            if (resultado.IsFailure)
+            if (resultado.IsSuccess == false)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();
@@ -68,3 +68,6 @@ namespace ProyectoArqSoft.Pages.Usuario
         }
     }
 }
+
+
+

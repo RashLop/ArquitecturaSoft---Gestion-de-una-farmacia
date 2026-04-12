@@ -28,3 +28,4 @@ namespace ProyectoArqSoft.Application.Interfaces
         Result Eliminar(int id, int idUsuario);
     }
 }
+

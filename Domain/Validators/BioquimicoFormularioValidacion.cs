@@ -1,4 +1,4 @@
-ï»¿// using System.Text.RegularExpressions;
+// using System.Text.RegularExpressions;
 // using ProyectoArqSoft.Models;
 
 // namespace ProyectoArqSoft.Validaciones
@@ -45,13 +45,13 @@
 //         private Validacion? ValidarCi(string ci)
 //         {
 //             if (string.IsNullOrWhiteSpace(ci))
-//                 return Validacion.Fail("El nÃºmero de carnet es obligatorio");
+//                 return Validacion.Fail("El número de carnet es obligatorio");
 
 //             if (ci.Contains(' '))
-//                 return Validacion.Fail("El nÃºmero de carnet no debe contener espacios");
+//                 return Validacion.Fail("El número de carnet no debe contener espacios");
 
 //             if (!Regex.IsMatch(ci, @"^\d{5,10}(-\d+[A-Za-z])?$"))
-//                 return Validacion.Fail("El CI debe tener de 5 a 10 dÃ­gitos y el formato correcto (ej: 1234567 o 1234567-1A)");
+//                 return Validacion.Fail("El CI debe tener de 5 a 10 dígitos y el formato correcto (ej: 1234567 o 1234567-1A)");
 
 //             return null;
 //         }
@@ -59,10 +59,10 @@
 //         private Validacion? ValidarCiExtension(string ciExtencion)
 //         {
 //             if (string.IsNullOrWhiteSpace(ciExtencion))
-//                 return Validacion.Fail("La extensiÃ³n del CI es obligatoria");
+//                 return Validacion.Fail("La extensión del CI es obligatoria");
 
 //             if (!ExtensionesValidas.Contains(ciExtencion))
-//                 return Validacion.Fail("La extensiÃ³n del CI no es vÃ¡lida");
+//                 return Validacion.Fail("La extensión del CI no es válida");
 
 //             return null;
 //         }
@@ -70,10 +70,10 @@
 //         private Validacion? ValidarTelefono(string telefono)
 //         {
 //             if (string.IsNullOrWhiteSpace(telefono))
-//                 return Validacion.Fail("El telÃ©fono es obligatorio");
+//                 return Validacion.Fail("El teléfono es obligatorio");
 
 //             if (!Regex.IsMatch(telefono, @"^\d{8}$"))
-//                 return Validacion.Fail("El telÃ©fono debe tener exactamente 8 dÃ­gitos");
+//                 return Validacion.Fail("El teléfono debe tener exactamente 8 dígitos");
 
 //             return null;
 //         }
@@ -83,7 +83,7 @@
 //             return !string.IsNullOrWhiteSpace(valor)
 //                 && valor.Length >= minimo
 //                 && valor.Length <= maximo
-//                 && Regex.IsMatch(valor, @"^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ±Ã‘\s]+$");
+//                 && Regex.IsMatch(valor, @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$");
 //         }
 //     }
 
@@ -110,11 +110,11 @@
 
 //         private Validacion? ValidarFormatoBusqueda(string filtro)
 //         {
-//             string patronValido = @"^([a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ±Ã‘\s]+|\d+|\d+-\d[A-Z])$";
+//             string patronValido = @"^([a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+|\d+|\d+-\d[A-Z])$";
 
 //             return Regex.IsMatch(filtro, patronValido)
 //                 ? null
-//                 : Validacion.Fail("Criterio de bÃºsqueda invÃ¡lido");
+//                 : Validacion.Fail("Criterio de búsqueda inválido");
 //         }
 //     }
 // }

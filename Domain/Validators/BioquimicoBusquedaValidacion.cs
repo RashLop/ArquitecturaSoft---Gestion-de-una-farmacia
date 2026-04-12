@@ -10,7 +10,7 @@ namespace ProyectoArqSoft.Domain.Validators
         {
             var validacionGeneral = FiltroHelper.ValidarFiltro(filtro);
 
-            if (validacionGeneral.IsFailure)
+            if (validacionGeneral.IsSuccess == false)
                 return validacionGeneral;
 
             if (string.IsNullOrWhiteSpace(filtro))
@@ -27,3 +27,5 @@ namespace ProyectoArqSoft.Domain.Validators
         }
     }
 }
+
+

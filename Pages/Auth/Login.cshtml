@@ -1,4 +1,4 @@
-ï»¿@page
+@page
 @model ProyectoArqSoft.Pages.Auth.LoginModel
 @{
     Layout = null;
@@ -35,17 +35,17 @@
                 <h1>Accede a<br />Farmacia VitalCare</h1>
 
                 <p>
-                    Ingresa al sistema de gestiÃ³n farmacÃ©utica para administrar
+                    Ingresa al sistema de gestión farmacéutica para administrar
                     usuarios, inventario, ventas y operaciones de forma segura y eficiente.
                 </p>
 
                 <div class="login-note">
-                    Utiliza tus credenciales para entrar al sistema. Si aÃºn no tienes una cuenta,
-                    puedes registrarte desde la opciÃ³n correspondiente.
+                    Utiliza tus credenciales para entrar al sistema. Si aún no tienes una cuenta,
+                    puedes registrarte desde la opción correspondiente.
                 </div>
 
                 <div class="login-actions">
-                    <a asp-page="/Index" class="btn-outline-home">â† Volver al inicio</a>
+                    <a asp-page="/Index" class="btn-outline-home">? Volver al inicio</a>
                 </div>
             </div>
 
@@ -56,13 +56,13 @@
                     </div>
 
                     <div class="card-header">
-                        <h2>Iniciar sesiÃ³n</h2>
+                        <h2>Iniciar sesión</h2>
                         <p>Ingresa tus credenciales para acceder al sistema</p>
                     </div>
 
                     <form method="post" class="login-form">
                         <div class="form-group">
-                            <label asp-for="LoginRequest.EmailOUserName">Correo electrÃ³nico o nombre de usuario</label>
+                            <label asp-for="LoginRequest.EmailOUserName">Correo electrónico o nombre de usuario</label>
                             <input type="text"
                                    asp-for="LoginRequest.EmailOUserName"
                                    placeholder="Ej. usuario@correo.com o nombre de usuario"
@@ -70,10 +70,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="LoginRequest.Password">ContraseÃ±a</label>
+                            <label asp-for="LoginRequest.Password">Contraseña</label>
                             <input type="password"
                                    asp-for="LoginRequest.Password"
-                                   placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                   placeholder="••••••••"
                                    required />
                         </div>
 
@@ -85,8 +85,8 @@
                         <button type="submit" class="btn-login">Ingresar</button>
 
                         <div class="extra-links">
-                            Â¿No tienes cuenta?
-                            <a asp-page="/Auth/Register">RegÃ­strate</a>
+                            ¿No tienes cuenta?
+                            <a asp-page="/Auth/Register">Regístrate</a>
                         </div>
                     </form>
                 </div>

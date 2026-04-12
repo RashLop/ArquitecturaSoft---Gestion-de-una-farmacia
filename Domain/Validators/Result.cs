@@ -3,7 +3,9 @@ namespace ProyectoArqSoft.Domain.Validators
     public class    Result
     {
         public bool IsSuccess { get; }
-        public bool IsFailure => !IsSuccess;
+        /// <summary>
+        /// Use IsSuccess == false instead of IsFailure.
+        /// </summary>
         public string Error { get; }
 
         public Result(bool isSuccess, string error = "")
@@ -19,3 +21,4 @@ namespace ProyectoArqSoft.Domain.Validators
             => new Result(false, error);
     }
 }
+
