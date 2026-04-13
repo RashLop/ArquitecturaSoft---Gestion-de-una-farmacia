@@ -7,7 +7,7 @@ using ProyectoArqSoft.Infrastructure.Persistence.Connection;
 
 namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 {
-    public class MedicamentoRepository : IRepository<Medicamento>
+    public class MedicamentoRepository : IMedicamentoRepository
     {
         private readonly string connectionString;
 
@@ -176,7 +176,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public int Count()
         {
-            string query = "SELECT COUNT(*) FROM medicamento WHERE estado = 1";
+            string query = "SELECT COUNT(*) FROM medicamento";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -185,6 +185,32 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
                 return Convert.ToInt32(command.ExecuteScalar());
             }
+        }
+        public DataTable GetDestacados()
+        {
+            DataTable tabla = new DataTable();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT m.nombre,
+                                m.presentacion,
+                                c.nombre AS clasificacion,
+                                m.concentracion,
+                                m.precio
+                         FROM medicamento m
+                         INNER JOIN clasificacion c
+                             ON m.id_clasificacion = c.id
+                         WHERE m.estado = 1
+                         ORDER BY RAND()
+                         LIMIT 3";
+
+                MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+                adapter.Fill(tabla);
+            }
+
+            return tabla;
         }
 
     }

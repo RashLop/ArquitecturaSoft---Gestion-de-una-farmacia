@@ -1,4 +1,4 @@
-@page
+锘緻page
 @model IndexModel
 @{
     ViewData["Title"] = "Inicio";
@@ -22,12 +22,12 @@
                         </h1>
 
                         <p class="mb-4">
-                            Sistema profesional para la gesti髇 eficiente de
-                            inventario, ventas y personal farmac閡tico.
+                            Sistema profesional para la gesti贸n eficiente de
+                            inventario, ventas y personal farmac茅utico.
                         </p>
 
                         <a asp-page="/Auth/Login" class="btn-main me-3">
-                            Iniciar Sesi髇
+                            Iniciar Sesi贸n
                         </a>
                     }
                     else
@@ -38,7 +38,7 @@
                             Bienvenido, <span class="text-accent">@Model.Usuario</span>
                         </h1>
 
-                        <p>Accede r醦idamente a los productos del sistema.</p>
+                        <p>Accede r谩pidamente a los productos del sistema.</p>
 
                         <a asp-page="/Medicamento/Medicamento" class="btn-main">
                             Ir a los medicamentos
@@ -59,27 +59,35 @@
 
 
 
-    <!-- SECCI覰 INSTITUCIONAL -->
+    <!-- SECCI脫N INSTITUCIONAL -->
     <section class="section bg-light text-center">
         <div class="container">
             <h2 class="mb-3">Comprometidos con la Salud</h2>
             <p class="text-muted mb-5">
                 VitalCare proporciona herramientas modernas para optimizar
-                los procesos farmac閡ticos y garantizar una atenci髇 segura.
+                los procesos farmac茅uticos y garantizar una atenci贸n segura.
             </p>
 
             <div class="row">
                 <div class="col-md-4">
-                    <h4 class="text-success">? Seguridad</h4>
-                    <p>Control de accesos y protecci髇 de datos.</p>
+                    <h4 class="text-success">
+                        <i class="bi bi-shield-lock-fill"></i> Seguridad
+                    </h4>
+                    <p>Control de accesos y protecci贸n de datos.</p>
                 </div>
                 <div class="col-md-4">
-                    <h4 class="text-success">? Eficiencia</h4>
-                    <p>Gesti髇 r醦ida y ordenada de inventario.</p>
+                    <h4 class="text-success">
+                        <i class="bi bi-lightning-charge-fill"></i> Eficiencia
+                    </h4>
+
+                    <p>Gesti贸n r谩pida y ordenada de inventario.</p>
                 </div>
                 <div class="col-md-4">
-                    <h4 class="text-success">? Confianza</h4>
-                    <p>Registro transparente de cada transacci髇.</p>
+                    <h4 class="text-success">
+                        <i class="bi bi-heart-pulse-fill"></i> Confianza
+                    </h4>
+
+                    <p>Registro transparente de cada transacci贸n.</p>
                 </div>
             </div>
         </div>
@@ -106,23 +114,24 @@
                                 <div class="med-card">
 
                                     <div class="med-icon">
-                                        ??
+                                        <i class="bi bi-capsule-pill"></i>
                                     </div>
+
 
                                     <h5 class="med-title">
                                         @row["nombre"]
                                     </h5>
 
                                     <p class="med-info">
-                                        <strong>Presentaci髇:</strong> @row["presentacion"]
+                                        <strong>Presentaci贸n:</strong> @row["presentacion"]
                                     </p>
 
                                     <p class="med-info">
-                                        <strong>Clasificaci髇:</strong> @row["clasificacion"]
+                                        <strong>Clasificaci贸n:</strong> @row["clasificacion"]
                                     </p>
 
                                     <p class="med-info">
-                                        <strong>Concentraci髇:</strong> @row["concentracion"]
+                                        <strong>Concentraci贸n:</strong> @row["concentracion"]
                                     </p>
 
                                     <div class="med-price">
@@ -144,33 +153,33 @@
 
     @if (Model.Usuario != null)
     {
-        <!-- M覦ULOS -->
+        <!-- M脫DULOS -->
         <section class="section text-center">
             <div class="container">
-                <h2 class="mb-5">M骴ulos del Sistema</h2>
+                <h2 class="mb-5">M贸dulos del Sistema</h2>
 
                 <div class="row">
 
                     <div class="col-lg-4">
                         <div class="card-module">
-                            <h3> Medicamentos</h3>
-                            <p>Administraci髇 completa del inventario de medicamentos.</p>
+                            <h3><i class="bi bi-capsule"></i> Medicamentos</h3>
+                            <p>Administraci贸n completa del inventario de medicamentos.</p>
                             <a asp-page="/Medicamento/Medicamento">Entrar</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="card-module">
-                            <h3>?? Clientes</h3>
-                            <p>Gesti髇 y registro de clientes de la farmacia.</p>
+                            <h3><i class="bi bi-people-fill"></i> Clientes</h3>
+                            <p>Gesti贸n y registro de clientes de la farmacia.</p>
                             <a asp-page="/Cliente/Cliente">Entrar</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="card-module">
-                            <h3> Bioqu韒icos</h3>
-                            <p>Administraci髇 del personal bioqu韒ico autorizado.</p>
+                            <h3><i class="bi bi-person-badge-fill"></i> Bioqu铆micos</h3>
+                            <p>Administraci贸n del personal bioqu铆mico autorizado.</p>
                             <a asp-page="/Bioquimico/Bioquimico">Entrar</a>
                         </div>
                     </div>
@@ -180,7 +189,7 @@
         </section>
     }
 
-    <!-- ESTAD蚐TICAS -->
+    <!-- ESTAD脥STICAS -->
     <section class="stats-section">
         <div class="container">
             <h2 class="mb-5 text-center">Estadisticas del Sistema</h2>
@@ -188,7 +197,9 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">??</div>
+                        <div class="stat-icon">
+                            <i class="bi bi-capsule-pill"></i>
+                        </div>
                         <h2>@Model.TotalFarmacia.TotalMedicamentos</h2>
                         <p>Medicamentos</p>
                     </div>
@@ -196,7 +207,9 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">??</div>
+                        <div class="stat-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
                         <h2>@Model.TotalFarmacia.TotalClientes</h2>
                         <p>Clientes</p>
                     </div>
@@ -204,7 +217,9 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">??</div>
+                        <div class="stat-icon">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
                         <h2>@Model.TotalFarmacia.TotalUsuarios</h2>
                         <p>Usuarios</p>
                     </div>
@@ -212,8 +227,10 @@
 
                 <div class="col-md-3">
                     <div class="stat-card">
-                        <div class="stat-icon">??</div>
-                        <h2>350+</h2>
+                        <div class="stat-icon">
+                            <i class="bi bi-cart-check-fill"></i>
+                        </div>
+                        <h2>@Model.TotalFarmacia.TotalVentas</h2>
                         <p>Ventas Registradas</p>
                     </div>
                 </div>

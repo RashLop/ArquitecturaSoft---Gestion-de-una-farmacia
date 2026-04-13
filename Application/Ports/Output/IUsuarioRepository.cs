@@ -14,7 +14,7 @@ namespace ProyectoArqSoft.Application.Ports.Output
         int CambiarPassword(int idUsuario, string nuevoPasswordHash, bool mustChangePassword);
 
         int UpdateDatosEdicion(Usuario usuario, int? idUsuarioSesion);
-
+        int Count();
         int SoftDelete(Usuario usuario, int? idUsuarioSesion);
 
     }

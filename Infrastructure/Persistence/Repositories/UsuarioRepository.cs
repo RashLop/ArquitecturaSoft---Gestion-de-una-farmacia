@@ -327,7 +327,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
     
         public int Count()
         {
-            string query = "SELECT COUNT(*) FROM usuario WHERE activo = 1";
+            string query = "SELECT COUNT(*) FROM usuario";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {

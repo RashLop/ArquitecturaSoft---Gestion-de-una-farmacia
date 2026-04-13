@@ -9,6 +9,7 @@ namespace ProyectoArqSoft.Application.Interfaces
         DataTable ObtenerTodos();
         DataTable ObtenerTodos(string filtro);
         Medicamento? ObtenerPorId(int id);
+        DataTable ObtenerDestacados();
 
         Result Crear(
             string nombre,

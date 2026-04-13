@@ -567,6 +567,18 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
             return detalles;
         }
+        public int Count()
+        {
+            string query = "SELECT COUNT(*) FROM venta";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                connection.Open();
+
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
+        }        
     }
 }
 

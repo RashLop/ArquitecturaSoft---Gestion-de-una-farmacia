@@ -13,9 +13,7 @@ namespace ProyectoArqSoft.Pages
     [Authorize(Roles = "Admin,Bioquimico")]
     public class VentaCreateModel : BasePageModel
     {
-        private readonly IVentaService ventaService;
-        private readonly IClienteService clienteService;
-        private readonly IMedicamentoService medicamentoService;
+        private readonly IVentaFacade ventaFacade;
 
         [BindProperty]
         public int IdCliente { get; set; }
@@ -30,14 +28,9 @@ namespace ProyectoArqSoft.Pages
         public DataTable ClienteDataTable { get; set; } = new DataTable();
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
 
-        public VentaCreateModel(
-            IVentaService ventaService,
-            IClienteService clienteService,
-            IMedicamentoService medicamentoService)
+        public VentaCreateModel(IVentaFacade ventaFacade)
         {
-            this.ventaService = ventaService;
-            this.clienteService = clienteService;
-            this.medicamentoService = medicamentoService;
+            this.ventaFacade = ventaFacade;
         }
 
         public void OnGet()
@@ -68,7 +61,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            Result resultado = ventaService.Crear(
+            Result resultado = ventaFacade.CrearVenta(
                 IdCliente,
                 idUsuario.Value,
                 MetodoPago,
@@ -86,8 +79,8 @@ namespace ProyectoArqSoft.Pages
 
         private void CargarCatalogos()
         {
-            ClienteDataTable = clienteService.ObtenerTodos();
-            MedicamentoDataTable = medicamentoService.ObtenerTodos();
+            ClienteDataTable = ventaFacade.ObtenerClientes();
+            MedicamentoDataTable = ventaFacade.ObtenerMedicamentos();
         }
     }
 }
