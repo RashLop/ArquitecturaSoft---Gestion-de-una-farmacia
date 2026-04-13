@@ -1,23 +1,29 @@
-using System.Text;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
-using ClienteEntidad = ProyectoArqSoft.Domain.Models.Cliente;
-using ClasificacionEntidad = ProyectoArqSoft.Domain.Models.Clasificacion;
-using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
-using ProyectoArqSoft.Domain.DTOs;
-using ProyectoArqSoft.Infrastructure.Creadores;
-using ProyectoArqSoft.Application.Ports.Output;
-using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
+using ProyectoArqSoft.Application.Facades;
 using ProyectoArqSoft.Application.Interfaces;
-using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.Application.Services;
+using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Domain.Validators;
+using ProyectoArqSoft.Infrastructure.Creadores;
+using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
+using System.Text;
+
+using ClasificacionEntidad = ProyectoArqSoft.Domain.Models.Clasificacion;
+using ClienteEntidad = ProyectoArqSoft.Domain.Models.Cliente;
+using MedicamentoEntidad = ProyectoArqSoft.Domain.Models.Medicamento;
+using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
 
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// =========================
+// CONFIGURACIÓN BASE
+// =========================
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
@@ -25,37 +31,44 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<MedicamentoRepositoryCreator>();
-builder.Services.AddScoped<MedicamentoRepository>();
-builder.Services.AddScoped<ClienteRepositoryCreator>();
-builder.Services.AddScoped<ClienteRepository>();
-builder.Services.AddScoped<UsuarioRepositoryCreator>();
-builder.Services.AddScoped<UsuarioRepository>();
-builder.Services.AddScoped<ClasificacionRepositoryCreator>();
-builder.Services.AddScoped<ClasificacionRepository>();
-//Estadisticas
-builder.Services.AddScoped<EstadisticasService>();
 
-// Si tienes creator de token:
-builder.Services.AddScoped<UsuarioTokenRepositoryCreator>();
-builder.Services.AddScoped<UsuarioTokenRepository>();
+// =========================
+// MEDICAMENTOS
+// =========================
+builder.Services.AddScoped<MedicamentoRepositoryCreator>();
+
+builder.Services.AddScoped<IMedicamentoRepository, MedicamentoRepository>();
 
 builder.Services.AddScoped<IRepository<MedicamentoEntidad>>(provider =>
 {
     var creator = provider.GetRequiredService<MedicamentoRepositoryCreator>();
     return creator.CreateRepo();
 });
+
 builder.Services.AddScoped<IResult<MedicamentoEntidad>, MedicamentoValidacion>();
 builder.Services.AddScoped<IMedicamentoService, MedicamentoService>();
+
+
+// =========================
+// CLIENTES
+// =========================
+builder.Services.AddScoped<ClienteRepositoryCreator>();
 
 builder.Services.AddScoped<IRepository<ClienteEntidad>>(provider =>
 {
     var creator = provider.GetRequiredService<ClienteRepositoryCreator>();
     return creator.CreateRepo();
 });
+
 builder.Services.AddScoped<IResult<ClienteEntidad>, ClienteValidacion>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 
+
+// =========================
+// USUARIOS
+// =========================
+builder.Services.AddScoped<UsuarioRepositoryCreator>();
+builder.Services.AddScoped<UsuarioTokenRepositoryCreator>();
 
 builder.Services.AddScoped<IUsuarioRepository>(provider =>
 {
@@ -69,9 +82,31 @@ builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
     return creator.CreateRepo();
 });
 
-// DI Ventas
+builder.Services.AddScoped<UsuarioNegocioValidacion>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioTokenService, UsuarioTokenService>();
+
+
+// =========================
+// CLASIFICACIÓN
+// =========================
+builder.Services.AddScoped<ClasificacionRepositoryCreator>();
+
+builder.Services.AddScoped<IRepository<ClasificacionEntidad>>(provider =>
+{
+    var creator = provider.GetRequiredService<ClasificacionRepositoryCreator>();
+    return creator.CreateRepo();
+});
+
+builder.Services.AddScoped<IClasificacionRepository, ClasificacionRepository>();
+builder.Services.AddScoped<IResult<ClasificacionEntidad>, ClasificacionValidacion>();
+builder.Services.AddScoped<IClasificacionService, ClasificacionService>();
+
+
+// =========================
+// VENTAS
+// =========================
 builder.Services.AddScoped<VentaRepositoryCreator>();
-builder.Services.AddScoped<VentaRepository>();
 
 builder.Services.AddScoped<IVentaRepository>(provider =>
 {
@@ -81,30 +116,38 @@ builder.Services.AddScoped<IVentaRepository>(provider =>
 
 builder.Services.AddScoped<IResult<VentaEntidad>, VentaValidacion>();
 builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<IVentaFacade, VentaFacade>();
 
-// Si NO tienes creator de token, usa esta en vez del bloque de arriba:
-// builder.Services.AddScoped<IUsuarioTokenRepository, UsuarioTokenRepository>();
+//repos
+builder.Services.AddScoped<IMedicamentoRepository, MedicamentoRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IVentaRepository, VentaRepository>();
+builder.Services.AddScoped<IClasificacionRepository, ClasificacionRepository>();
+
+
+// =========================
+// DASHBOARD / INDEX
+// =========================
+builder.Services.AddScoped<EstadisticasService>();
+builder.Services.AddScoped<IDashboardFacade, DashboardFacade>();
+
+
+// =========================
+// AUTH / EMAIL / TOKEN
+// =========================
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IResult<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
 builder.Services.AddScoped<IResult<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
 builder.Services.AddScoped<IResult<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
 
-builder.Services.AddScoped<IRepository<ClasificacionEntidad>>(provider =>
-{
-    var creator = provider.GetRequiredService<ClasificacionRepositoryCreator>();
-    return creator.CreateRepo();
-});
-builder.Services.AddScoped<IResult<ClasificacionEntidad>, ClasificacionValidacion>();
-builder.Services.AddScoped<IClasificacionService, ClasificacionService>();
-builder.Services.AddScoped<IClasificacionRepository, ClasificacionRepository>();
 
-builder.Services.AddScoped<UsuarioNegocioValidacion>();
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<IUsuarioTokenService, UsuarioTokenService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-
+// =========================
+// JWT
+// =========================
 string jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") ?? string.Empty;
 string jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? string.Empty;
 string jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? string.Empty;
@@ -129,9 +172,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtKey)
+            ),
             ClockSkew = TimeSpan.Zero
         };
+
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
@@ -150,6 +196,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+
+// =========================
+// APP
+// =========================
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

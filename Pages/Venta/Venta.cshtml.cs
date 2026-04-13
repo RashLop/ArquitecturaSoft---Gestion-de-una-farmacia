@@ -11,13 +11,13 @@ namespace ProyectoArqSoft.Pages
     [Authorize(Roles = "Admin,Bioquimico")]
     public class VentaModel : BasePageModel
     {
-        private readonly IVentaService ventaService;
+        private readonly IVentaFacade ventaFacade;
 
         public DataTable VentaDataTable { get; set; } = new DataTable();
 
-        public VentaModel(IVentaService ventaService)
+        public VentaModel(IVentaFacade ventaFacade)
         {
-            this.ventaService = ventaService;
+            this.ventaFacade = ventaFacade;
         }
 
         public void OnGet(string? filtro, string? mensaje, string? error)
@@ -29,10 +29,10 @@ namespace ProyectoArqSoft.Pages
             Result resultado = FiltroHelper.ValidarFiltro(Estado.FiltroActual);
             Estado.MensajeError = resultado.Error;
 
-            if (resultado.IsSuccess == false)
+            if (!resultado.IsSuccess)
                 return;
 
-            VentaDataTable = ventaService.ObtenerTodos(Estado.FiltroActual);
+            VentaDataTable = ventaFacade.ObtenerVentas(Estado.FiltroActual);
         }
 
         public IActionResult OnPostEliminarVentaLogicamente(int id)
@@ -42,22 +42,21 @@ namespace ProyectoArqSoft.Pages
             if (idUsuarioEditor == null)
             {
                 Estado.MensajeError = "No se pudo identificar el usuario.";
-                VentaDataTable = ventaService.ObtenerTodos(Estado.FiltroActual);
+                VentaDataTable = ventaFacade.ObtenerVentas(Estado.FiltroActual);
                 return Page();
             }
 
-            Result resultado = ventaService.EliminarLogicamente(id, idUsuarioEditor.Value);
+            Result resultado = ventaFacade.AnularVenta(id, idUsuarioEditor.Value);
 
-            if (resultado.IsSuccess == false)
+            if (!resultado.IsSuccess)
             {
                 Estado.MensajeError = resultado.Error;
-                VentaDataTable = ventaService.ObtenerTodos(Estado.FiltroActual);
+                VentaDataTable = ventaFacade.ObtenerVentas(Estado.FiltroActual);
                 return Page();
             }
 
-            return RedirectToPage("Venta", new { mensaje = "Venta anulada correctamente." });
+            return RedirectToPage("Venta",
+                new { mensaje = "Venta anulada correctamente." });
         }
     }
 }
-
-

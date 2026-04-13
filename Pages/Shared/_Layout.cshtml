@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -8,13 +8,15 @@
     <link rel="icon" type="image/x-icon" href="~/favicon.ico?v=1" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/modal.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VitalCare.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/medicamento-form.css" asp-append-version="true" />
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top shadow">
@@ -38,7 +40,7 @@
                 <div class="collapse navbar-collapse" id="navbarVitalCare">
 
                     @{
-                        // Obtenemos los datos de la sesi�n
+                        // Obtenemos los datos de sesion
                         var usuario = Context.Session.GetString("UserName");
                         var role = Context.Session.GetString("Role")?.Trim();
                     }
@@ -131,7 +133,7 @@
                             </li>
 
                             <li class="nav-item">
-                                @* Mostramos el rol para verificar qu� est� leyendo el sistema *@
+                                @* Mostramos el rol para verificar*@
                                 <span class="nav-link text-light">Hola, <b>@usuario (@role)</b></span>
                             </li>
 
@@ -164,30 +166,30 @@
         </nav>
     </header>
 
-    @* Contenedor para el cuerpo de la p�gina *@
-    <main role="main">
+    @* Contenedor para el cuerpo *@
+    <main role="main" class="flex-grow-1">
         @RenderBody()
     </main>
 
-    <footer class="footer mt-5 bg-dark py-4 text-white">
+    <footer class="bg-dark py-4 text-white mt-auto">
         <div class="container text-center">
-            <p>
-                � 2026 Farmacia VitalCare - Sistema de Gesti�n Farmac�utica
-            </p>
-        </div>
+            <p class="mb-0">
+                &copy; 2026 Farmacia VitalCare - Sistema de Gestión Farmacéutica
+             </p>
+         </div>
     </footer>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+    
     <script>
         window.addEventListener("scroll", function () {
-            let navbar = document.querySelector(".navbar");
+          let navbar = document.querySelector(".navbar");
             navbar.classList.toggle("scrolled", window.scrollY > 50);
-        });
+          });
     </script>
 
     @RenderSection("Scripts", required: false)
 
 </body>
-</html>
+
 

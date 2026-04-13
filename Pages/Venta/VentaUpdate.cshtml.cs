@@ -15,9 +15,7 @@ namespace ProyectoArqSoft.Pages
     [Authorize(Roles = "Admin,Bioquimico")]
     public class VentaUpdateModel : BasePageModel
     {
-        private readonly IVentaService ventaService;
-        private readonly IClienteService clienteService;
-        private readonly IMedicamentoService medicamentoService;
+        private readonly IVentaFacade ventaFacade;
 
         [BindProperty]
         public int IdVenta { get; set; }
@@ -35,14 +33,9 @@ namespace ProyectoArqSoft.Pages
         public DataTable ClienteDataTable { get; set; } = new DataTable();
         public DataTable MedicamentoDataTable { get; set; } = new DataTable();
 
-        public VentaUpdateModel(
-            IVentaService ventaService,
-            IClienteService clienteService,
-            IMedicamentoService medicamentoService)
+        public VentaUpdateModel(IVentaFacade ventaFacade)
         {
-            this.ventaService = ventaService;
-            this.clienteService = clienteService;
-            this.medicamentoService = medicamentoService;
+            this.ventaFacade = ventaFacade;
         }
 
         public void OnGet()
@@ -52,7 +45,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCargarVenta(int id)
         {
-            VentaEntidad? venta = ventaService.ObtenerPorId(id);
+            VentaEntidad? venta = ventaFacade.ObtenerVentaPorId(id);
 
             if (venta == null)
                 return RedirectToPage("Venta", new { error = "Venta no encontrada." });
@@ -60,7 +53,7 @@ namespace ProyectoArqSoft.Pages
             if (venta.Estado == 0)
                 return RedirectToPage("Venta", new { error = "No se puede editar una venta anulada." });
 
-            List<DetalleVenta> detalles = ventaService.ObtenerDetallesPorVenta(id);
+            List<DetalleVenta> detalles = ventaFacade.ObtenerDetalles(id);
 
             IdVenta = venta.Id;
             IdCliente = venta.IdCliente;
@@ -102,7 +95,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            Result resultado = ventaService.Actualizar(
+            Result resultado = ventaFacade.ActualizarVenta(
                 IdVenta,
                 IdCliente,
                 MetodoPago,
@@ -121,8 +114,8 @@ namespace ProyectoArqSoft.Pages
 
         private void CargarCatalogos()
         {
-            ClienteDataTable = clienteService.ObtenerTodos();
-            MedicamentoDataTable = medicamentoService.ObtenerTodos();
+            ClienteDataTable = ventaFacade.ObtenerClientes();
+            MedicamentoDataTable = ventaFacade.ObtenerMedicamentos();
         }
     }
 }

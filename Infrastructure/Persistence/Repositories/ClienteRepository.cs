@@ -7,7 +7,7 @@ using ProyectoArqSoft.Infrastructure.Persistence.Connection;
 
 namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 {
-    public class ClienteRepository : IRepository<Cliente>
+    public class ClienteRepository : IClienteRepository
     {
         private readonly string connectionString;
 
@@ -176,7 +176,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
         public int Count()
         {
-            string query = "SELECT COUNT(*) FROM cliente WHERE estado = 1";
+            string query = "SELECT COUNT(*) FROM cliente";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {

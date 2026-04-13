@@ -9,11 +9,11 @@ namespace ProyectoArqSoft.Application.Services
 {
     public class MedicamentoService : IMedicamentoService
     {
-        private readonly IRepository<Medicamento> _repository;
+        private readonly IMedicamentoRepository _repository;
         private readonly IResult<Medicamento> _validador;
 
         public MedicamentoService(
-            IRepository<Medicamento> repository,
+            IMedicamentoRepository repository,
             IResult<Medicamento> validador)
         {
             _repository = repository;
@@ -33,6 +33,11 @@ namespace ProyectoArqSoft.Application.Services
         public Medicamento? ObtenerPorId(int id)
         {
             return _repository.GetById(id);
+        }
+
+        public DataTable ObtenerDestacados()
+        {
+            return _repository.GetDestacados();
         }
 
         public Result Crear(

@@ -10,6 +10,8 @@ namespace ProyectoArqSoft.Application.Ports.Output
         DataTable GetAll(string filtro);
 
         Venta? GetById(int id);
+        int Count();
+
         List<DetalleVenta> GetDetallesByVentaId(int idVenta);
 
         Result RegistrarVenta(Venta venta);
