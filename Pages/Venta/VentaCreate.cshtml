@@ -1,27 +1,38 @@
 @page
 @model ProyectoArqSoft.Pages.VentaCreateModel
 @{
+    ViewData["Title"] = "Registro de Venta - VitalCare";
 }
 
-<div class="container py-5 medicamento-form-page">
+<div class="container py-5 mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
-            <div class="med-card shadow-sm">
-                <div class="med-card-header text-center">
-                    <h2 class="mb-0">Nueva Venta</h2>
-                    <p class="text-muted mt-2 mb-0">Registra una venta con uno o más medicamentos</p>
+            <div class="med-card shadow border-0">
+                <!-- CABECERA ESTILO VITALCARE (TEXTO BLANCO) -->
+                <div class="med-card-header text-center bg-success text-white py-3">
+                    <h2 class="mb-0 fw-bold text-white">
+                        REGISTRO DE VENTA (PROCESO PRINCIPAL)
+                    </h2>
+                    <p class="mb-0 small text-white-50">Gestión de transacciones y actualización de stock en tiempo real</p>
                 </div>
 
-                <div class="med-card-body">
+                <div class="med-card-body p-4">
                     <form method="post" asp-page-handler="CrearVenta" id="ventaCreateForm">
                         <input type="hidden" asp-for="DetallesJson" id="DetallesJson" />
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="IdCliente" class="form-label">Cliente</label>
-                                <select asp-for="IdCliente" class="form-select med-input" required>
-                                    <option value="">Seleccione un cliente</option>
+                        <!-- DATOS GENERALES -->
+                        <div class="row g-3 mb-4">
+                            <!-- CAMPO FECHA (DATO AUTOMÁTICO NO EDITABLE - REQUISITO ANEXO 1) -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Fecha</label>
+                                <input type="text" class="form-control bg-light" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="IdCliente" class="form-label fw-bold">Cliente</label>
+                                <select asp-for="IdCliente" class="form-select med-input" required id="selectCliente">
+                                    <option value="">-- Seleccione Cliente --</option>
                                     @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
                                     {
                                         <option value="@row["id"]">@row["razon_social"]</option>
@@ -29,10 +40,9 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                            <div class="col-md-4">
+                                <label asp-for="MetodoPago" class="form-label fw-bold">Método de Pago</label>
                                 <select asp-for="MetodoPago" class="form-select med-input" required>
-                                    <option value="">Seleccione un método</option>
                                     <option value="Efectivo">Efectivo</option>
                                     <option value="Tarjeta">Tarjeta</option>
                                     <option value="Transferencia">Transferencia</option>
@@ -41,46 +51,52 @@
                             </div>
                         </div>
 
-                        <hr />
+                        <hr class="my-4" />
 
+                        <!-- SECCIÓN DETALLE -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Detalle de venta</h5>
-                            <button type="button" class="btn btn-success btn-sm" id="btnAgregarDetalle">
-                                + Agregar medicamento
+                            <h5 class="mb-0 fw-bold text-dark">Busca y agrega productos para la venta</h5>
+                            <!-- BOTÓN ESTANDARIZADO PX-5 -->
+                            <button type="button" class="btn btn-success px-5 fw-bold shadow-sm" id="btnAgregarDetalle" style="background-color: #198754;">
+                                Agregar Medicamento
                             </button>
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered align-middle" id="tablaDetalles">
-                                <thead class="table-success">
+                        <div class="table-responsive mb-3">
+                            <table class="table table-bordered align-middle shadow-sm" id="tablaDetalles">
+                                <thead class="table-success text-dark">
                                     <tr>
                                         <th>Medicamento</th>
                                         <th style="width:130px;">Cantidad</th>
                                         <th style="width:160px;">Precio Unitario</th>
-                                        <th style="width:140px;">Subtotal</th>
-                                        <th style="width:90px;">Acción</th>
+                                        <th style="width:140px;">Subtotal (Bs)</th>
+                                        <th style="width:90px;" class="text-center">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody id="detalleBody">
-                                </tbody>
+                                <tbody id="detalleBody"></tbody>
                             </table>
                         </div>
 
-                        <div class="text-end mb-3">
-                            <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
+                        <!-- TOTAL SUMARIADO -->
+                        <div class="text-end mb-3 p-3 bg-light rounded border border-success border-opacity-25 shadow-sm">
+                            <h4 class="mb-0 fw-bold">TOTAL: <span class="text-success" id="totalVenta">Bs. 0.00</span></h4>
                         </div>
 
                         @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
                         {
-                            <div class="alert alert-danger med-alert" role="alert">
-                                @Model.Estado.MensajeError
+                            <div class="alert alert-danger shadow-sm py-2" role="alert">
+                                <i class="bi bi-exclamation-octagon-fill"></i> @Model.Estado.MensajeError
                             </div>
                         }
 
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a asp-page="Venta" class="btn med-btn-secondary">Volver</a>
-                            <button type="submit" class="btn med-btn-primary" id="btnGuardarVenta">Guardar Venta</button>
+                        <!-- BOTONES DE ACCIÓN (ESTANDARIZADOS) -->
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a asp-page="Venta" class="btn btn-secondary px-4">Cancelar</a>
+                            <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm" id="btnGuardarVenta" style="background-color: #198754;">
+                                Guardar Venta
+                            </button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -89,131 +105,107 @@
     </div>
 </div>
 
-<script>
-    const medicamentos = [
-        @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
-        {
-            <text>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const medicamentos = [
+            @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
             {
-                id: @row["id"],
-                nombre: "@row["nombre"]",
-                precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture))
-            },
-            </text>
-        }
-    ];
-
-    const detalleBody = document.getElementById("detalleBody");
-    const detallesJsonInput = document.getElementById("DetallesJson");
-    const totalVentaSpan = document.getElementById("totalVenta");
-    const btnAgregarDetalle = document.getElementById("btnAgregarDetalle");
-
-    function crearFila(detalle = null) {
-        const tr = document.createElement("tr");
-
-        const opciones = medicamentos.map(m => {
-            const selected = detalle && Number(detalle.IdMedicamento) === Number(m.id) ? "selected" : "";
-            return `<option value="${m.id}" data-precio="${m.precio}" ${selected}>${m.nombre}</option>`;
-        }).join("");
-
-        tr.innerHTML = `
-            <td>
-                <select class="form-select medicamento-select">
-                    <option value="">Seleccione</option>
-                    ${opciones}
-                </select>
-            </td>
-            <td>
-                <input type="number" min="1" class="form-control cantidad-input" value="${detalle ? detalle.Cantidad : 1}">
-            </td>
-            <td>
-                <input type="number" min="0.01" step="0.01" class="form-control precio-input" value="${detalle ? detalle.PrecioUnitario : 0}" readonly>
-            </td>
-            <td>
-                <span class="subtotal-text">0.00</span>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger btn-sm btnEliminarFila">Quitar</button>
-            </td>
-        `;
-
-        detalleBody.appendChild(tr);
-
-        const select = tr.querySelector(".medicamento-select");
-        const cantidadInput = tr.querySelector(".cantidad-input");
-        const precioInput = tr.querySelector(".precio-input");
-
-        function actualizarPrecioPorMedicamento() {
-            const option = select.options[select.selectedIndex];
-            if (option && option.dataset.precio && (!detalle || Number(precioInput.value) <= 0)) {
-                precioInput.value = option.dataset.precio;
+                    @:{ id: @row["id"], nombre: "@row["nombre"]", precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture)) },
             }
-            recalcularFila(tr);
-        }
+        ];
 
-        select.addEventListener("change", actualizarPrecioPorMedicamento);
-        cantidadInput.addEventListener("input", () => recalcularFila(tr));
-        precioInput.addEventListener("input", () => recalcularFila(tr));
+        const detalleBody = document.getElementById("detalleBody");
+        const detallesJsonInput = document.getElementById("DetallesJson");
+        const totalVentaSpan = document.getElementById("totalVenta");
 
-        tr.querySelector(".btnEliminarFila").addEventListener("click", () => {
-            tr.remove();
-            sincronizarJson();
-        });
+        function crearFila(detalle = null) {
+            const tr = document.createElement("tr");
+            const opciones = medicamentos.map(m => {
+                const selected = detalle && Number(detalle.IdMedicamento) === Number(m.id) ? "selected" : "";
+                return `<option value="${m.id}" data-precio="${m.precio}" ${selected}>${m.nombre}</option>`;
+            }).join("");
 
-        if (!detalle) {
-            actualizarPrecioPorMedicamento();
-        } else {
-            recalcularFila(tr);
-        }
-    }
+            tr.innerHTML = `
+                <td>
+                    <select class="form-select">
+                        <option value="">Seleccione...</option>
+                        ${opciones}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" min="1" class="form-control text-center" value="${detalle ? detalle.Cantidad : 1}">
+                </td>
+                <td>
+                    <input type="number" class="form-control bg-light" value="${detalle ? detalle.PrecioUnitario : 0}" readonly>
+                </td>
+                <td class="fw-bold">
+                    <span class="subtotal-text">0.00</span>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm btnEliminarFila"><i class="bi bi-trash"></i></button>
+                </td>`;
 
-    function recalcularFila(tr) {
-        const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
-        const select = tr.querySelector(".medicamento-select");
-        const option = select.options[select.selectedIndex];
-        const precio = Number(option?.dataset?.precio || tr.querySelector(".precio-input").value || 0);
-        tr.querySelector(".precio-input").value = precio > 0 ? precio : 0;
-        const subtotal = cantidad * precio;
-        tr.querySelector(".subtotal-text").textContent = subtotal.toFixed(2);
-        sincronizarJson();
-    }
+            detalleBody.appendChild(tr);
 
-    function sincronizarJson() {
-        const filas = detalleBody.querySelectorAll("tr");
-        const detalles = [];
-        let total = 0;
+            const select = tr.querySelector("select");
+            const cantidadInput = tr.querySelector("input[type='number']");
+            const precioInput = tr.querySelectorAll("input")[1];
 
-        filas.forEach(tr => {
-            const idMedicamento = Number(tr.querySelector(".medicamento-select").value || 0);
-            const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
-            const select = tr.querySelector(".medicamento-select");
-            const option = select.options[select.selectedIndex];
-            const precioUnitario = Number(option?.dataset?.precio || tr.querySelector(".precio-input").value || 0);
-            const subtotal = cantidad * precioUnitario;
-
-            if (idMedicamento > 0) {
-                detalles.push({
-                    IdMedicamento: idMedicamento,
-                    Cantidad: cantidad,
-                    PrecioUnitario: precioUnitario
-                });
+            function actualizarFila() {
+                const opt = select.options[select.selectedIndex];
+                if (opt && opt.dataset.precio) {
+                    precioInput.value = opt.dataset.precio;
+                }
+                const sub = Number(cantidadInput.value) * Number(precioInput.value);
+                tr.querySelector(".subtotal-text").textContent = sub.toFixed(2);
+                sincronizar();
             }
 
-            total += subtotal;
+            select.addEventListener("change", actualizarFila);
+            cantidadInput.addEventListener("input", actualizarFila);
+            tr.querySelector(".btnEliminarFila").addEventListener("click", () => { tr.remove(); sincronizar(); });
+
+            if (detalle) actualizarFila();
+        }
+
+        function sincronizar() {
+            const filas = detalleBody.querySelectorAll("tr");
+            const arr = [];
+            let t = 0;
+            filas.forEach(f => {
+                const id = Number(f.querySelector("select").value);
+                const cant = Number(f.querySelector("input").value);
+                const pre = Number(f.querySelectorAll("input")[1].value);
+                if (id > 0) arr.push({ IdMedicamento: id, Cantidad: cant, PrecioUnitario: pre });
+                t += (cant * pre);
+            });
+            detallesJsonInput.value = JSON.stringify(arr);
+            totalVentaSpan.textContent = "Bs. " + t.toFixed(2);
+        }
+
+        document.getElementById("btnAgregarDetalle").addEventListener("click", () => crearFila());
+
+        document.getElementById("ventaCreateForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = this;
+            Swal.fire({
+                title: '¿Confirmar Transacción?',
+                text: "Se registrará la venta y se actualizará el stock.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                confirmButtonText: 'Sí, Guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    document.getElementById("btnGuardarVenta").disabled = true;
+                    form.submit();
+                }
+            });
         });
 
-        detallesJsonInput.value = JSON.stringify(detalles);
-        totalVentaSpan.textContent = "Bs. " + total.toFixed(2);
-    }
-
-    btnAgregarDetalle.addEventListener("click", () => crearFila());
-
-    document.getElementById("ventaCreateForm").addEventListener("submit", function () {
-        const botonGuardar = document.getElementById("btnGuardarVenta");
-        botonGuardar.disabled = true;
-        botonGuardar.textContent = "Guardando...";
-    });
-
-    crearFila();
-</script>
-
+        // Iniciar con una fila vacía
+        crearFila();
+    </script>
+}

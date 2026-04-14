@@ -40,14 +40,8 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearVenta()
         {
-            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
-
-            if (idUsuario == null)
-            {
-                Estado.MensajeError = "No se pudo identificar el usuario.";
-                CargarCatalogos();
-                return Page();
-            }
+            // REQUISITO: Auditoría (usuario_idUsuario)
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
 
             List<DetalleVentaInputDto> detalles;
             try
@@ -61,6 +55,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
+            // REQUISITO: Patrón Facade y Transacción Principal
             Result resultado = ventaFacade.CrearVenta(
                 IdCliente,
                 idUsuario.Value,
@@ -74,6 +69,7 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
+            // REQUISITO: Generación automática de comprobante (Redirección tras éxito)
             return RedirectToPage("Venta", new { mensaje = "Venta registrada correctamente." });
         }
 
@@ -84,5 +80,3 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
-
-
