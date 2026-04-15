@@ -12,14 +12,18 @@ namespace ProyectoArqSoft.Application.Services
     {
         private readonly IVentaRepository _repository;
         private readonly IResult<Venta> _validador;
+        private readonly IMedicamentoRepository _medicamentoRepository;
 
         public VentaService(
             IVentaRepository repository,
+            IMedicamentoRepository medicamentoRepository,
             IResult<Venta> validador)
         {
             _repository = repository;
+            _medicamentoRepository = medicamentoRepository;
             _validador = validador;
         }
+
 
         public DataTable ObtenerTodos()
         {
@@ -47,20 +51,30 @@ namespace ProyectoArqSoft.Application.Services
             string metodoPago,
             List<DetalleVentaInputDto> detallesInput)
         {
-            Venta venta = ConstruirVenta(
-                id: 0,
-                idCliente: idCliente,
-                idUsuario: idUsuario,
-                metodoPago: metodoPago,
-                detallesInput: detallesInput,
-                idUsuarioEditor: null);
+            try
+            {
+                Venta venta = ConstruirVenta(
+                    id: 0,
+                    idCliente: idCliente,
+                    idUsuario: idUsuario,
+                    metodoPago: metodoPago,
+                    detallesInput: detallesInput,
+                    idUsuarioEditor: null);
 
-            Result validacion = _validador.Validar(venta);
-            if (validacion.IsSuccess == false)
-                return validacion;
 
-            return _repository.RegistrarVenta(venta);
+                Result validacion = _validador.Validar(venta);
+
+                if (!validacion.IsSuccess)
+                    return validacion;
+
+                return _repository.RegistrarVenta(venta);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
+
 
         public Result Actualizar(
             int idVenta,
@@ -69,28 +83,37 @@ namespace ProyectoArqSoft.Application.Services
             List<DetalleVentaInputDto> detallesInput,
             int idUsuarioEditor)
         {
-            Venta ventaExistente = _repository.GetById(idVenta) ?? new Venta();
+            try
+            {
+                Venta ventaExistente = _repository.GetById(idVenta) ?? new Venta();
 
-            if (ventaExistente.Id == 0)
-                return Result.Fail("La venta no existe.");
+                if (ventaExistente.Id == 0)
+                    return Result.Fail("La venta no existe.");
 
-            if (ventaExistente.Estado == 0)
-                return Result.Fail("No se puede modificar una venta anulada.");
+                if (ventaExistente.Estado == 0)
+                    return Result.Fail("No se puede modificar una venta anulada.");
 
-            Venta venta = ConstruirVenta(
-                id: idVenta,
-                idCliente: idCliente,
-                idUsuario: ventaExistente.IdUsuario,
-                metodoPago: metodoPago,
-                detallesInput: detallesInput,
-                idUsuarioEditor: idUsuarioEditor);
+                Venta venta = ConstruirVenta(
+                    id: idVenta,
+                    idCliente: idCliente,
+                    idUsuario: ventaExistente.IdUsuario,
+                    metodoPago: metodoPago,
+                    detallesInput: detallesInput,
+                    idUsuarioEditor: idUsuarioEditor);
 
-            Result validacion = _validador.Validar(venta);
-            if (validacion.IsSuccess == false)
-                return validacion;
+                Result validacion = _validador.Validar(venta);
 
-            return _repository.ActualizarVenta(venta);
+                if (!validacion.IsSuccess)
+                    return validacion;
+
+                return _repository.ActualizarVenta(venta);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
+
 
         public Result EliminarLogicamente(int idVenta, int idUsuarioEditor)
         {
@@ -105,6 +128,9 @@ namespace ProyectoArqSoft.Application.Services
             List<DetalleVentaInputDto> detallesInput,
             int? idUsuarioEditor)
         {
+            if (detallesInput == null || !detallesInput.Any())
+                throw new InvalidOperationException("Debe agregar al menos un medicamento.");
+
             Venta venta = new Venta
             {
                 Id = id,
@@ -117,12 +143,20 @@ namespace ProyectoArqSoft.Application.Services
 
             foreach (DetalleVentaInputDto item in detallesInput)
             {
+                var medicamento = _medicamentoRepository.GetById(item.IdMedicamento);
+
+                if (medicamento == null)
+                    throw new InvalidOperationException(
+                        $"Medicamento con ID {item.IdMedicamento} no encontrado.");
+
+                decimal precioReal = medicamento.Precio;
+
                 DetalleVenta detalle = new DetalleVenta
                 {
                     IdMedicamento = item.IdMedicamento,
                     Cantidad = item.Cantidad,
-                    PrecioUnitario = item.PrecioUnitario,
-                    Subtotal = item.Cantidad * item.PrecioUnitario
+                    PrecioUnitario = precioReal,
+                    Subtotal = item.Cantidad * precioReal
                 };
 
                 venta.Detalles.Add(detalle);

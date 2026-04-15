@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.DTOs;
+using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using ProyectoArqSoft.Domain.Validators;
 using System.Data;
+using System.Text.Json;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -25,8 +25,8 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public string DetallesJson { get; set; } = "[]";
 
-        public DataTable ClienteDataTable { get; set; } = new DataTable();
-        public DataTable MedicamentoDataTable { get; set; } = new DataTable();
+        public DataTable ClienteDataTable { get; set; } = new();
+        public DataTable MedicamentoDataTable { get; set; } = new();
 
         public VentaCreateModel(IVentaFacade ventaFacade)
         {
@@ -40,10 +40,10 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearVenta()
         {
-            // REQUISITO: Auditoría (usuario_idUsuario)
-            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
+            int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
 
             List<DetalleVentaInputDto> detalles;
+
             try
             {
                 detalles = JsonSerializer.Deserialize<List<DetalleVentaInputDto>>(DetallesJson) ?? new();
@@ -55,22 +55,61 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            // REQUISITO: Patrón Facade y Transacción Principal
+            // Validaciones previas
+            if (IdCliente <= 0)
+            {
+                Estado.MensajeError = "Debe seleccionar un cliente válido.";
+                CargarCatalogos();
+                return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(MetodoPago))
+            {
+                Estado.MensajeError = "Debe seleccionar un método de pago.";
+                CargarCatalogos();
+                return Page();
+            }
+
+            if (!detalles.Any())
+            {
+                Estado.MensajeError = "Debe agregar al menos un medicamento.";
+                CargarCatalogos();
+                return Page();
+            }
+
+            foreach (var detalle in detalles)
+            {
+                if (detalle.IdMedicamento <= 0)
+                {
+                    Estado.MensajeError = "Uno de los medicamentos no fue seleccionado correctamente.";
+                    CargarCatalogos();
+                    return Page();
+                }
+
+                if (detalle.Cantidad <= 0)
+                {
+                    Estado.MensajeError = "La cantidad debe ser mayor a cero.";
+                    CargarCatalogos();
+                    return Page();
+                }
+            }
+
             Result resultado = ventaFacade.CrearVenta(
                 IdCliente,
-                idUsuario.Value,
+                idUsuario,
                 MetodoPago,
-                detalles);
+                detalles
+            );
 
-            if (resultado.IsSuccess == false)
+            if (!resultado.IsSuccess)
             {
                 Estado.MensajeError = resultado.Error;
                 CargarCatalogos();
                 return Page();
             }
 
-            // REQUISITO: Generación automática de comprobante (Redirección tras éxito)
-            return RedirectToPage("Venta", new { mensaje = "Venta registrada correctamente." });
+            return RedirectToPage("Venta",
+                new { mensaje = "Venta registrada correctamente." });
         }
 
         private void CargarCatalogos()

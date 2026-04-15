@@ -116,7 +116,11 @@ builder.Services.AddScoped<IVentaRepository>(provider =>
 
 builder.Services.AddScoped<IResult<VentaEntidad>, VentaValidacion>();
 builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<FachadaVenta>();
+builder.Services.AddScoped<FachadaAnular>();
+builder.Services.AddScoped<FachadaActualizarStock>();
 builder.Services.AddScoped<IVentaFacade, VentaFacade>();
+
 
 //repos
 builder.Services.AddScoped<IMedicamentoRepository, MedicamentoRepository>();

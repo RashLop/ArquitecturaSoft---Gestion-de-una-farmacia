@@ -8,35 +8,42 @@ namespace ProyectoArqSoft.Application.Facades
 {
     public class VentaFacade : IVentaFacade
     {
-        private readonly IVentaService _ventaService;
+        private readonly FachadaVenta _fv;
+        private readonly FachadaAnular _fa;
+        private readonly FachadaActualizarStock _fasm;
         private readonly IClienteService _clienteService;
-        private readonly IMedicamentoService _medicamentoService;
 
         public VentaFacade(
-            IVentaService ventaService,
-            IClienteService clienteService,
-            IMedicamentoService medicamentoService)
+            FachadaVenta fv,
+            FachadaAnular fa,
+            FachadaActualizarStock fasm,
+            IClienteService clienteService)
         {
-            _ventaService = ventaService;
+            _fv = fv;
+            _fa = fa;
+            _fasm = fasm;
             _clienteService = clienteService;
-            _medicamentoService = medicamentoService;
         }
 
         public DataTable ObtenerVentas(string filtro)
-            => _ventaService.ObtenerTodos(filtro);
+            => _fv.ObtenerVentas(filtro);
 
         public Venta? ObtenerVentaPorId(int id)
-            => _ventaService.ObtenerPorId(id);
+            => _fv.ObtenerVentaPorId(id);
 
         public List<DetalleVenta> ObtenerDetalles(int idVenta)
-            => _ventaService.ObtenerDetallesPorVenta(idVenta);
+            => _fv.ObtenerDetalles(idVenta);
 
         public Result CrearVenta(
             int idCliente,
             int idUsuario,
             string metodoPago,
             List<DetalleVentaInputDto> detalles)
-            => _ventaService.Crear(idCliente, idUsuario, metodoPago, detalles);
+            => _fv.RegistrarVenta(
+                idCliente,
+                idUsuario,
+                metodoPago,
+                detalles);
 
         public Result ActualizarVenta(
             int idVenta,
@@ -44,21 +51,24 @@ namespace ProyectoArqSoft.Application.Facades
             string metodoPago,
             List<DetalleVentaInputDto> detalles,
             int idUsuarioEditor)
-            => _ventaService.Actualizar(
+            => _fv.ActualizarVenta(
                 idVenta,
                 idCliente,
                 metodoPago,
                 detalles,
                 idUsuarioEditor);
 
-        public Result AnularVenta(int idVenta, int idUsuarioEditor)
-            => _ventaService.EliminarLogicamente(idVenta, idUsuarioEditor);
+        public Result AnularVenta(
+            int idVenta,
+            int idUsuarioEditor)
+            => _fa.AnularVenta(
+                idVenta,
+                idUsuarioEditor);
 
         public DataTable ObtenerClientes()
             => _clienteService.ObtenerTodos();
 
         public DataTable ObtenerMedicamentos()
-            => _medicamentoService.ObtenerTodos();
+            => _fasm.ObtenerMedicamentos();
     }
 }
-    

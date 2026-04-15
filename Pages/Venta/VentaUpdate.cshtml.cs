@@ -62,8 +62,7 @@ namespace ProyectoArqSoft.Pages
             List<DetalleVentaInputDto> detallesInput = detalles.Select(x => new DetalleVentaInputDto
             {
                 IdMedicamento = x.IdMedicamento,
-                Cantidad = x.Cantidad,
-                PrecioUnitario = x.PrecioUnitario
+                Cantidad = x.Cantidad
             }).ToList();
 
             DetallesJson = JsonSerializer.Serialize(detallesInput);
