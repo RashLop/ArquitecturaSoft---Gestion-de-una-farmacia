@@ -31,5 +31,7 @@ namespace ProyectoArqSoft.Application.Interfaces
             int IdUsuario);
 
         Result EliminarLogicamente(int id, int IdUsuario);
+
+        Result UpdateStock(int idMedicamento, int cantidad, bool esEntrada, int idUsuario);   
     }
 }

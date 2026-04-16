@@ -4,6 +4,7 @@ using ProyectoArqSoft.Domain.Models;
 using ProyectoArqSoft.Domain.Validators;
 using System.Data;
 using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.DTOs;
 
 namespace ProyectoArqSoft.Application.Services
 {
@@ -12,12 +13,16 @@ namespace ProyectoArqSoft.Application.Services
         private readonly IMedicamentoRepository _repository;
         private readonly IResult<Medicamento> _validador;
 
+        private readonly IResult<MovimientoStockDTO> _movimientoStockValidacion;
+
         public MedicamentoService(
             IMedicamentoRepository repository,
-            IResult<Medicamento> validador)
+            IResult<Medicamento> validador,
+            IResult<MovimientoStockDTO> movimientoStockValidacion)
         {
             _repository = repository;
             _validador = validador;
+            _movimientoStockValidacion = movimientoStockValidacion;
         }
 
         public DataTable ObtenerTodos()
@@ -146,6 +151,47 @@ namespace ProyectoArqSoft.Application.Services
             medicamento.Presentacion = StringHelper.LimpiarEspacios(medicamento.Presentacion);
             medicamento.Concentracion = StringHelper.LimpiarEspacios(medicamento.Concentracion);
         }
+
+        public Result UpdateStock(int idMedicamento, int cantidad, bool esEntrada, int idUsuario)
+        {
+            Medicamento? medicamento = _repository.GetById(idMedicamento);
+
+            if (medicamento == null)
+            {
+                return Result.Fail("El medicamento no existe o no está activo.");
+            }
+
+            MovimientoStockDTO movimiento = new MovimientoStockDTO
+            {
+                IdMedicamento = medicamento.Id,
+                Cantidad = cantidad,
+                EsEntrada = esEntrada,
+                IdUsuario = idUsuario,
+                StockActual = medicamento.Stock
+            };
+
+            Result validacion = _movimientoStockValidacion.Validar(movimiento);
+
+            if (validacion.IsSuccess == false)
+            {
+                return validacion;
+            }
+
+            int filasAfectadas = _repository.UpdateStock(
+                idMedicamento,
+                cantidad,
+                esEntrada,
+                idUsuario
+            );
+
+            if (filasAfectadas <= 0)
+            {
+                return Result.Fail("No se pudo actualizar el stock del medicamento.");
+            }
+
+            return Result.Ok();
+        }
+
     }
 }
 
