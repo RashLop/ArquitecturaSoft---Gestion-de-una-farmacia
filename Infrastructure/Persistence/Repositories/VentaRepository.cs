@@ -34,7 +34,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                         v.fecha_hora,
                                         v.total,
                                         v.metodo_pago,
-                                        v.razon_social AS cliente,
+                                        CONCAT(v.nit, ' - ', v.razon_social) AS cliente,
+                                        v.razon_social,
                                         v.nit,
                                         u.user_name AS usuario
                                  FROM venta v
@@ -123,7 +124,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     id_medicamento
                              FROM detalle_venta
                              WHERE id_venta = @id_venta
-                             ORDER BY id_detalle";
+                             ORDER BY id_medicamento";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
