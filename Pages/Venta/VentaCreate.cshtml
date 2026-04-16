@@ -20,24 +20,25 @@
 
                     <!-- CLIENTE -->
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Cliente</label>
+                        <label class="form-label fw-bold">Cliente (NIT)</label>
 
                         <input type="text"
-                               id="clienteBusqueda"
-                               class="form-control"
-                               placeholder="Buscar cliente..." />
+                            id="clienteBusqueda"
+                            class="form-control"
+                            placeholder="Buscar por NIT..." />
 
                         <div id="clienteResultados" class="list-group mt-1"></div>
 
+                        <label class="form-label fw-bold mt-2">Cliente:</label>
                         <input type="text"
-                               id="clienteSeleccionado"
-                               class="form-control mt-2"
-                               placeholder="Cliente seleccionado"
-                               readonly />
+                            id="razonSocialCliente"
+                            class="form-control"
+                            placeholder="Razón social del cliente"
+                            readonly />
 
                         <input type="hidden"
-                               asp-for="IdCliente"
-                               id="IdCliente" />
+                            asp-for="IdCliente"
+                            id="IdCliente" />
                     </div>
 
                     <!-- METODO PAGO -->
@@ -109,7 +110,8 @@
                     <text>
                     {
                         id: @row["id"],
-                        nombre: "@row["razon_social"]"
+                        nit: "@row["nit"]",
+                        razonSocial: "@row["razon_social"]"
                     },
                     </text>
             }
@@ -296,34 +298,42 @@
     <script>
         const clienteBusqueda = document.getElementById("clienteBusqueda");
         const clienteResultados = document.getElementById("clienteResultados");
-        const clienteSeleccionado = document.getElementById("clienteSeleccionado");
+        const razonSocialCliente = document.getElementById("razonSocialCliente");
         const idClienteInput = document.getElementById("IdCliente");
 
         clienteBusqueda.addEventListener("input", function () {
-            const texto = this.value.toLowerCase();
+            const texto = this.value.toLowerCase().trim();
             clienteResultados.innerHTML = "";
 
-            if (texto.length < 2) return;
+            if (texto.length < 1) return;
 
             const filtrados = clientes.filter(c =>
-                c.nombre.toLowerCase().includes(texto)
+                c.nit.toLowerCase().includes(texto)
             );
 
             filtrados.forEach(cliente => {
                 const item = document.createElement("button");
                 item.type = "button";
                 item.className = "list-group-item list-group-item-action";
-                item.textContent = cliente.nombre;
+                item.textContent = `${cliente.nit} - ${cliente.razonSocial}`;
 
                 item.onclick = function () {
-                    clienteSeleccionado.value = cliente.nombre;
+                    clienteBusqueda.value = cliente.nit;
+                    razonSocialCliente.value = cliente.razonSocial;
                     idClienteInput.value = cliente.id;
-                    clienteBusqueda.value = "";
                     clienteResultados.innerHTML = "";
                 };
 
                 clienteResultados.appendChild(item);
             });
+        });
+
+        clienteBusqueda.addEventListener("blur", function () {
+            if (this.value.trim() === "") {
+                razonSocialCliente.value = "";
+                idClienteInput.value = "";
+                clienteResultados.innerHTML = "";
+            }
         });
     </script>
 }

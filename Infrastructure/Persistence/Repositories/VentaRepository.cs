@@ -34,17 +34,19 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                         v.fecha_hora,
                                         v.total,
                                         v.metodo_pago,
-                                        c.razon_social AS cliente,
+                                        CONCAT(v.nit, ' - ', v.razon_social) AS cliente,
+                                        v.razon_social,
+                                        v.nit,
                                         u.user_name AS usuario
                                  FROM venta v
-                                 INNER JOIN cliente c ON v.Cliente_idCliente = c.id
                                  INNER JOIN usuario u ON v.usuario_idUsuario = u.id
                                  WHERE v.estado = 1";
 
                 query += FiltroSqlHelper.ConstruirCondicionLike(
                     filtro,
                     "v.metodo_pago",
-                    "c.razon_social",
+                    "v.razon_social",
+                    "v.nit",
                     "u.user_name"
                 );
 
@@ -71,7 +73,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     estado,
                                     fecha_registro,
                                     ultima_actualizacion,
-                                    Id_usuario_editor
+                                    Id_usuario_editor,
+                                    nit,
+                                    razon_social
                              FROM venta
                              WHERE id = @id";
 
@@ -102,7 +106,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                             : Convert.ToDateTime(reader["ultima_actualizacion"]),
                         IdUsuarioEditor = reader["Id_usuario_editor"] == DBNull.Value
                             ? null
-                            : Convert.ToInt32(reader["Id_usuario_editor"])
+                            : Convert.ToInt32(reader["Id_usuario_editor"]),
+                        Nit = StringHelper.LimpiarEspacios(reader["nit"]?.ToString()),
+                        RazonSocial = StringHelper.LimpiarEspacios(reader["razon_social"]?.ToString())
                     };
                 }
             }
@@ -112,15 +118,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             List<DetalleVenta> detalles = new();
 
-            string query = @"SELECT id_detalle,
-                                    cantidad,
+            string query = @"SELECT cantidad,
                                     precio_unitario,
-                                    subtotal,
                                     id_venta,
                                     id_medicamento
                              FROM detalle_venta
                              WHERE id_venta = @id_venta
-                             ORDER BY id_detalle";
+                             ORDER BY id_medicamento";
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -135,10 +139,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         detalles.Add(new DetalleVenta
                         {
-                            Id = Convert.ToInt32(reader["id_detalle"]),
                             Cantidad = Convert.ToInt32(reader["cantidad"]),
                             PrecioUnitario = Convert.ToDecimal(reader["precio_unitario"]),
-                            Subtotal = Convert.ToDecimal(reader["subtotal"]),
                             IdVenta = Convert.ToInt32(reader["id_venta"]),
                             IdMedicamento = Convert.ToInt32(reader["id_medicamento"])
                         });
@@ -165,16 +167,37 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                         return validacionDb;
                     }
 
+                    string queryCliente = @"SELECT nit, razon_social
+                                            FROM cliente
+                                            WHERE id = @idCliente AND estado = 1";
+
+                    MySqlCommand commandCliente = new MySqlCommand(queryCliente, connection, transaction);
+                    commandCliente.Parameters.AddWithValue("@idCliente", venta.IdCliente);
+
+                    using (MySqlDataReader reader = commandCliente.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            transaction.Rollback();
+                            return Result.Fail("No se pudo obtener los datos del cliente.");
+                        }
+
+                        venta.Nit = reader["nit"].ToString()!;
+                        venta.RazonSocial = reader["razon_social"].ToString()!;
+                    }
+
                     string queryVenta = @"INSERT INTO venta
-                                          (total, metodo_pago, Cliente_idCliente, usuario_idUsuario)
-                                          VALUES
-                                          (@total, @metodo_pago, @idCliente, @idUsuario)";
+                                        (total, metodo_pago, Cliente_idCliente, usuario_idUsuario, nit, razon_social)
+                                        VALUES
+                                        (@total, @metodo_pago, @idCliente, @idUsuario, @nit, @razon_social)";
 
                     MySqlCommand commandVenta = new MySqlCommand(queryVenta, connection, transaction);
                     commandVenta.Parameters.AddWithValue("@total", venta.Total);
                     commandVenta.Parameters.AddWithValue("@metodo_pago", venta.MetodoPago);
                     commandVenta.Parameters.AddWithValue("@idCliente", venta.IdCliente);
                     commandVenta.Parameters.AddWithValue("@idUsuario", venta.IdUsuario);
+                    commandVenta.Parameters.AddWithValue("@nit", venta.Nit);
+                    commandVenta.Parameters.AddWithValue("@razon_social", venta.RazonSocial);
 
                     commandVenta.ExecuteNonQuery();
                     int idVenta = Convert.ToInt32(commandVenta.LastInsertedId);
@@ -189,14 +212,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                         }
 
                         string queryDetalle = @"INSERT INTO detalle_venta
-                                                (cantidad, precio_unitario, subtotal, id_venta, id_medicamento)
+                                                (cantidad, precio_unitario, id_venta, id_medicamento)
                                                 VALUES
-                                                (@cantidad, @precio_unitario, @subtotal, @id_venta, @id_medicamento)";
+                                                (@cantidad, @precio_unitario, @id_venta, @id_medicamento)";
 
                         MySqlCommand commandDetalle = new MySqlCommand(queryDetalle, connection, transaction);
                         commandDetalle.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
                         commandDetalle.Parameters.AddWithValue("@precio_unitario", detalle.PrecioUnitario);
-                        commandDetalle.Parameters.AddWithValue("@subtotal", detalle.Subtotal);
                         commandDetalle.Parameters.AddWithValue("@id_venta", idVenta);
                         commandDetalle.Parameters.AddWithValue("@id_medicamento", detalle.IdMedicamento);
 
@@ -235,6 +257,25 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     {
                         transaction.Rollback();
                         return validacionBase;
+                    }   
+
+                    string queryCliente = @"SELECT nit, razon_social
+                                    FROM cliente
+                                    WHERE id = @idCliente AND estado = 1";
+
+                    MySqlCommand commandCliente = new MySqlCommand(queryCliente, connection, transaction);
+                    commandCliente.Parameters.AddWithValue("@idCliente", venta.IdCliente);
+
+                    using (MySqlDataReader reader = commandCliente.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                        {
+                            transaction.Rollback();
+                            return Result.Fail("No se pudo obtener los datos del cliente.");
+                        }
+
+                        venta.Nit = reader["nit"].ToString()!;
+                        venta.RazonSocial = reader["razon_social"].ToString()!;
                     }
 
                     List<DetalleVenta> detallesActuales = GetDetallesByVentaIdTransaccional(connection, transaction, venta.Id);
@@ -269,6 +310,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                                 SET total = @total,
                                                     metodo_pago = @metodo_pago,
                                                     Cliente_idCliente = @idCliente,
+                                                    nit = @nit,
+                                                    razon_social = @razon_social,
                                                     ultima_actualizacion = NOW(),
                                                     Id_usuario_editor = @id_usuario_editor
                                                 WHERE id = @id
@@ -280,6 +323,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                     commandUpdateVenta.Parameters.AddWithValue("@idCliente", venta.IdCliente);
                     commandUpdateVenta.Parameters.AddWithValue("@id_usuario_editor", venta.IdUsuarioEditor);
                     commandUpdateVenta.Parameters.AddWithValue("@id", venta.Id);
+                    commandUpdateVenta.Parameters.AddWithValue("@nit", venta.Nit);
+                    commandUpdateVenta.Parameters.AddWithValue("@razon_social", venta.RazonSocial);
 
                     int filasVenta = commandUpdateVenta.ExecuteNonQuery();
                     if (filasVenta <= 0)
@@ -298,14 +343,13 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                         }
 
                         string queryDetalle = @"INSERT INTO detalle_venta
-                                                (cantidad, precio_unitario, subtotal, id_venta, id_medicamento)
+                                                (cantidad, precio_unitario, id_venta, id_medicamento)
                                                 VALUES
-                                                (@cantidad, @precio_unitario, @subtotal, @id_venta, @id_medicamento)";
+                                                (@cantidad, @precio_unitario, @id_venta, @id_medicamento)";
 
                         MySqlCommand commandDetalle = new MySqlCommand(queryDetalle, connection, transaction);
                         commandDetalle.Parameters.AddWithValue("@cantidad", detalle.Cantidad);
                         commandDetalle.Parameters.AddWithValue("@precio_unitario", detalle.PrecioUnitario);
-                        commandDetalle.Parameters.AddWithValue("@subtotal", detalle.Subtotal);
                         commandDetalle.Parameters.AddWithValue("@id_venta", venta.Id);
                         commandDetalle.Parameters.AddWithValue("@id_medicamento", detalle.IdMedicamento);
                         commandDetalle.ExecuteNonQuery();
@@ -539,10 +583,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
         {
             List<DetalleVenta> detalles = new();
 
-            string query = @"SELECT id_detalle,
-                                    cantidad,
+            string query = @"SELECT cantidad,
                                     precio_unitario,
-                                    subtotal,
                                     id_venta,
                                     id_medicamento
                              FROM detalle_venta
@@ -556,10 +598,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             {
                 detalles.Add(new DetalleVenta
                 {
-                    Id = Convert.ToInt32(reader["id_detalle"]),
                     Cantidad = Convert.ToInt32(reader["cantidad"]),
                     PrecioUnitario = Convert.ToDecimal(reader["precio_unitario"]),
-                    Subtotal = Convert.ToDecimal(reader["subtotal"]),
                     IdVenta = Convert.ToInt32(reader["id_venta"]),
                     IdMedicamento = Convert.ToInt32(reader["id_medicamento"])
                 });

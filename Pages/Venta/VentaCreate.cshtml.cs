@@ -40,7 +40,14 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostCrearVenta()
         {
-            int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Estado.MensajeError = "No se pudo identificar el usuario que registra la venta.";
+                CargarCatalogos();
+                return Page();
+            }
 
             List<DetalleVentaInputDto> detalles;
 
@@ -96,7 +103,7 @@ namespace ProyectoArqSoft.Pages
 
             Result resultado = ventaFacade.CrearVenta(
                 IdCliente,
-                idUsuario,
+                idUsuario.Value,
                 MetodoPago,
                 detalles
             );
