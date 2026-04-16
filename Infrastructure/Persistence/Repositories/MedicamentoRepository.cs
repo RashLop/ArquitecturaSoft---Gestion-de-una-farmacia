@@ -213,6 +213,34 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             return tabla;
         }
 
+        public int UpdateStock(int idMedicamento, int cantidad, bool esEntrada, int idUsuario)
+        {
+            string operacion = esEntrada ? "+" : "-";
+
+            string validacionStock = esEntrada
+                ? ""
+                : " AND stock >= @cantidad";
+
+            string query = $@"UPDATE medicamento
+                            SET stock = stock {operacion} @cantidad,
+                                id_usuario = @id_usuario,
+                                ultima_actualizacion = NOW()
+                            WHERE id = @id
+                            AND estado = 1
+                            {validacionStock}";
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@id", idMedicamento);
+                command.Parameters.AddWithValue("@cantidad", cantidad);
+                command.Parameters.AddWithValue("@id_usuario", idUsuario);
+
+                connection.Open();
+                return command.ExecuteNonQuery();
+            }
+        }
     }
 }
 

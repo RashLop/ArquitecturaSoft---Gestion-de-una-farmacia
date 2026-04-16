@@ -7,5 +7,6 @@ namespace ProyectoArqSoft.Application.Ports.Output
     {
         DataTable GetDestacados();
         int Count();
+        int UpdateStock(int idMedicamento, int cantidad, bool esEntrada, int idUsuario);
     }
 }
