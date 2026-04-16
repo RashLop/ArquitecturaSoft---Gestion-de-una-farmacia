@@ -2,13 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.DTOs;
-using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
-using DetalleVenta = ProyectoArqSoft.Domain.Models.DetalleVenta;
-using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text.Json;
+using DetalleVenta = ProyectoArqSoft.Domain.Models.DetalleVenta;
+using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -24,7 +23,7 @@ namespace ProyectoArqSoft.Pages
         public int IdCliente { get; set; }
 
         [BindProperty]
-        [Display(Name = "Método de Pago")]
+        [Display(Name = "MÃ©todo de Pago")]
         public string MetodoPago { get; set; } = string.Empty;
 
         [BindProperty]
@@ -49,9 +48,6 @@ namespace ProyectoArqSoft.Pages
 
             if (venta == null)
                 return RedirectToPage("Venta", new { error = "Venta no encontrada." });
-
-            if (venta.Estado == 0)
-                return RedirectToPage("Venta", new { error = "No se puede editar una venta anulada." });
 
             List<DetalleVenta> detalles = ventaFacade.ObtenerDetalles(id);
 
@@ -84,5 +80,3 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
-
-
