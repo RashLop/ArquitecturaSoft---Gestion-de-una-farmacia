@@ -2,13 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
 using ProyectoArqSoft.Domain.DTOs;
-using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
-using DetalleVenta = ProyectoArqSoft.Domain.Models.DetalleVenta;
-using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text.Json;
+using DetalleVenta = ProyectoArqSoft.Domain.Models.DetalleVenta;
+using VentaEntidad = ProyectoArqSoft.Domain.Models.Venta;
 
 namespace ProyectoArqSoft.Pages
 {
@@ -24,7 +23,7 @@ namespace ProyectoArqSoft.Pages
         public int IdCliente { get; set; }
 
         [BindProperty]
-        [Display(Name = "Método de Pago")]
+        [Display(Name = "MÃ©todo de Pago")]
         public string MetodoPago { get; set; } = string.Empty;
 
         [BindProperty]
@@ -50,9 +49,6 @@ namespace ProyectoArqSoft.Pages
             if (venta == null)
                 return RedirectToPage("Venta", new { error = "Venta no encontrada." });
 
-            if (venta.Estado == 0)
-                return RedirectToPage("Venta", new { error = "No se puede editar una venta anulada." });
-
             List<DetalleVenta> detalles = ventaFacade.ObtenerDetalles(id);
 
             IdVenta = venta.Id;
@@ -62,7 +58,8 @@ namespace ProyectoArqSoft.Pages
             List<DetalleVentaInputDto> detallesInput = detalles.Select(x => new DetalleVentaInputDto
             {
                 IdMedicamento = x.IdMedicamento,
-                Cantidad = x.Cantidad
+                Cantidad = x.Cantidad,
+                PrecioUnitario = x.PrecioUnitario
             }).ToList();
 
             DetallesJson = JsonSerializer.Serialize(detallesInput);
@@ -73,42 +70,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarVenta()
         {
-            int? idUsuarioEditor = HttpContext.Session.GetInt32("IdUsuario");
-
-            if (idUsuarioEditor == null)
-            {
-                Estado.MensajeError = "No se pudo identificar el usuario.";
-                CargarCatalogos();
-                return Page();
-            }
-
-            List<DetalleVentaInputDto> detalles;
-            try
-            {
-                detalles = JsonSerializer.Deserialize<List<DetalleVentaInputDto>>(DetallesJson) ?? new();
-            }
-            catch
-            {
-                Estado.MensajeError = "El detalle de la venta no tiene un formato válido.";
-                CargarCatalogos();
-                return Page();
-            }
-
-            Result resultado = ventaFacade.ActualizarVenta(
-                IdVenta,
-                IdCliente,
-                MetodoPago,
-                detalles,
-                idUsuarioEditor.Value);
-
-            if (resultado.IsSuccess == false)
-            {
-                Estado.MensajeError = resultado.Error;
-                CargarCatalogos();
-                return Page();
-            }
-
-            return RedirectToPage("Venta", new { mensaje = "Venta actualizada correctamente." });
+            return RedirectToPage("Venta", new { error = "La venta confirmada solo puede visualizarse o anularse." });
         }
 
         private void CargarCatalogos()
@@ -118,5 +80,3 @@ namespace ProyectoArqSoft.Pages
         }
     }
 }
-
-
