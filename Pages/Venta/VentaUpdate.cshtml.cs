@@ -55,7 +55,7 @@ namespace ProyectoArqSoft.Pages
             IdCliente = venta.IdCliente;
             MetodoPago = venta.MetodoPago;
 
-            List<DetalleVentaInputDto> detallesInput = detalles.Select(x => new DetalleVentaInputDto
+            List<DetalleVentaDto> detallesInput = detalles.Select(x => new DetalleVentaDto
             {
                 IdMedicamento = x.IdMedicamento,
                 Cantidad = x.Cantidad,
@@ -70,7 +70,7 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarVenta()
         {
-            return RedirectToPage("Venta", new { error = "La venta confirmada solo puede visualizarse o anularse." });
+            return RedirectToPage("Venta", new { mensaje = "Venta actualizada correctamente." });
         }
 
         private void CargarCatalogos()

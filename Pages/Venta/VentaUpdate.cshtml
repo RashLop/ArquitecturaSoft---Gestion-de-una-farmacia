@@ -10,44 +10,47 @@
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
                     <h2 class="mb-0">Detalle de Venta</h2>
-                    <p class="text-muted mt-2 mb-0">Consulta los datos de la venta registrada</p>
+                    <p class="text-muted mt-2 mb-0">Datos de la venta seleccionada</p>
                 </div>
 
                 <div class="med-card-body">
+
+                    <input type="hidden" asp-for="IdVenta" />
                     <input type="hidden" asp-for="DetallesJson" id="DetallesJson" />
-                    <input type="hidden" asp-for="IdCliente" id="IdCliente" />
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Cliente (NIT)</label>
+
                             <input type="text"
                                    id="clienteBusqueda"
                                    class="form-control"
+                                   placeholder="NIT del cliente"
                                    readonly />
-                        </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Cliente</label>
+                            <label class="form-label fw-bold mt-2">Cliente:</label>
                             <input type="text"
                                    id="razonSocialCliente"
                                    class="form-control"
+                                   placeholder="Razón social del cliente"
                                    readonly />
+
+                            <input type="hidden"
+                                   asp-for="IdCliente"
+                                   id="IdCliente" />
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="MetodoPago" class="form-label">MÃ©todo de Pago</label>
-                            <input asp-for="MetodoPago" class="form-control" readonly />
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Id de Venta</label>
-                            <input asp-for="IdVenta" class="form-control" readonly />
+                            <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                            <input asp-for="MetodoPago"
+                                   class="form-control med-input"
+                                   readonly />
                         </div>
                     </div>
 
                     <hr />
 
-                    <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">Detalle de venta</h5>
                     </div>
 
@@ -80,6 +83,7 @@
                     <div class="d-flex justify-content-end gap-2 mt-4">
                         <a asp-page="Venta" class="btn med-btn-secondary">Volver</a>
                     </div>
+
                 </div>
             </div>
 
@@ -116,42 +120,77 @@
     const detalleBody = document.getElementById("detalleBody");
     const detallesJsonInput = document.getElementById("DetallesJson");
     const totalVentaSpan = document.getElementById("totalVenta");
+
     const clienteBusqueda = document.getElementById("clienteBusqueda");
     const razonSocialCliente = document.getElementById("razonSocialCliente");
     const idClienteInput = document.getElementById("IdCliente");
 
     function crearFila(detalle) {
         const tr = document.createElement("tr");
-        const medicamento = medicamentos.find(m => Number(m.id) === Number(detalle?.IdMedicamento));
-        const cantidad = Number(detalle?.Cantidad || 0);
-        const precio = Number(detalle?.PrecioUnitario || 0);
-        const subtotal = cantidad * precio;
+
+        const medicamento = medicamentos.find(m =>
+            Number(m.id) === Number(detalle.IdMedicamento)
+        );
+
+        const nombreMedicamento = medicamento ? medicamento.nombre : "Medicamento no encontrado";
+        const cantidad = Number(detalle.Cantidad || 0);
+        const precioUnitario = Number(detalle.PrecioUnitario || 0);
+        const subtotal = cantidad * precioUnitario;
 
         tr.innerHTML = `
-            <td>${medicamento ? medicamento.nombre : "Medicamento no encontrado"}</td>
-            <td>${cantidad}</td>
-            <td>${precio.toFixed(2)}</td>
-            <td>${subtotal.toFixed(2)}</td>
+            <td>
+                <input type="text"
+                       class="form-control"
+                       value="${nombreMedicamento}"
+                       readonly>
+            </td>
+            <td>
+                <input type="number"
+                       class="form-control"
+                       value="${cantidad}"
+                       readonly>
+            </td>
+            <td>
+                <input type="number"
+                       class="form-control"
+                       value="${precioUnitario}"
+                       readonly>
+            </td>
+            <td>
+                <span class="subtotal-text">${subtotal.toFixed(2)}</span>
+            </td>
         `;
 
         detalleBody.appendChild(tr);
-        return subtotal;
+    }
+
+    function calcularTotal() {
+        const filas = detalleBody.querySelectorAll("tr");
+        let total = 0;
+
+        filas.forEach(tr => {
+            const cantidad = Number(tr.querySelector("td:nth-child(2) input").value || 0);
+            const precioUnitario = Number(tr.querySelector("td:nth-child(3) input").value || 0);
+
+            total += cantidad * precioUnitario;
+        });
+
+        totalVentaSpan.textContent = "Bs. " + total.toFixed(2);
     }
 
     let detallesIniciales = [];
+
     try {
         detallesIniciales = JSON.parse(detallesJsonInput.value || "[]");
     } catch {
         detallesIniciales = [];
     }
 
-    let total = 0;
-    detallesIniciales.forEach(d => {
-        total += crearFila(d);
-    });
-    totalVentaSpan.textContent = "Bs. " + total.toFixed(2);
+    detallesIniciales.forEach(d => crearFila(d));
+    calcularTotal();
 
     const clienteInicial = clientes.find(c => Number(c.id) === Number(idClienteInput.value));
+
     if (clienteInicial) {
         clienteBusqueda.value = clienteInicial.nit;
         razonSocialCliente.value = clienteInicial.razonSocial;
