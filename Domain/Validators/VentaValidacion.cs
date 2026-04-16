@@ -66,10 +66,6 @@ namespace ProyectoArqSoft.Domain.Validators
                 if (detalle.Subtotal <= 0)
                     return Result.Fail("El subtotal debe ser mayor a 0.");
 
-                decimal subtotalEsperado = detalle.Cantidad * detalle.PrecioUnitario;
-                if (detalle.Subtotal != subtotalEsperado)
-                    return Result.Fail("El subtotal no coincide con cantidad por precio unitario.");
-
                 if (!medicamentos.Add(detalle.IdMedicamento))
                     return Result.Fail("Un medicamento no puede repetirse dentro de la misma venta.");
             }

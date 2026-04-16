@@ -20,14 +20,25 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="IdCliente" class="form-label">Cliente</label>
-                                <select asp-for="IdCliente" class="form-select med-input" required>
-                                    <option value="">Seleccione un cliente</option>
-                                    @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
-                                    {
-                                        <option value="@row["id"]">@row["razon_social"]</option>
-                                    }
-                                </select>
+                                <label class="form-label fw-bold">Cliente (NIT)</label>
+
+                                <input type="text"
+                                    id="clienteBusqueda"
+                                    class="form-control"
+                                    placeholder="Buscar por NIT..." />
+
+                                <div id="clienteResultados" class="list-group mt-1"></div>
+
+                                <label class="form-label fw-bold mt-2">Cliente:</label>
+                                <input type="text"
+                                    id="razonSocialCliente"
+                                    class="form-control"
+                                    placeholder="Razón social del cliente"
+                                    readonly />
+
+                                <input type="hidden"
+                                    asp-for="IdCliente"
+                                    id="IdCliente" />
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -91,6 +102,21 @@
 </div>
 
 <script>
+
+    <script>
+    const clientes = [
+        @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
+        {
+            <text>
+            {
+                id: @row["id"],
+                nit: "@row["nit"]",
+                razonSocial: "@row["razon_social"]"
+            },
+            </text>
+        }
+    ];
+
     const medicamentos = [
         @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
         {
@@ -108,6 +134,46 @@
     const detallesJsonInput = document.getElementById("DetallesJson");
     const totalVentaSpan = document.getElementById("totalVenta");
     const btnAgregarDetalle = document.getElementById("btnAgregarDetalle");
+
+    const clienteBusqueda = document.getElementById("clienteBusqueda");
+    const clienteResultados = document.getElementById("clienteResultados");
+    const razonSocialCliente = document.getElementById("razonSocialCliente");
+    const idClienteInput = document.getElementById("IdCliente");
+
+    clienteBusqueda.addEventListener("input", function () {
+        const texto = this.value.toLowerCase().trim();
+        clienteResultados.innerHTML = "";
+
+        if (texto.length < 1) return;
+
+        const filtrados = clientes.filter(c =>
+            c.nit.toLowerCase().includes(texto)
+        );
+
+        filtrados.forEach(cliente => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "list-group-item list-group-item-action";
+            item.textContent = `${cliente.nit} - ${cliente.razonSocial}`;
+
+            item.onclick = function () {
+                clienteBusqueda.value = cliente.nit;
+                razonSocialCliente.value = cliente.razonSocial;
+                idClienteInput.value = cliente.id;
+                clienteResultados.innerHTML = "";
+            };
+
+            clienteResultados.appendChild(item);
+        });
+    });
+
+    clienteBusqueda.addEventListener("blur", function () {
+        if (this.value.trim() === "") {
+            razonSocialCliente.value = "";
+            idClienteInput.value = "";
+            clienteResultados.innerHTML = "";
+        }
+    });
 
     function crearFila(detalle = null) {
         const tr = document.createElement("tr");
@@ -220,6 +286,12 @@
         detallesIniciales.forEach(d => crearFila(d));
     } else {
         crearFila();
+    }
+
+    const clienteInicial = clientes.find(c => Number(c.id) === Number(idClienteInput.value));
+    if (clienteInicial) {
+        clienteBusqueda.value = clienteInicial.nit;
+        razonSocialCliente.value = clienteInicial.razonSocial;
     }
 
     document.getElementById("ventaUpdateForm").addEventListener("submit", function () {

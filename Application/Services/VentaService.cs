@@ -156,7 +156,6 @@ namespace ProyectoArqSoft.Application.Services
                     IdMedicamento = item.IdMedicamento,
                     Cantidad = item.Cantidad,
                     PrecioUnitario = precioReal,
-                    Subtotal = item.Cantidad * precioReal
                 };
 
                 venta.Detalles.Add(detalle);
