@@ -50,10 +50,21 @@ namespace ProyectoArqSoft.Pages
             }
 
             List<DetalleVentaInputDto> detalles;
-
-            try
+            try 
             {
                 detalles = JsonSerializer.Deserialize<List<DetalleVentaInputDto>>(DetallesJson) ?? new();
+
+                detalles = detalles
+                    .Where(x => x.IdMedicamento > 0 && x.Cantidad > 0)
+                    .GroupBy(x => x.IdMedicamento)
+                    .Select(g => new DetalleVentaInputDto
+                    {
+                        IdMedicamento = g.Key,
+                        Cantidad = g.Sum(x => x.Cantidad)
+                    })
+                    .ToList();
+
+                DetallesJson = JsonSerializer.Serialize(detalles);
             }
             catch
             {
