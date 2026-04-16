@@ -9,91 +9,81 @@
 
             <div class="med-card shadow-sm">
                 <div class="med-card-header text-center">
-                    <h2 class="mb-0">Actualizar Venta</h2>
-                    <p class="text-muted mt-2 mb-0">Modifica los datos de la venta seleccionada</p>
+                    <h2 class="mb-0">Detalle de Venta</h2>
+                    <p class="text-muted mt-2 mb-0">Datos de la venta seleccionada</p>
                 </div>
 
                 <div class="med-card-body">
-                    <form method="post" asp-page-handler="ActualizarVenta" id="ventaUpdateForm">
-                        <input type="hidden" asp-for="IdVenta" />
-                        <input type="hidden" asp-for="DetallesJson" id="DetallesJson" />
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Cliente (NIT)</label>
+                    <input type="hidden" asp-for="IdVenta" />
+                    <input type="hidden" asp-for="DetallesJson" id="DetallesJson" />
 
-                                <input type="text"
-                                    id="clienteBusqueda"
-                                    class="form-control"
-                                    placeholder="Buscar por NIT..." />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Cliente (NIT)</label>
 
-                                <div id="clienteResultados" class="list-group mt-1"></div>
+                            <input type="text"
+                                   id="clienteBusqueda"
+                                   class="form-control"
+                                   placeholder="NIT del cliente"
+                                   readonly />
 
-                                <label class="form-label fw-bold mt-2">Cliente:</label>
-                                <input type="text"
-                                    id="razonSocialCliente"
-                                    class="form-control"
-                                    placeholder="Razón social del cliente"
-                                    readonly />
+                            <label class="form-label fw-bold mt-2">Cliente:</label>
+                            <input type="text"
+                                   id="razonSocialCliente"
+                                   class="form-control"
+                                   placeholder="Razón social del cliente"
+                                   readonly />
 
-                                <input type="hidden"
-                                    asp-for="IdCliente"
-                                    id="IdCliente" />
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
-                                <select asp-for="MetodoPago" class="form-select med-input" required>
-                                    <option value="">Seleccione un método</option>
-                                    <option value="Efectivo">Efectivo</option>
-                                    <option value="Tarjeta">Tarjeta</option>
-                                    <option value="Transferencia">Transferencia</option>
-                                    <option value="QR">QR</option>
-                                </select>
-                            </div>
+                            <input type="hidden"
+                                   asp-for="IdCliente"
+                                   id="IdCliente" />
                         </div>
 
-                        <hr />
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Detalle de venta</h5>
-                            <button type="button" class="btn btn-success btn-sm" id="btnAgregarDetalle">
-                                + Agregar medicamento
-                            </button>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                            <input asp-for="MetodoPago"
+                                   class="form-control med-input"
+                                   readonly />
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered align-middle" id="tablaDetalles">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th>Medicamento</th>
-                                        <th style="width:130px;">Cantidad</th>
-                                        <th style="width:160px;">Precio Unitario</th>
-                                        <th style="width:140px;">Subtotal</th>
-                                        <th style="width:90px;">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detalleBody">
-                                </tbody>
-                            </table>
+                    <hr />
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Detalle de venta</h5>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle" id="tablaDetalles">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th style="width:130px;">Cantidad</th>
+                                    <th style="width:160px;">Precio Unitario</th>
+                                    <th style="width:140px;">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detalleBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-end mb-3">
+                        <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                    {
+                        <div class="alert alert-danger med-alert" role="alert">
+                            @Model.Estado.MensajeError
                         </div>
+                    }
 
-                        <div class="text-end mb-3">
-                            <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
-                        </div>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a asp-page="Venta" class="btn med-btn-secondary">Volver</a>
+                    </div>
 
-                        @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
-                        {
-                            <div class="alert alert-danger med-alert" role="alert">
-                                @Model.Estado.MensajeError
-                            </div>
-                        }
-
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a asp-page="Venta" class="btn med-btn-secondary">Volver</a>
-                            <button type="submit" class="btn med-btn-primary" id="btnActualizarVenta">Actualizar Venta</button>
-                        </div>
-                    </form>
                 </div>
             </div>
 
@@ -131,171 +121,79 @@
     const detalleBody = document.getElementById("detalleBody");
     const detallesJsonInput = document.getElementById("DetallesJson");
     const totalVentaSpan = document.getElementById("totalVenta");
-    const btnAgregarDetalle = document.getElementById("btnAgregarDetalle");
 
     const clienteBusqueda = document.getElementById("clienteBusqueda");
-    const clienteResultados = document.getElementById("clienteResultados");
     const razonSocialCliente = document.getElementById("razonSocialCliente");
     const idClienteInput = document.getElementById("IdCliente");
 
-    clienteBusqueda.addEventListener("input", function () {
-        const texto = this.value.toLowerCase().trim();
-        clienteResultados.innerHTML = "";
-
-        if (texto.length < 1) return;
-
-        const filtrados = clientes.filter(c =>
-            c.nit.toLowerCase().includes(texto)
-        );
-
-        filtrados.forEach(cliente => {
-            const item = document.createElement("button");
-            item.type = "button";
-            item.className = "list-group-item list-group-item-action";
-            item.textContent = `${cliente.nit} - ${cliente.razonSocial}`;
-
-            item.onclick = function () {
-                clienteBusqueda.value = cliente.nit;
-                razonSocialCliente.value = cliente.razonSocial;
-                idClienteInput.value = cliente.id;
-                clienteResultados.innerHTML = "";
-            };
-
-            clienteResultados.appendChild(item);
-        });
-    });
-
-    clienteBusqueda.addEventListener("blur", function () {
-        if (this.value.trim() === "") {
-            razonSocialCliente.value = "";
-            idClienteInput.value = "";
-            clienteResultados.innerHTML = "";
-        }
-    });
-
-    function crearFila(detalle = null) {
+    function crearFila(detalle) {
         const tr = document.createElement("tr");
 
-        const opciones = medicamentos.map(m => {
-            const selected = detalle && Number(detalle.IdMedicamento) === Number(m.id) ? "selected" : "";
-            return `<option value="${m.id}" data-precio="${m.precio}" ${selected}>${m.nombre}</option>`;
-        }).join("");
+        const medicamento = medicamentos.find(m =>
+            Number(m.id) === Number(detalle.IdMedicamento)
+        );
+
+        const nombreMedicamento = medicamento ? medicamento.nombre : "Medicamento no encontrado";
+        const cantidad = Number(detalle.Cantidad || 0);
+        const precioUnitario = Number(detalle.PrecioUnitario || 0);
+        const subtotal = cantidad * precioUnitario;
 
         tr.innerHTML = `
             <td>
-                <select class="form-select medicamento-select">
-                    <option value="">Seleccione</option>
-                    ${opciones}
-                </select>
+                <input type="text"
+                       class="form-control"
+                       value="${nombreMedicamento}"
+                       readonly>
             </td>
             <td>
-                <input type="number" min="1" class="form-control cantidad-input" value="${detalle ? detalle.Cantidad : 1}">
+                <input type="number"
+                       class="form-control"
+                       value="${cantidad}"
+                       readonly>
             </td>
             <td>
-                <input type="number" min="0.01" step="0.01" class="form-control precio-input" value="${detalle ? detalle.PrecioUnitario : 0}" readonly>
+                <input type="number"
+                       class="form-control"
+                       value="${precioUnitario}"
+                       readonly>
             </td>
             <td>
-                <span class="subtotal-text">0.00</span>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger btn-sm btnEliminarFila">Quitar</button>
+                <span class="subtotal-text">${subtotal.toFixed(2)}</span>
             </td>
         `;
 
         detalleBody.appendChild(tr);
-
-        const select = tr.querySelector(".medicamento-select");
-        const cantidadInput = tr.querySelector(".cantidad-input");
-        const precioInput = tr.querySelector(".precio-input");
-
-        function actualizarPrecioPorMedicamento() {
-            const option = select.options[select.selectedIndex];
-            if (option && option.dataset.precio && (!detalle || Number(precioInput.value) <= 0)) {
-                precioInput.value = option.dataset.precio;
-            }
-            recalcularFila(tr);
-        }
-
-        select.addEventListener("change", actualizarPrecioPorMedicamento);
-        cantidadInput.addEventListener("input", () => recalcularFila(tr));
-        precioInput.addEventListener("input", () => recalcularFila(tr));
-
-        tr.querySelector(".btnEliminarFila").addEventListener("click", () => {
-            tr.remove();
-            sincronizarJson();
-        });
-
-        if (!detalle) {
-            actualizarPrecioPorMedicamento();
-        } else {
-            recalcularFila(tr);
-        }
     }
 
-    function recalcularFila(tr) {
-        const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
-        const select = tr.querySelector(".medicamento-select");
-        const option = select.options[select.selectedIndex];
-        const precio = Number(option?.dataset?.precio || tr.querySelector(".precio-input").value || 0);
-        tr.querySelector(".precio-input").value = precio > 0 ? precio : 0;
-        const subtotal = cantidad * precio;
-        tr.querySelector(".subtotal-text").textContent = subtotal.toFixed(2);
-        sincronizarJson();
-    }
-
-    function sincronizarJson() {
+    function calcularTotal() {
         const filas = detalleBody.querySelectorAll("tr");
-        const detalles = [];
         let total = 0;
 
         filas.forEach(tr => {
-            const idMedicamento = Number(tr.querySelector(".medicamento-select").value || 0);
-            const cantidad = Number(tr.querySelector(".cantidad-input").value || 0);
-            const select = tr.querySelector(".medicamento-select");
-            const option = select.options[select.selectedIndex];
-            const precioUnitario = Number(option?.dataset?.precio || tr.querySelector(".precio-input").value || 0);
-            const subtotal = cantidad * precioUnitario;
+            const cantidad = Number(tr.querySelector("td:nth-child(2) input").value || 0);
+            const precioUnitario = Number(tr.querySelector("td:nth-child(3) input").value || 0);
 
-            if (idMedicamento > 0) {
-                detalles.push({
-                    IdMedicamento: idMedicamento,
-                    Cantidad: cantidad,
-                    PrecioUnitario: precioUnitario
-                });
-            }
-
-            total += subtotal;
+            total += cantidad * precioUnitario;
         });
 
-        detallesJsonInput.value = JSON.stringify(detalles);
         totalVentaSpan.textContent = "Bs. " + total.toFixed(2);
     }
 
-    btnAgregarDetalle.addEventListener("click", () => crearFila());
-
     let detallesIniciales = [];
+
     try {
         detallesIniciales = JSON.parse(detallesJsonInput.value || "[]");
     } catch {
         detallesIniciales = [];
     }
 
-    if (detallesIniciales.length > 0) {
-        detallesIniciales.forEach(d => crearFila(d));
-    } else {
-        crearFila();
-    }
+    detallesIniciales.forEach(d => crearFila(d));
+    calcularTotal();
 
     const clienteInicial = clientes.find(c => Number(c.id) === Number(idClienteInput.value));
+
     if (clienteInicial) {
         clienteBusqueda.value = clienteInicial.nit;
         razonSocialCliente.value = clienteInicial.razonSocial;
     }
-
-    document.getElementById("ventaUpdateForm").addEventListener("submit", function () {
-        const botonActualizar = document.getElementById("btnActualizarVenta");
-        botonActualizar.disabled = true;
-        botonActualizar.textContent = "Actualizando...";
-    });
 </script>
-

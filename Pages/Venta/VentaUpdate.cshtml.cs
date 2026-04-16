@@ -59,10 +59,11 @@ namespace ProyectoArqSoft.Pages
             IdCliente = venta.IdCliente;
             MetodoPago = venta.MetodoPago;
 
-            List<DetalleVentaInputDto> detallesInput = detalles.Select(x => new DetalleVentaInputDto
+            List<DetalleVentaDto> detallesInput = detalles.Select(x => new DetalleVentaDto
             {
                 IdMedicamento = x.IdMedicamento,
-                Cantidad = x.Cantidad
+                Cantidad = x.Cantidad,
+                PrecioUnitario = x.PrecioUnitario
             }).ToList();
 
             DetallesJson = JsonSerializer.Serialize(detallesInput);
@@ -73,41 +74,6 @@ namespace ProyectoArqSoft.Pages
 
         public IActionResult OnPostActualizarVenta()
         {
-            int? idUsuarioEditor = HttpContext.Session.GetInt32("IdUsuario");
-
-            if (idUsuarioEditor == null)
-            {
-                Estado.MensajeError = "No se pudo identificar el usuario.";
-                CargarCatalogos();
-                return Page();
-            }
-
-            List<DetalleVentaInputDto> detalles;
-            try
-            {
-                detalles = JsonSerializer.Deserialize<List<DetalleVentaInputDto>>(DetallesJson) ?? new();
-            }
-            catch
-            {
-                Estado.MensajeError = "El detalle de la venta no tiene un formato válido.";
-                CargarCatalogos();
-                return Page();
-            }
-
-            Result resultado = ventaFacade.ActualizarVenta(
-                IdVenta,
-                IdCliente,
-                MetodoPago,
-                detalles,
-                idUsuarioEditor.Value);
-
-            if (resultado.IsSuccess == false)
-            {
-                Estado.MensajeError = resultado.Error;
-                CargarCatalogos();
-                return Page();
-            }
-
             return RedirectToPage("Venta", new { mensaje = "Venta actualizada correctamente." });
         }
 
