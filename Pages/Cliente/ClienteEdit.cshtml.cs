@@ -38,6 +38,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // La edición se inicializa desde el handler que recibe el cliente seleccionado.
         }
 
         public IActionResult OnPostCargarClienteParaEdicion(int id)

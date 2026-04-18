@@ -34,6 +34,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // La página únicamente muestra el formulario de registro inicial.
         }
 
         public IActionResult OnPostCrearCliente()

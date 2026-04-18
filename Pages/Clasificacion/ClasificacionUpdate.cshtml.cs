@@ -36,6 +36,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // La carga de datos para edición se resuelve en el handler POST correspondiente.
         }
 
         public IActionResult OnPostCargarClasificacionParaEdicion(int id)

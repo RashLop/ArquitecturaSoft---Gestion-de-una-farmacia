@@ -7,8 +7,6 @@ namespace ProyectoArqSoft.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly IConfiguration _configuration;
         private readonly IDashboardFacade _dashboardFacade;
 
         public string? Usuario { get; set; }
@@ -16,12 +14,8 @@ namespace ProyectoArqSoft.Pages
         public EstadisticasDTO TotalFarmacia { get; set; } = new EstadisticasDTO();
 
         public IndexModel(
-            ILogger<IndexModel> logger,
-            IConfiguration configuration,
             IDashboardFacade dashboardFacade)
         {
-            _logger = logger;
-            _configuration = configuration;
             _dashboardFacade = dashboardFacade;
         }
 

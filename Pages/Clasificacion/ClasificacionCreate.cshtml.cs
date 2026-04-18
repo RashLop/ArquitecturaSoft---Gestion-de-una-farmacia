@@ -31,6 +31,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // La pantalla solo necesita renderizar el formulario inicial.
         }
 
         public IActionResult OnPostCrearClasificacion()
