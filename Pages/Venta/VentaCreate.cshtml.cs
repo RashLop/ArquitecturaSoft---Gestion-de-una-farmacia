@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Application.Services;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Pages.Base;
@@ -14,6 +15,9 @@ namespace ProyectoArqSoft.Pages
     public class VentaCreateModel : BasePageModel
     {
         private readonly IVentaFacade ventaFacade;
+        private readonly IClienteService clienteService;
+        private readonly IMedicamentoService medicamentoService;
+        private readonly ComprobanteVentaPdfService comprobanteVentaPdfService;
 
         [BindProperty]
         public int IdCliente { get; set; }
@@ -28,9 +32,16 @@ namespace ProyectoArqSoft.Pages
         public DataTable ClienteDataTable { get; set; } = new();
         public DataTable MedicamentoDataTable { get; set; } = new();
 
-        public VentaCreateModel(IVentaFacade ventaFacade)
+        public VentaCreateModel(
+            IVentaFacade ventaFacade,
+            IClienteService clienteService,
+            IMedicamentoService medicamentoService,
+            ComprobanteVentaPdfService comprobanteVentaPdfService)
         {
             this.ventaFacade = ventaFacade;
+            this.clienteService = clienteService;
+            this.medicamentoService = medicamentoService;
+            this.comprobanteVentaPdfService = comprobanteVentaPdfService;
         }
 
         public void OnGet()
@@ -41,6 +52,7 @@ namespace ProyectoArqSoft.Pages
         public IActionResult OnPostCrearVenta()
         {
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+            string cajero = HttpContext.Session.GetString("UserName") ?? "cajero";
 
             if (idUsuario == null)
             {
@@ -50,7 +62,7 @@ namespace ProyectoArqSoft.Pages
             }
 
             List<DetalleVentaInputDto> detalles;
-            try 
+            try
             {
                 detalles = JsonSerializer.Deserialize<List<DetalleVentaInputDto>>(DetallesJson) ?? new();
 
@@ -73,7 +85,6 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            // Validaciones previas
             if (IdCliente <= 0)
             {
                 Estado.MensajeError = "Debe seleccionar un cliente válido.";
@@ -126,8 +137,39 @@ namespace ProyectoArqSoft.Pages
                 return Page();
             }
 
-            return RedirectToPage("Venta",
-                new { mensaje = "Venta registrada correctamente." });
+            var cliente = clienteService.ObtenerPorId(IdCliente);
+            if (cliente == null)
+            {
+                Estado.MensajeError = "No se pudo obtener la información del cliente para el comprobante.";
+                CargarCatalogos();
+                return Page();
+            }
+
+            var comprobante = new ComprobanteVentaPdfDto
+            {
+                Fecha = DateTime.Now,
+                Nit = cliente.Nit,
+                RazonSocial = cliente.RazonSocial,
+                Cajero = cajero
+            };
+
+            foreach (var item in detalles)
+            {
+                var medicamento = medicamentoService.ObtenerPorId(item.IdMedicamento);
+
+                comprobante.Detalles.Add(new ComprobanteVentaDetallePdfDto
+                {
+                    Cantidad = item.Cantidad,
+                    Descripcion = medicamento?.Nombre ?? $"Medicamento #{item.IdMedicamento}",
+                    PrecioUnitario = medicamento?.Precio ?? 0
+                });
+            }
+
+            comprobante.Total = comprobante.Detalles.Sum(x => x.Importe);
+
+            byte[] pdf = comprobanteVentaPdfService.Generar(comprobante);
+
+            return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
         }
 
         private void CargarCatalogos()
