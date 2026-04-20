@@ -167,9 +167,13 @@ namespace ProyectoArqSoft.Pages
 
             comprobante.Total = comprobante.Detalles.Sum(x => x.Importe);
 
-            byte[] pdf = comprobanteVentaPdfService.Generar(comprobante);
+byte[] pdf = comprobanteVentaPdfService.Generar(comprobante);
 
-            return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
+Response.Headers["X-Mensaje-Exito"] = "Venta registrada correctamente.";
+Response.Headers["X-Redirect-To"] =
+    Url.Page("Venta", new { mensaje = "Venta registrada correctamente." }) ?? "/Venta?mensaje=Venta%20registrada%20correctamente.";
+
+return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
         }
 
         private void CargarCatalogos()
