@@ -253,12 +253,12 @@ namespace ProyectoArqSoft.Application.Services
                 return Result.Fail("El campo nombres parece estar dividido incorrectamente. Verifique que no haya separado un solo nombre con espacios.");
 
             if (StringHelper.ApellidoPareceFragmentado(apellidoPaterno))
-                return Result.Fail("El apellido paterno parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
+                return Result.Fail("El primer apellido parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
 
             if (!string.IsNullOrWhiteSpace(apellidoMaterno) &&
                 StringHelper.ApellidoPareceFragmentado(apellidoMaterno))
             {
-                return Result.Fail("El apellido materno parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
+                return Result.Fail("El segundo apellido parece estar dividido incorrectamente. Verifique que no haya separado una sola palabra con espacios.");
             }
 
             return Result.Ok();
