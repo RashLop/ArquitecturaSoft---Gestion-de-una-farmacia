@@ -156,7 +156,8 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                                     m.presentacion,
                                     c.nombre AS clasificacion,
                                     m.concentracion,
-                                    m.precio
+                                    m.precio,
+                                    m.stock
                             FROM medicamento m
                             INNER JOIN clasificacion c 
                                 ON m.id_clasificacion = c.id
