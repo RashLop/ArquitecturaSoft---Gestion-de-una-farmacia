@@ -29,6 +29,18 @@ namespace ProyectoArqSoft.Pages
         [BindProperty]
         public string DetallesJson { get; set; } = "[]";
 
+        [BindProperty]
+        public bool ClienteModalEsConsumidorFinal { get; set; }
+
+        [BindProperty]
+        public string ClienteModalNit { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string ClienteModalRazonSocial { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string ClienteModalCorreoElectronico { get; set; } = string.Empty;
+
         public DataTable ClienteDataTable { get; set; } = new();
         public DataTable MedicamentoDataTable { get; set; } = new();
 
@@ -47,6 +59,33 @@ namespace ProyectoArqSoft.Pages
         public void OnGet()
         {
             CargarCatalogos();
+        }
+
+        public IActionResult OnGetMedicamentoStock(int id)
+        {
+            var medicamento = medicamentoService.ObtenerPorId(id);
+
+            if (medicamento == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = "El medicamento no existe o no esta activo."
+                });
+            }
+
+            return new JsonResult(new
+            {
+                success = true,
+                medicamento = new
+                {
+                    id = medicamento.Id,
+                    nombre = medicamento.Nombre,
+                    precio = medicamento.Precio,
+                    stock = medicamento.Stock
+                }
+            });
         }
 
         public IActionResult OnPostCrearVenta()
@@ -167,19 +206,89 @@ namespace ProyectoArqSoft.Pages
 
             comprobante.Total = comprobante.Detalles.Sum(x => x.Importe);
 
-byte[] pdf = comprobanteVentaPdfService.Generar(comprobante);
+            byte[] pdf = comprobanteVentaPdfService.Generar(comprobante);
 
-Response.Headers["X-Mensaje-Exito"] = "Venta registrada correctamente.";
-Response.Headers["X-Redirect-To"] =
-    Url.Page("Venta", new { mensaje = "Venta registrada correctamente." }) ?? "/Venta?mensaje=Venta%20registrada%20correctamente.";
+            Response.Headers["X-Mensaje-Exito"] = "Venta registrada correctamente.";
+            Response.Headers["X-Redirect-To"] =
+                Url.Page("Venta", new { mensaje = "Venta registrada correctamente." }) ?? "/Venta?mensaje=Venta%20registrada%20correctamente.";
 
-return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
+        }
+
+        public IActionResult OnPostCrearClienteModal()
+        {
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (idUsuario == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = "No se pudo identificar el usuario que realiza la operacion."
+                });
+            }
+
+            Result resultado = clienteService.Crear(
+                ClienteModalEsConsumidorFinal,
+                ClienteModalNit,
+                ClienteModalRazonSocial,
+                ClienteModalCorreoElectronico,
+                idUsuario.Value);
+
+            if (!resultado.IsSuccess)
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = resultado.Error
+                });
+            }
+
+            string nitBuscado = ClienteModalEsConsumidorFinal ? "CF" : ClienteModalNit;
+            DataTable clientes = clienteService.ObtenerTodos(nitBuscado);
+            DataRow? clienteCreado = BuscarClientePorNit(clientes, nitBuscado);
+
+            if (clienteCreado == null)
+            {
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return new JsonResult(new
+                {
+                    success = false,
+                    error = "El cliente fue registrado, pero no se pudo recuperar para seleccionarlo."
+                });
+            }
+
+            return new JsonResult(new
+            {
+                success = true,
+                cliente = new
+                {
+                    id = Convert.ToInt32(clienteCreado["id"]),
+                    nit = clienteCreado["nit"]?.ToString() ?? string.Empty,
+                    razonSocial = clienteCreado["razon_social"]?.ToString() ?? string.Empty
+                }
+            });
         }
 
         private void CargarCatalogos()
         {
             ClienteDataTable = ventaFacade.ObtenerClientes();
             MedicamentoDataTable = ventaFacade.ObtenerMedicamentos();
+        }
+
+        private static DataRow? BuscarClientePorNit(DataTable clientes, string nit)
+        {
+            foreach (DataRow row in clientes.Rows)
+            {
+                string nitFila = row["nit"]?.ToString()?.Trim() ?? string.Empty;
+
+                if (nitFila.Equals(nit.Trim(), StringComparison.OrdinalIgnoreCase))
+                    return row;
+            }
+
+            return null;
         }
     }
 }

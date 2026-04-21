@@ -149,6 +149,10 @@ namespace ProyectoArqSoft.Application.Services
                     throw new InvalidOperationException(
                         $"Medicamento con ID {item.IdMedicamento} no encontrado.");
 
+                if (item.Cantidad > medicamento.Stock)
+                    throw new InvalidOperationException(
+                        $"Stock insuficiente para {medicamento.Nombre}. Disponible: {medicamento.Stock}.");
+
                 decimal precioReal = medicamento.Precio;
 
                 DetalleVenta detalle = new DetalleVenta
