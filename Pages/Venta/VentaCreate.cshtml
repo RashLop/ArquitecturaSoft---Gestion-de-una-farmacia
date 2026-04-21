@@ -124,11 +124,11 @@
                 }
 
                 <div class="text-end">
-                  <button type="button"
-                        class="btn btn-primary"
-                        id="btnGuardarVenta">
-                    Guardar Venta
-                </button>
+                    <button type="submit"
+                            class="btn btn-primary"
+                            id="btnGuardarVenta">
+                        Guardar Venta
+                    </button>
                 </div>
             </form>
         </div>
@@ -750,88 +750,4 @@
             seleccionarCliente(clienteInicial);
         }
     </script>
-    <script>
-    const formVenta = document.getElementById("ventaCreateForm");
-    const btnGuardarVenta = document.getElementById("btnGuardarVenta");
-    const btnConfirmarVentaModal = document.getElementById("btnConfirmarVentaModal");
-    const modalConfirmarVenta = new bootstrap.Modal(document.getElementById("modalConfirmarVenta"));
-
-    btnGuardarVenta.addEventListener("click", function () {
-        sincronizarJson();
-
-        const idCliente = document.getElementById("IdCliente").value;
-        const metodoPago = document.querySelector('[name="MetodoPago"]').value;
-        const detalles = detallesJsonInput.value;
-
-        if (!idCliente || Number(idCliente) <= 0) {
-            alert("Debe seleccionar un cliente válido.");
-            return;
-        }
-
-        if (!metodoPago || metodoPago.trim() === "") {
-            alert("Debe seleccionar un método de pago.");
-            return;
-        }
-
-        if (!detalles || detalles === "[]" || detalles.trim() === "") {
-            alert("Debe agregar al menos un medicamento.");
-            return;
-        }
-
-        modalConfirmarVenta.show();
-    });
-
-    btnConfirmarVentaModal.addEventListener("click", async function () {
-        try {
-            sincronizarJson();
-            modalConfirmarVenta.hide();
-
-            const formData = new FormData(formVenta);
-
-            const response = await fetch(formVenta.action || (window.location.pathname + "?handler=CrearVenta"), {
-                method: "POST",
-                body: formData
-            });
-
-            const contentType = response.headers.get("content-type") || "";
-
-            if (!response.ok || contentType.includes("text/html")) {
-                const html = await response.text();
-                document.open();
-                document.write(html);
-                document.close();
-                return;
-            }
-
-            const blob = await response.blob();
-            const mensaje = response.headers.get("X-Mensaje-Exito") || "Venta registrada correctamente.";
-            const redirectTo = response.headers.get("X-Redirect-To") || "/Venta?mensaje=" + encodeURIComponent(mensaje);
-
-            let fileName = "comprobante-venta.pdf";
-            const contentDisposition = response.headers.get("Content-Disposition");
-
-            if (contentDisposition) {
-                const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                if (match && match[1]) fileName = match[1];
-            }
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-
-            setTimeout(() => {
-                window.location.href = redirectTo;
-            }, 500);
-        }
-        catch (error) {
-            alert("Ocurrió un error al registrar la venta.");
-            console.error(error);
-        }
-    });
-</script>
 }
