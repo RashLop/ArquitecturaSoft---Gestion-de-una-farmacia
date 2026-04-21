@@ -100,6 +100,7 @@ namespace ProyectoArqSoft.Application.Services
 
                         // Convertir el total a texto usando la clase helper
                         string totalLiteral = NumeroATextoConverter.ConvertirDecimalATexto(comprobante.Total);
+                        int decimales = (int)Math.Round((comprobante.Total - Math.Truncate(comprobante.Total)) * 100, 0);
 
                         // Alineación a la izquierda del total
                         column.Item().AlignRight().Text($"TOTAL Bs.: {comprobante.Total:0.00}")
@@ -107,7 +108,7 @@ namespace ProyectoArqSoft.Application.Services
                             .FontSize(14);
 
                         // Aquí mostramos el total literal al lado izquierdo
-                        column.Item().AlignLeft().Text($"Son {totalLiteral} Bolivianos")
+                        column.Item().AlignLeft().Text($"Son {totalLiteral} {decimales:00}/100 Bolivianos")
                             .FontSize(14)
                             .FontColor(Colors.Black);
 
