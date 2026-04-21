@@ -33,15 +33,21 @@
         </div>
     </form>
 
-    @if (!string.IsNullOrEmpty(Model.Estado.Mensaje))
-    {
-        <div class="alert alert-success shadow-sm">@Model.Estado.Mensaje</div>
-    }
+   @if (!string.IsNullOrWhiteSpace(Model.Estado.Mensaje))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @Model.Estado.Mensaje
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
-    @if (!string.IsNullOrEmpty(Model.Estado.MensajeError))
-    {
-        <div class="alert alert-danger shadow-sm">@Model.Estado.MensajeError</div>
-    }
+@if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @Model.Estado.MensajeError
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
     <div class="card-module">
         <table class="table table-hover align-middle">
