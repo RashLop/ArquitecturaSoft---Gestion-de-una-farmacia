@@ -71,10 +71,33 @@
 
                         <div class="form-group">
                             <label asp-for="LoginRequest.Password">Contraseña</label>
-                            <input type="password"
-                                   asp-for="LoginRequest.Password"
-                                   placeholder="••••••••"
-                                   required />
+
+                            <div class="password-wrapper">
+                                <input type="password"
+                                       asp-for="LoginRequest.Password"
+                                       placeholder="••••••••"
+                                       required
+                                       id="passwordInput" />
+
+                                <button type="button"
+                                        class="toggle-password"
+                                        id="togglePassword"
+                                        aria-label="Mostrar contraseña"
+                                        aria-pressed="false"
+                                        title="Mostrar contraseña">
+                                    <svg class="icon-eye icon-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+
+                                    <svg class="icon-eye icon-hide" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 3l18 18"></path>
+                                        <path d="M10.58 10.58A2 2 0 0 0 12 14a2 2 0 0 0 1.42-.58"></path>
+                                        <path d="M9.88 5.09A9.77 9.77 0 0 1 12 5c6.5 0 10 7 10 7a13.16 13.16 0 0 1-2.17 2.94"></path>
+                                        <path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3.5 7 10 7a9.77 9.77 0 0 0 2.12-.23"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
@@ -93,5 +116,20 @@
             </div>
         </section>
     </main>
+
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', function () {
+            const showingPassword = passwordInput.type === 'text';
+
+            passwordInput.type = showingPassword ? 'password' : 'text';
+            togglePassword.classList.toggle('active', !showingPassword);
+            togglePassword.setAttribute('aria-pressed', (!showingPassword).toString());
+            togglePassword.setAttribute('aria-label', showingPassword ? 'Mostrar contraseña' : 'Ocultar contraseña');
+            togglePassword.setAttribute('title', showingPassword ? 'Mostrar contraseña' : 'Ocultar contraseña');
+        });
+    </script>
 </body>
 </html>
