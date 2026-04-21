@@ -2,6 +2,7 @@ using ProyectoArqSoft.Domain.DTOs;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using ProyectoArqSoft.Application.Helpers; // Importamos el helper de conversión
 
 namespace ProyectoArqSoft.Application.Services
 {
@@ -97,9 +98,18 @@ namespace ProyectoArqSoft.Application.Services
                             }
                         });
 
+                        // Convertir el total a texto usando la clase helper
+                        string totalLiteral = NumeroATextoConverter.ConvertirDecimalATexto(comprobante.Total);
+
+                        // Alineación a la izquierda del total
                         column.Item().AlignRight().Text($"TOTAL Bs.: {comprobante.Total:0.00}")
                             .Bold()
                             .FontSize(14);
+
+                        // Aquí mostramos el total literal al lado izquierdo
+                        column.Item().AlignLeft().Text($"Son {totalLiteral} Bolivianos")
+                            .FontSize(14)
+                            .FontColor(Colors.Black);
 
                         column.Item().PaddingTop(10).AlignCenter().Text("Gracias por su compra.")
                             .FontSize(10)
