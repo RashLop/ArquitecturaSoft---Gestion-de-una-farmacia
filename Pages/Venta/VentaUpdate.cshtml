@@ -41,7 +41,8 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                            <label asp-for="MetodoPago" class="form-label fw-bold">Método de Pago</label>
+                            <!-- El input se mantiene 'readonly' para que solo sea vista de detalle -->
                             <input asp-for="MetodoPago"
                                    class="form-control med-input"
                                    readonly />
@@ -60,7 +61,7 @@
                                 <tr>
                                     <th>Medicamento</th>
                                     <th style="width:130px;">Cantidad</th>
-                                    <th style="width:160px;">Precio Unitario</th>
+                                    <th style="width:180px;">Precio Unitario</th>
                                     <th style="width:140px;">Subtotal</th>
                                 </tr>
                             </thead>
@@ -73,7 +74,7 @@
                         <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
                     </div>
 
-                    @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                    @if (!string.IsNullOrWhiteSpace(Model.Estado?.MensajeError))
                     {
                         <div class="alert alert-danger med-alert" role="alert">
                             @Model.Estado.MensajeError
@@ -95,25 +96,25 @@
     const clientes = [
         @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
         {
-            <text>
-            {
-                id: @row["id"],
-                nit: "@row["nit"]",
-                razonSocial: "@row["razon_social"]"
-            },
-            </text>
+                <text>
+                {
+                    id: @row["id"],
+                    nit: "@row["nit"]",
+                    razonSocial: "@row["razon_social"]"
+                },
+                </text>
         }
     ];
 
     const medicamentos = [
         @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
         {
-            <text>
-            {
-                id: @row["id"],
-                nombre: "@row["nombre"]"
-            },
-            </text>
+                <text>
+                {
+                    id: @row["id"],
+                    nombre: "@row["nombre"]"
+                },
+                </text>
         }
     ];
 
@@ -151,13 +152,18 @@
                        readonly>
             </td>
             <td>
-                <input type="number"
-                       class="form-control"
-                       value="${precioUnitario}"
-                       readonly>
+                <!-- Se agregó 'Bs.' al input del Precio Unitario -->
+                <div class="input-group">
+                    <span class="input-group-text">Bs.</span>
+                    <input type="number"
+                           class="form-control"
+                           value="${precioUnitario.toFixed(2)}"
+                           readonly>
+                </div>
             </td>
             <td>
-                <span class="subtotal-text">${subtotal.toFixed(2)}</span>
+                <!-- Se agregó 'Bs.' al texto del Subtotal -->
+                <span class="subtotal-text fw-bold">Bs. ${subtotal.toFixed(2)}</span>
             </td>
         `;
 

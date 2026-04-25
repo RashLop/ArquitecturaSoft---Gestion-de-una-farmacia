@@ -23,8 +23,8 @@ namespace ProyectoArqSoft.Pages
         public int IdCliente { get; set; }
 
         [BindProperty]
-        [Display(Name = "MÃ©todo de Pago")]
-        public string MetodoPago { get; set; } = string.Empty;
+        [Display(Name = "Método de Pago")] // Corrección de tilde
+        public string MetodoPago { get; set; } = "Efectivo"; // Valor por defecto inicial
 
         [BindProperty]
         public string DetallesJson { get; set; } = "[]";
@@ -53,7 +53,9 @@ namespace ProyectoArqSoft.Pages
 
             IdVenta = venta.Id;
             IdCliente = venta.IdCliente;
-            MetodoPago = venta.MetodoPago;
+
+            // Asigna el valor por defecto "Efectivo" si la BD trae el dato nulo o vacío
+            MetodoPago = string.IsNullOrWhiteSpace(venta.MetodoPago) ? "Efectivo" : venta.MetodoPago;
 
             List<DetalleVentaDto> detallesInput = detalles.Select(x => new DetalleVentaDto
             {
