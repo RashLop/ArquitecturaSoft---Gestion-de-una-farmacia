@@ -22,18 +22,12 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Cliente (NIT)</label>
 
-                            <input type="text"
-                                   id="clienteBusqueda"
-                                   class="form-control"
-                                   placeholder="NIT del cliente"
-                                   readonly />
+                            <div id="clienteBusqueda"
+                                 class="form-control-plaintext border rounded px-3 py-2 bg-light"></div>
 
                             <label class="form-label fw-bold mt-2">Cliente:</label>
-                            <input type="text"
-                                   id="razonSocialCliente"
-                                   class="form-control"
-                                   placeholder="Razón social del cliente"
-                                   readonly />
+                            <div id="razonSocialCliente"
+                                 class="form-control-plaintext border rounded px-3 py-2 bg-light"></div>
 
                             <input type="hidden"
                                    asp-for="IdCliente"
@@ -41,10 +35,10 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
-                            <input asp-for="MetodoPago"
-                                   class="form-control med-input"
-                                   readonly />
+                            <label asp-for="MetodoPago" class="form-label">Metodo de Pago</label>
+                            <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
+                                @Model.MetodoPago
+                            </div>
                         </div>
                     </div>
 
@@ -139,25 +133,16 @@
 
         tr.innerHTML = `
             <td>
-                <input type="text"
-                       class="form-control"
-                       value="${nombreMedicamento}"
-                       readonly>
+                <span class="form-control-plaintext px-2">${nombreMedicamento}</span>
             </td>
             <td>
-                <input type="number"
-                       class="form-control"
-                       value="${cantidad}"
-                       readonly>
+                <span class="detalle-cantidad form-control-plaintext px-2">${cantidad}</span>
             </td>
             <td>
-                <input type="number"
-                       class="form-control"
-                       value="${precioUnitario}"
-                       readonly>
+                <span class="detalle-precio form-control-plaintext px-2">Bs. ${precioUnitario.toFixed(2)}</span>
             </td>
             <td>
-                <span class="subtotal-text">${subtotal.toFixed(2)}</span>
+                <span class="subtotal-text">Bs. ${subtotal.toFixed(2)}</span>
             </td>
         `;
 
@@ -169,8 +154,9 @@
         let total = 0;
 
         filas.forEach(tr => {
-            const cantidad = Number(tr.querySelector("td:nth-child(2) input").value || 0);
-            const precioUnitario = Number(tr.querySelector("td:nth-child(3) input").value || 0);
+            const cantidad = Number(tr.querySelector(".detalle-cantidad")?.textContent || 0);
+            const precioTexto = tr.querySelector(".detalle-precio")?.textContent || "0";
+            const precioUnitario = Number(precioTexto.replace("Bs.", "").trim() || 0);
 
             total += cantidad * precioUnitario;
         });
@@ -192,7 +178,7 @@
     const clienteInicial = clientes.find(c => Number(c.id) === Number(idClienteInput.value));
 
     if (clienteInicial) {
-        clienteBusqueda.value = clienteInicial.nit;
-        razonSocialCliente.value = clienteInicial.razonSocial;
+        clienteBusqueda.textContent = clienteInicial.nit;
+        razonSocialCliente.textContent = clienteInicial.razonSocial;
     }
 </script>
