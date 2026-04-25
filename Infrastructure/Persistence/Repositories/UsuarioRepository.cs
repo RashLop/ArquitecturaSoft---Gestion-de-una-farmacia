@@ -74,9 +74,9 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             return Update(t, null);
         } 
 
-        public int Delete(Usuario t)
+        public int Delete(Usuario usuario)
         {
-            return SoftDelete(t, null);
+            return SoftDelete(usuario, null);
         }
 
         public Usuario? GetById(int id)
@@ -273,7 +273,7 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
             return command.ExecuteNonQuery();
         }
-        public int SoftDelete(Usuario t, int? idUsuarioSesion)
+        public int SoftDelete(Usuario usuario, int? idUsuarioSesion)
         {
             string query = @"UPDATE usuario
                             SET activo = 0,
@@ -283,12 +283,12 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
 
             MySqlCommand command = new MySqlCommand(query);
             command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
-            command.Parameters.AddWithValue("@id", t.IdUsuario);
+            command.Parameters.AddWithValue("@id", usuario.IdUsuario);
 
             return RepositoryDbHelper.ExecuteNonQuery(connectionString, command);
         }
 
-        public int Update(Usuario t, int? idUsuarioSesion)
+        public int Update(Usuario usuario, int? idUsuarioSesion)
         {
             string query = @"UPDATE usuario
                             SET nombres = @nombres,
@@ -309,18 +309,18 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
             connection.Open();
 
             using MySqlCommand command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@nombres", t.Nombres);
-            command.Parameters.AddWithValue("@apellido_materno", t.ApellidoMaterno);
-            command.Parameters.AddWithValue("@apellido_paterno", t.ApellidoPaterno);
-            command.Parameters.AddWithValue("@ci", t.Ci);
-            command.Parameters.AddWithValue("@telefono", t.Telefono);
-            command.Parameters.AddWithValue("@ci_extencion", t.CiExtencion);
-            command.Parameters.AddWithValue("@email", t.Email);
-            command.Parameters.AddWithValue("@user_name", t.UserName);
-            command.Parameters.AddWithValue("@role", t.Role);
-            command.Parameters.AddWithValue("@activo", t.Activo);
+            command.Parameters.AddWithValue("@nombres", usuario.Nombres);
+            command.Parameters.AddWithValue("@apellido_materno", usuario.ApellidoMaterno);
+            command.Parameters.AddWithValue("@apellido_paterno", usuario.ApellidoPaterno);
+            command.Parameters.AddWithValue("@ci", usuario.Ci);
+            command.Parameters.AddWithValue("@telefono", usuario.Telefono);
+            command.Parameters.AddWithValue("@ci_extencion", usuario.CiExtencion);
+            command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@user_name", usuario.UserName);
+            command.Parameters.AddWithValue("@role", usuario.Role);
+            command.Parameters.AddWithValue("@activo", usuario.Activo);
             command.Parameters.AddWithValue("@idUsuarioSesion", idUsuarioSesion);
-            command.Parameters.AddWithValue("@id", t.IdUsuario);
+            command.Parameters.AddWithValue("@id", usuario.IdUsuario);
 
             return command.ExecuteNonQuery();
         }
