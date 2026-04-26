@@ -562,63 +562,56 @@
                 mostrarErrorVenta(error.message);
             }
         });
+btnConfirmarVentaModal.addEventListener("click", async function () {
+    const pestañaPdf = window.open("about:blank", "_blank");
 
-        btnConfirmarVentaModal.addEventListener("click", async function () {
-            try {
-                sincronizarJson();
-                modalConfirmarVenta.hide();
-                btnConfirmarVentaModal.disabled = true;
-                btnConfirmarVentaModal.textContent = "Guardando...";
+    try {
+        sincronizarJson();
+        modalConfirmarVenta.hide();
+        btnConfirmarVentaModal.disabled = true;
+        btnConfirmarVentaModal.textContent = "Guardando...";
 
-                const formData = new FormData(formVenta);
+        const formData = new FormData(formVenta);
 
-                const response = await fetch(formVenta.action || (window.location.pathname + "?handler=CrearVenta"), {
-                    method: "POST",
-                    body: formData
-                });
-
-                const contentType = response.headers.get("content-type") || "";
-
-                if (!response.ok || contentType.includes("text/html")) {
-                    const html = await response.text();
-                    document.open();
-                    document.write(html);
-                    document.close();
-                    return;
-                }
-
-                const blob = await response.blob();
-                const mensaje = response.headers.get("X-Mensaje-Exito") || "Venta registrada correctamente.";
-                const redirectTo = response.headers.get("X-Redirect-To") || "/Venta/Venta?mensaje=" + encodeURIComponent(mensaje);
-
-                let fileName = "comprobante-venta.pdf";
-                const contentDisposition = response.headers.get("Content-Disposition");
-
-                if (contentDisposition) {
-                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
-                    if (match && match[1]) fileName = match[1];
-                }
-
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-
-                setTimeout(() => {
-                    window.location.href = redirectTo;
-                }, 500);
-            }
-            catch (error) {
-                mostrarErrorVenta("Ocurrio un error al registrar la venta.");
-                console.error(error);
-                btnConfirmarVentaModal.disabled = false;
-                btnConfirmarVentaModal.textContent = "Si, guardar venta";
-            }
+        const response = await fetch(formVenta.action || (window.location.pathname + "?handler=CrearVenta"), {
+            method: "POST",
+            body: formData
         });
+
+        if (!response.ok) {
+            throw new Error("Error al registrar la venta");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        if (pestañaPdf) {
+            pestañaPdf.location.href = url;
+        } else {
+            mostrarErrorVenta("El navegador bloqueó la nueva pestaña. Permite ventanas emergentes.");
+            btnConfirmarVentaModal.disabled = false;
+            btnConfirmarVentaModal.textContent = "Si, guardar venta";
+            return;
+        }
+
+        const mensaje = response.headers.get("X-Mensaje-Exito") || "Venta registrada correctamente.";
+        const redirectTo = response.headers.get("X-Redirect-To") || "/Venta/Venta?mensaje=" + encodeURIComponent(mensaje);
+
+        setTimeout(() => {
+            window.location.href = redirectTo;
+        }, 1000);
+    }
+    catch (error) {
+        if (pestañaPdf) {
+            pestañaPdf.close();
+        }
+
+        mostrarErrorVenta("Ocurrio un error al registrar la venta.");
+        console.error(error);
+        btnConfirmarVentaModal.disabled = false;
+        btnConfirmarVentaModal.textContent = "Si, guardar venta";
+    }
+});
 
         let detallesIniciales = [];
         try {

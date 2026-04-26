@@ -19,10 +19,20 @@ namespace ProyectoArqSoft.Domain.Validators
 
         private Result? ValidarNit(string nit)
         {
-            if (nit == null)
-                return Result.Fail("El NIT es obligatorio.");
+            Result? resultadoBasico = ValidarNitObligatorioYEspacios(nit);
+            if (resultadoBasico != null)
+                return resultadoBasico;
 
-            if (nit.Length == 0)
+            Result? resultadoFormato = ValidarNitFormato(nit);
+            if (resultadoFormato != null)
+                return resultadoFormato;
+
+            return ValidarNitLongitudYContenido(nit);
+        }
+
+        private Result? ValidarNitObligatorioYEspacios(string nit)
+        {
+            if (nit == null || nit.Length == 0)
                 return Result.Fail("El NIT es obligatorio.");
 
             if (string.IsNullOrWhiteSpace(nit))
@@ -37,6 +47,11 @@ namespace ProyectoArqSoft.Domain.Validators
             if (nit.Contains(' '))
                 return Result.Fail("El NIT no debe contener espacios internos.");
 
+            return null;
+        }
+
+        private static Result? ValidarNitFormato(string nit)
+        {
             if (nit.StartsWith("+") || nit.StartsWith("-"))
                 return Result.Fail("El NIT no debe contener signos positivos ni negativos.");
 
@@ -58,6 +73,11 @@ namespace ProyectoArqSoft.Domain.Validators
             if (contieneSimbolos)
                 return Result.Fail("El NIT no debe contener simbolos ni caracteres especiales.");
 
+            return null;
+        }
+
+        private static Result? ValidarNitLongitudYContenido(string nit)
+        {
             if (nit.Length < 5)
                 return Result.Fail("El NIT debe contener entre 5 y 12 digitos; faltan digitos.");
 
@@ -87,7 +107,7 @@ namespace ProyectoArqSoft.Domain.Validators
             if (razonSocial.Length < 3 || razonSocial.Length > 45)
                 return Result.Fail("La razon social debe tener entre 3 y 45 caracteres.");
 
-            if (!Regex.IsMatch(razonSocial, @"^[a-zA-Z0-9·ÈÌÛ˙¡…Õ”⁄Ò—\s\.\-&]+$"))
+            if (!Regex.IsMatch(razonSocial, @"^[\p{L}0-9\s\.\-&]+$"))
                 return Result.Fail("La razon social contiene caracteres no permitidos.");
 
             if (!razonSocial.Any(char.IsLetterOrDigit))
@@ -120,4 +140,3 @@ namespace ProyectoArqSoft.Domain.Validators
         }
     }
 }
-

@@ -38,6 +38,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // This page only needs to render the form when it is loaded directly.
         }
 
         public IActionResult OnPostCargarClienteParaEdicion(int id)

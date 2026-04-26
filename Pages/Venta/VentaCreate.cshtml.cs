@@ -212,7 +212,8 @@ namespace ProyectoArqSoft.Pages
             Response.Headers["X-Redirect-To"] =
                 Url.Page("Venta", new { mensaje = "Venta registrada correctamente." }) ?? "/Venta?mensaje=Venta%20registrada%20correctamente.";
 
-            return File(pdf, "application/pdf", $"comprobante-venta-{DateTime.Now:yyyyMMddHHmmss}.pdf");
+            Response.Headers["Content-Disposition"] = "inline";
+                return File(pdf, "application/pdf");
         }
 
         public IActionResult OnPostCrearClienteModal()

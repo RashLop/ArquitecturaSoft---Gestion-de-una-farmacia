@@ -20,20 +20,14 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Cliente (NIT)</label>
+                            <label class="form-label fw-bold d-block text-start">Cliente (NIT)</label>
 
-                            <input type="text"
-                                   id="clienteBusqueda"
-                                   class="form-control"
-                                   placeholder="NIT del cliente"
-                                   readonly />
+                            <div id="clienteBusqueda"
+                                 class="form-control-plaintext text-start fw-semibold py-1"></div>
 
-                            <label class="form-label fw-bold mt-2">Cliente:</label>
-                            <input type="text"
-                                   id="razonSocialCliente"
-                                   class="form-control"
-                                   placeholder="Razón social del cliente"
-                                   readonly />
+                            <label class="form-label fw-bold mt-2 d-block text-start">Cliente:</label>
+                            <div id="razonSocialCliente"
+                                 class="form-control-plaintext text-start fw-semibold py-1"></div>
 
                             <input type="hidden"
                                    asp-for="IdCliente"
@@ -41,11 +35,10 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="MetodoPago" class="form-label fw-bold">Método de Pago</label>
-                            <!-- El input se mantiene 'readonly' para que solo sea vista de detalle -->
-                            <input asp-for="MetodoPago"
-                                   class="form-control med-input"
-                                   readonly />
+                            <label asp-for="MetodoPago" class="form-label d-block text-start">Método de Pago</label>
+                            <div class="form-control-plaintext text-start fw-semibold py-1">
+                                @Model.MetodoPago
+                            </div>
                         </div>
                     </div>
 
@@ -61,8 +54,8 @@
                                 <tr>
                                     <th>Medicamento</th>
                                     <th style="width:130px;">Cantidad</th>
-                                    <th style="width:180px;">Precio Unitario</th>
-                                    <th style="width:140px;">Subtotal</th>
+                                    <th style="width:160px;">Precio Unitario (Bs)</th>
+                                    <th style="width:140px;">Subtotal (Bs)</th>
                                 </tr>
                             </thead>
                             <tbody id="detalleBody">
@@ -140,30 +133,16 @@
 
         tr.innerHTML = `
             <td>
-                <input type="text"
-                       class="form-control"
-                       value="${nombreMedicamento}"
-                       readonly>
+                <span class="form-control-plaintext text-start px-2">${nombreMedicamento}</span>
             </td>
             <td>
-                <input type="number"
-                       class="form-control"
-                       value="${cantidad}"
-                       readonly>
+                <span class="detalle-cantidad form-control-plaintext text-start px-2">${cantidad}</span>
             </td>
             <td>
-                <!-- Se agregó 'Bs.' al input del Precio Unitario -->
-                <div class="input-group">
-                    <span class="input-group-text">Bs.</span>
-                    <input type="number"
-                           class="form-control"
-                           value="${precioUnitario.toFixed(2)}"
-                           readonly>
-                </div>
+                <span class="detalle-precio form-control-plaintext text-start px-2">${precioUnitario.toFixed(2)}</span>
             </td>
             <td>
-                <!-- Se agregó 'Bs.' al texto del Subtotal -->
-                <span class="subtotal-text fw-bold">Bs. ${subtotal.toFixed(2)}</span>
+                <span class="subtotal-text text-start d-block px-2">${subtotal.toFixed(2)}</span>
             </td>
         `;
 
@@ -175,8 +154,9 @@
         let total = 0;
 
         filas.forEach(tr => {
-            const cantidad = Number(tr.querySelector("td:nth-child(2) input").value || 0);
-            const precioUnitario = Number(tr.querySelector("td:nth-child(3) input").value || 0);
+            const cantidad = Number(tr.querySelector(".detalle-cantidad")?.textContent || 0);
+            const precioTexto = tr.querySelector(".detalle-precio")?.textContent || "0";
+            const precioUnitario = Number(precioTexto.trim() || 0);
 
             total += cantidad * precioUnitario;
         });
@@ -198,7 +178,7 @@
     const clienteInicial = clientes.find(c => Number(c.id) === Number(idClienteInput.value));
 
     if (clienteInicial) {
-        clienteBusqueda.value = clienteInicial.nit;
-        razonSocialCliente.value = clienteInicial.razonSocial;
+        clienteBusqueda.textContent = clienteInicial.nit;
+        razonSocialCliente.textContent = clienteInicial.razonSocial;
     }
 </script>

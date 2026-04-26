@@ -28,9 +28,9 @@ namespace ProyectoArqSoft.Application.Interfaces
             string concentracion,
             decimal precio,
             int stock,
-            int IdUsuario);
+            int idUsuario);
 
-        Result EliminarLogicamente(int id, int IdUsuario);
+        Result EliminarLogicamente(int id, int idUsuario);
 
         Result UpdateStock(int idMedicamento, int cantidad, bool esEntrada, int idUsuario);   
     }

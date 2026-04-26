@@ -34,6 +34,7 @@ namespace ProyectoArqSoft.Pages
 
         public void OnGet()
         {
+            // This page only needs to render the empty creation form on GET.
         }
 
         public IActionResult OnPostCrearCliente()
