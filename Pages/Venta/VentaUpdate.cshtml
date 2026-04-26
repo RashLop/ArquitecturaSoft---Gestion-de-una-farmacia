@@ -67,7 +67,7 @@
                         <h5>Total: <span class="text-success" id="totalVenta">Bs. 0.00</span></h5>
                     </div>
 
-                    @if (!string.IsNullOrWhiteSpace(Model.Estado.MensajeError))
+                    @if (!string.IsNullOrWhiteSpace(Model.Estado?.MensajeError))
                     {
                         <div class="alert alert-danger med-alert" role="alert">
                             @Model.Estado.MensajeError
@@ -89,25 +89,25 @@
     const clientes = [
         @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
         {
-            <text>
-            {
-                id: @row["id"],
-                nit: "@row["nit"]",
-                razonSocial: "@row["razon_social"]"
-            },
-            </text>
+                <text>
+                {
+                    id: @row["id"],
+                    nit: "@row["nit"]",
+                    razonSocial: "@row["razon_social"]"
+                },
+                </text>
         }
     ];
 
     const medicamentos = [
         @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
         {
-            <text>
-            {
-                id: @row["id"],
-                nombre: "@row["nombre"]"
-            },
-            </text>
+                <text>
+                {
+                    id: @row["id"],
+                    nombre: "@row["nombre"]"
+                },
+                </text>
         }
     ];
 

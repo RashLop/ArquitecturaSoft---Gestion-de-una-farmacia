@@ -57,7 +57,6 @@
                     <div class="col-md-6">
                         <label asp-for="MetodoPago" class="form-label fw-bold"></label>
                         <select asp-for="MetodoPago" class="form-select" required>
-                            <option value="">Seleccione</option>
                             <option value="Efectivo">Efectivo</option>
                             <option value="Tarjeta">Tarjeta</option>
                             <option value="Transferencia">Transferencia</option>
@@ -119,8 +118,9 @@
                 }
 
                 <div class="text-end">
+                    <!-- Cambio: Se cambió btn-primary a btn-success para que coincida con "Agregar" -->
                     <button type="button"
-                            class="btn btn-primary"
+                            class="btn btn-success"
                             id="btnGuardarVenta">
                         Guardar Venta
                     </button>
@@ -193,27 +193,27 @@
         const clientes = [
             @foreach (System.Data.DataRow row in Model.ClienteDataTable.Rows)
             {
-                    <text>
-                    {
-                        id: @row["id"],
-                        nit: "@row["nit"]",
-                        razonSocial: "@row["razon_social"]"
-                    },
-                    </text>
+                        <text>
+                        {
+                            id: @row["id"],
+                            nit: "@row["nit"]",
+                            razonSocial: "@row["razon_social"]"
+                        },
+                        </text>
             }
         ];
 
         const medicamentos = [
             @foreach (System.Data.DataRow row in Model.MedicamentoDataTable.Rows)
             {
-                    <text>
-                    {
-                        id: @row["id"],
-                        nombre: "@row["nombre"]",
-                        precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture)),
-                        stock: @(Convert.ToInt32(row["stock"]))
-                    },
-                    </text>
+                        <text>
+                        {
+                            id: @row["id"],
+                            nombre: "@row["nombre"]",
+                            precio: @(Convert.ToDecimal(row["precio"]).ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                            stock: @(Convert.ToInt32(row["stock"]))
+                        },
+                        </text>
             }
         ];
     </script>

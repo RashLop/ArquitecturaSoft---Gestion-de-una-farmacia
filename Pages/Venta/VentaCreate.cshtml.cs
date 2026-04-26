@@ -24,7 +24,7 @@ namespace ProyectoArqSoft.Pages
 
         [BindProperty]
         [Display(Name = "Método de Pago")]
-        public string MetodoPago { get; set; } = string.Empty;
+        public string MetodoPago { get; set; } = "Efectivo";
 
         [BindProperty]
         public string DetallesJson { get; set; } = "[]";
