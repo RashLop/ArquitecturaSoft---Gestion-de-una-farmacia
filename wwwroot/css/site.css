@@ -360,7 +360,7 @@ body {
 /* Resultados tipo dropdown flotante */
 .resultados-dropdown {
     position: absolute;
-    top: 100%; /* se abre hacia abajo */
+    bottom: 100%; /* se abre hacia abajo */
     left: 0;
     width: 100%;
     z-index: 1050;
