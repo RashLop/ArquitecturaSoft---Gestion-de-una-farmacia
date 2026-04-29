@@ -19,12 +19,15 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Cliente (NIT)</label>
 
-                        <input type="text"
-                               id="clienteBusqueda"
-                               class="form-control"
-                               placeholder="Buscar por NIT..." />
+                        <div class="busqueda-container">
+                            <input type="text"
+                                   id="clienteBusqueda"
+                                   class="form-control"
+                                   placeholder="Buscar por NIT..." />
 
-                        <div id="clienteResultados" class="list-group mt-1"></div>
+                            <div id="clienteResultados" class="list-group resultados-dropdown"></div>
+                        </div>
+
 
                         <div class="d-flex gap-2 mt-2">
                             <button type="button"
@@ -71,23 +74,22 @@
                     <h5>Detalle</h5>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-8 col-lg-7">
-                        <label class="form-label fw-bold">Medicamento</label>
-                        <div class="input-group">
-                            <input type="text"
-                                   id="medicamentoBusquedaGlobal"
-                                   class="form-control"
-                                   placeholder="Buscar medicamento" />
-                            <button type="button"
-                                    class="btn btn-success"
-                                    id="btnAgregarDetalle">
-                                Agregar
-                            </button>
-                        </div>
-                        <div id="medicamentoResultadosGlobal" class="list-group mt-1"></div>
+                <div class="busqueda-container">
+                    <div class="input-group">
+                        <input type="text"
+                               id="medicamentoBusquedaGlobal"
+                               class="form-control"
+                               placeholder="Buscar medicamento" />
+                        <button type="button"
+                                class="btn btn-success"
+                                id="btnAgregarDetalle">
+                            Agregar
+                        </button>
                     </div>
+
+                    <div id="medicamentoResultadosGlobal" class="list-group resultados-dropdown"></div>
                 </div>
+
 
                 <table class="table table-bordered" id="tablaDetalles">
                     <thead class="table-success">
@@ -118,7 +120,7 @@
                 }
 
                 <div class="text-end">
-                    <!-- Cambio: Se cambió btn-primary a btn-success para que coincida con "Agregar" -->
+                    <!-- Cambio: Se cambiï¿½ btn-primary a btn-success para que coincida con "Agregar" -->
                     <button type="button"
                             class="btn btn-success"
                             id="btnGuardarVenta">
@@ -378,7 +380,7 @@
             medicamentoSeleccionado = null;
             medicamentoResultadosGlobal.innerHTML = "";
 
-            if (texto.length < 2) return;
+            if (texto.length < 3) return;
 
             const filtrados = medicamentos.filter(m =>
                 m.nombre.toLowerCase().includes(texto)
@@ -645,7 +647,7 @@ btnConfirmarVentaModal.addEventListener("click", async function () {
             const texto = this.value.toLowerCase().trim();
             clienteResultados.innerHTML = "";
 
-            if (texto.length < 1) return;
+            if (texto.length < 3) return;
 
             const filtrados = clientes.filter(c =>
                 c.nit.toLowerCase().includes(texto)
@@ -765,5 +767,14 @@ btnConfirmarVentaModal.addEventListener("click", async function () {
         if (clienteInicial) {
             seleccionarCliente(clienteInicial);
         }
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".busqueda-container")) {
+                clienteResultados.innerHTML = "";
+                medicamentoResultadosGlobal.innerHTML = "";
+            }
+        });
+
+
     </script>
 }

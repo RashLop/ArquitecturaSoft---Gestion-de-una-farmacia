@@ -351,3 +351,27 @@ body {
 .dropdown-menu {
     transition: all 0.3s ease;
 }
+
+/* Contenedor relativo */
+.busqueda-container {
+    position: relative;
+}
+
+/* Resultados tipo dropdown flotante */
+.resultados-dropdown {
+    position: absolute;
+    bottom: 100%; /* 👈 hace que se abra hacia ARRIBA */
+    left: 0;
+    width: 100%;
+    z-index: 1050;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Opcional: sombra */
+.resultados-dropdown {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
