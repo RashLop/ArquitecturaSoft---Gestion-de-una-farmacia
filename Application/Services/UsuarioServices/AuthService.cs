@@ -2,70 +2,83 @@ using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Application.Ports.Output;
 using ProyectoArqSoft.Infrastructure.Helpers;
 using ProyectoArqSoft.Domain.Models;
-using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Application.Interfaces;
+using ProyectoArqSoft.Domain.Validators;
 
 namespace ProyectoArqSoft.Application.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IResult<UsuarioLoginRequestDto> _loginValidador;
         private readonly ITokenService _tokenService;
 
         public AuthService(
             IUsuarioRepository usuarioRepository,
-            IResult<UsuarioLoginRequestDto> loginValidador,
             ITokenService tokenService)
         {
-            _usuarioRepository = usuarioRepository;
-            _loginValidador = loginValidador;
-            _tokenService = tokenService;
+            _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
+            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
         }
 
         public Result IniciarSesion(UsuarioLoginRequestDto dto, out UsuarioLoginResponseDto? respuesta)
         {
-            Result validacionEntrada = _loginValidador.Validar(dto);
-            if (!validacionEntrada.IsSuccess)
-            {
-                respuesta = null;
-                return validacionEntrada;
-            }
+            respuesta = null;
 
-            string emailOUserName = dto.EmailOUserName?.Trim() ?? string.Empty;
-            string password = dto.Password ?? string.Empty;
+            Result validacion = ValidarLoginDto(dto);
+            if (!validacion.IsSuccess)
+                return validacion;
+
+            string emailOUserName = dto.EmailOUserName!.Trim();
+            string password = dto.Password!.Trim();
 
             Usuario? usuario = BuscarPorEmailOUserName(emailOUserName);
             if (usuario == null)
-            {
-                respuesta = null;
                 return Result.Fail("Las credenciales son incorrectas.");
-            }
 
             if (usuario.Activo == 0)
-            {
-                respuesta = null;
                 return Result.Fail("El usuario se encuentra inactivo.");
-            }
 
             bool passwordValido = PasswordHelper.Verify(password, usuario.PasswordHash);
             if (!passwordValido)
-            {
-                respuesta = null;
                 return Result.Fail("Las credenciales son incorrectas.");
-            }
 
-            string token = _tokenService.GenerarToken(usuario, out int expiraEn);
+            var tokenGeneracionDto = new UsuarioTokenGeneracionDto
+            {
+                IdUsuario = usuario.IdUsuario,
+                TipoToken = "INICIO_SESION",  
+                MinutosExpiracion = 60,
+                UserName = usuario.UserName,
+                Role = usuario.Role
+            };
+
+            (Result resultado, string token) = _tokenService.GenerarToken(tokenGeneracionDto, out string? tokenPlano);
 
             respuesta = new UsuarioLoginResponseDto
             {
                 IdUsuario = usuario.IdUsuario,
-                UserName = usuario.UserName,
-                Role = usuario.Role,
+                UserName = usuario.UserName ?? string.Empty,
+                Role = usuario.Role ?? string.Empty,
                 MustChangePassword = usuario.MustChangePassword == 1,
                 Token = token,
-                ExpiraEn = expiraEn
+                ExpiraEn = 60  // Esto se ajusta según lo que se define en el servicio
             };
+
+            return Result.Ok();
+        }
+
+        private Result ValidarLoginDto(UsuarioLoginRequestDto? dto)
+        {
+            if (dto == null)
+                return Result.Fail("Los datos de acceso no pueden ser nulos.");
+
+            if (string.IsNullOrWhiteSpace(dto.EmailOUserName))
+                return Result.Fail("El email o nombre de usuario es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(dto.Password))
+                return Result.Fail("La contraseña es obligatoria.");
+
+            if (dto.Password!.Length < 8)
+                return Result.Fail("La contraseña debe tener al menos 8 caracteres.");
 
             return Result.Ok();
         }

@@ -140,16 +140,16 @@ namespace ProyectoArqSoft.Infrastructure.Persistence.Repositories
                 UsuarioIdUsuario = reader.GetInt32("usuario_idUsuario"),
                 TokenHash = reader.GetString("token_hash"),
                 TipoToken = reader.GetString("tipo_token"),
-                FechaCreacion = reader.GetDateTime("fecha_creacion"),
-                FechaExpiracion = reader.GetDateTime("fecha_expiracion"),
+                FechaCreacion = DateTime.SpecifyKind(reader.GetDateTime("fecha_creacion"), DateTimeKind.Utc),
+                FechaExpiracion = DateTime.SpecifyKind(reader.GetDateTime("fecha_expiracion"), DateTimeKind.Utc),
                 Revocado = reader.GetSByte("revocado"),
                 Usado = reader.GetSByte("usado"),
                 FechaUso = reader.IsDBNull(reader.GetOrdinal("fecha_uso"))
                     ? (DateTime?)null
-                    : reader.GetDateTime("fecha_uso"),
+                    : DateTime.SpecifyKind(reader.GetDateTime("fecha_uso"), DateTimeKind.Utc),
                 FechaRevocacion = reader.IsDBNull(reader.GetOrdinal("fecha_revocacion"))
                     ? (DateTime?)null
-                    : reader.GetDateTime("fecha_revocacion")
+                    : DateTime.SpecifyKind(reader.GetDateTime("fecha_revocacion"), DateTimeKind.Utc)
             };
         }
     }

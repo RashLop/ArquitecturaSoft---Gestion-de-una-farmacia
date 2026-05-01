@@ -6,7 +6,6 @@
         <div class="col-lg-5 col-md-7">
 
             <div class="med-card shadow border-0" style="border-radius: 15px; overflow: hidden;">
-                <!-- SECCIÓN MODIFICADA PARA VERSE IGUAL AL REGISTRO -->
                 <div class="med-card-header text-center bg-success text-white py-3">
                     <h2 class="mb-0 fw-bold text-white">
                         Editar Perfil de Usuario
@@ -15,9 +14,7 @@
                 </div>
 
                 <div class="med-card-body p-4 pt-4">
-                    <!-- Se ajustó el padding superior -->
                     <form method="post" asp-page-handler="ActualizarUsuario">
-                        @* Campos ocultos necesarios para el DTO *@
                         <input type="hidden" asp-for="Input.IdUsuario" />
 
                         <!-- CORREO ELECTRÓNICO -->
@@ -25,6 +22,8 @@
                             <input asp-for="Input.Email" class="form-control med-input" placeholder="Email" required />
                             <label class="ms-2">Correo Electrónico</label>
                         </div>
+
+                        <!-- ELIMINADO: NOMBRES (Ya no es parte del formulario) -->
 
                         <!-- ROL / PRIVILEGIOS -->
                         <div class="form-floating mb-3">

@@ -8,6 +8,7 @@ using ProyectoArqSoft.Application.Services;
 using ProyectoArqSoft.Domain.DTOs;
 using ProyectoArqSoft.Domain.Validators;
 using ProyectoArqSoft.Infrastructure.Creadores;
+using ProyectoArqSoft.Infrastructure.Middleware;
 using ProyectoArqSoft.Infrastructure.Persistence.Repositories;
 using System.Text;
 
@@ -83,9 +84,8 @@ builder.Services.AddScoped<IUsuarioTokenRepository>(provider =>
     return creator.CreateRepo();
 });
 
-builder.Services.AddScoped<UsuarioNegocioValidacion>();
+builder.Services.AddScoped<UsuarioValidacionGeneral>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<IUsuarioTokenService, UsuarioTokenService>();
 
 
 // =========================
@@ -145,10 +145,7 @@ builder.Services.AddScoped<IDashboardFacade, DashboardFacade>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
-builder.Services.AddScoped<IResult<UsuarioRegistroDto>, UsuarioRegistroValidacion>();
-builder.Services.AddScoped<IResult<UsuarioActualizacionDto>, UsuarioActualizacionValidacion>();
-builder.Services.AddScoped<IResult<UsuarioLoginRequestDto>, UsuarioLoginRequestValidacion>();
+builder.Services.AddScoped<TokenService>();
 
 
 // =========================
@@ -183,21 +180,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ),
             ClockSkew = TimeSpan.Zero
         };
-
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                var token = context.HttpContext.Session.GetString("Token");
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    context.Token = token;
-                }
-
-                return Task.CompletedTask;
-            }
-        };
     });
 
 builder.Services.AddAuthorization();
@@ -220,6 +202,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
+app.UseMiddleware<SessionTokenMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

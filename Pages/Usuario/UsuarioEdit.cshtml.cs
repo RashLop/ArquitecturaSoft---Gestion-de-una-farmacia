@@ -13,7 +13,7 @@ namespace ProyectoArqSoft.Pages.Usuario
         private readonly IUsuarioService _usuarioService;
 
         [BindProperty]
-        public UsuarioEdicionDto Input { get; set; } = new();
+        public UsuarioActualizarDto Input { get; set; } = new();
 
         public UsuarioEditModel(IUsuarioService usuarioService) => _usuarioService = usuarioService;
 
@@ -25,7 +25,7 @@ namespace ProyectoArqSoft.Pages.Usuario
             Input.IdUsuario = user.IdUsuario;
             Input.Email = user.Email;
             Input.Role = user.Role;
-            Input.Activo = user.Activo;
+            // Input.Nombres no se carga porque es solo visual, no editable
             return Page();
         }
 
@@ -33,7 +33,13 @@ namespace ProyectoArqSoft.Pages.Usuario
         {
             int? idUsuarioSesion = HttpContext.Session.GetInt32("IdUsuario");
 
-            Result resultado = _usuarioService.ActualizarUsuarioEdicion(Input, idUsuarioSesion);
+            // Si Nombres está vacío, no lo actualizamos
+            if (string.IsNullOrWhiteSpace(Input.Nombres))
+            {
+                Input.Nombres = null;  // No modificamos el campo Nombres si está vacío
+            }
+
+            Result resultado = _usuarioService.ActualizarUsuario(Input, idUsuarioSesion);
 
             if (resultado.IsSuccess == false)
             {
@@ -42,6 +48,6 @@ namespace ProyectoArqSoft.Pages.Usuario
             }
 
             return RedirectToPage("Usuario", new { mensaje = "Perfil de usuario actualizado correctamente" });
-        }
+                }
     }
 }

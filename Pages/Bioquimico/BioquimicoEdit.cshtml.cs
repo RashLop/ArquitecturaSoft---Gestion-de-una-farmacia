@@ -14,7 +14,7 @@ namespace ProyectoArqSoft.Pages.Bioquimico
         private readonly IUsuarioService usuarioService;
 
         [BindProperty]
-        public UsuarioActualizacionDto Input { get; set; } = new UsuarioActualizacionDto
+        public UsuarioActualizarDto Input { get; set; } = new UsuarioActualizarDto
         {
             Role = "Bioquimico",
             Activo = 1,
@@ -48,28 +48,25 @@ namespace ProyectoArqSoft.Pages.Bioquimico
             if (usuario == null)
                 return RedirectToPage("Bioquimico", new { error = "Bioquímico no encontrado" });
 
-            UsuarioDto usuarioNoNull = usuario;
-            if (!EsBioquimico(usuarioNoNull.Role))
+            if (!EsBioquimico(usuario.Role))
                 return RedirectToPage("Bioquimico", new { error = "Bioquímico no encontrado" });
 
-            string ciCompleto = usuarioNoNull.Ci?.Trim() ?? string.Empty;
+            string ciCompleto = usuario.Ci?.Trim() ?? string.Empty;
             int separador = ciCompleto.IndexOf('-');
 
             CiBase = separador >= 0 ? ciCompleto[..separador].Trim() : ciCompleto;
             CiComplemento = separador >= 0 ? ciCompleto[(separador + 1)..].Trim() : string.Empty;
 
-            Input.IdUsuario = usuarioNoNull.IdUsuario;
-            Input.Nombres = usuarioNoNull.Nombres;
-            Input.ApellidoPaterno = usuarioNoNull.ApellidoPaterno;
-            Input.ApellidoMaterno = usuarioNoNull.ApellidoMaterno;
-            Input.Ci = usuarioNoNull.Ci?.Trim() ?? string.Empty;
-            Input.CiExtencion = usuarioNoNull.CiExtencion?.Trim() ?? string.Empty;
-            Input.Telefono = usuarioNoNull.Telefono;
-            Input.Email = usuarioNoNull.Email;
-            Input.UserName = usuarioNoNull.UserName;
+            Input.IdUsuario = usuario.IdUsuario;
+            Input.Nombres = usuario.Nombres ?? string.Empty;
+            Input.ApellidoPaterno = usuario.ApellidoPaterno ?? string.Empty;
+            Input.ApellidoMaterno = usuario.ApellidoMaterno ?? string.Empty;
+            Input.Ci = usuario.Ci?.Trim() ?? string.Empty;
+            Input.CiExtencion = usuario.CiExtencion?.Trim() ?? string.Empty;
+            Input.Telefono = usuario.Telefono ?? string.Empty;
+            Input.Email = usuario.Email ?? string.Empty;
+            Input.UserName = usuario.UserName ?? string.Empty;
             Input.Role = "Bioquimico";
-            Input.Activo = usuarioNoNull.Activo;
-            Input.MustChangePassword = usuarioNoNull.MustChangePassword;
 
             return Page();
         }
@@ -87,7 +84,7 @@ namespace ProyectoArqSoft.Pages.Bioquimico
 
             Result resultado = usuarioService.ActualizarUsuario(Input, idSession);
 
-            if (resultado.IsSuccess == false)
+            if (!resultado.IsSuccess)
             {
                 Estado.MensajeError = resultado.Error;
                 return Page();
